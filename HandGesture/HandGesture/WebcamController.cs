@@ -61,7 +61,7 @@ namespace HandGesture
         }
 
 #if DEBUG
-        CvFont font;
+        static CvFont font;
 
         private static void addDisplayFPS()
         {

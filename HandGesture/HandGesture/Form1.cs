@@ -42,6 +42,8 @@ namespace HandGesture
             m_cvImg = m_cvCap.QueryFrame();
             //IplImage을 비트맵으로 전환
             pictureBox1.Image = m_cvImg.ToBitmap();
+
+            //헤헷
         }
     }
 

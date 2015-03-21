@@ -1,0 +1,11 @@
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.exe.config
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.exe
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.pdb
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\bin\Debug\OpenCvSharp.CPlusPlus.dll
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\bin\Debug\OpenCvSharp.dll
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\bin\Debug\OpenCvSharp.Extensions.dll
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.Form1.resources
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.Properties.Resources.resources
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.csproj.GenerateResource.Cache
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.exe
+C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.pdb

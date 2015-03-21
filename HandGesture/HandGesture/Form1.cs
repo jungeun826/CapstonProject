@@ -21,8 +21,9 @@ namespace HandGesture
 
         private void Form1_Load(object sender, EventArgs e)
         {
+#if DEBUG
             WebcamController.addDisplayFPS();
-
+#endif
             //타이머 설정
             timer1.Interval = 20;
             timer1.Enabled = true;

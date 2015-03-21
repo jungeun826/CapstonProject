@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using OpenCvSharp;
-using OpenCvSharp.Extensions;
+//using OpenCvSharp;
+//using OpenCvSharp.Extensions;
 
 namespace HandGesture
 {
@@ -21,6 +21,8 @@ namespace HandGesture
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            WebcamController.addDisplayFPS();
+
             //타이머 설정
             timer1.Interval = 20;
             timer1.Enabled = true;

@@ -27,10 +27,6 @@ namespace HandGesture
             m_cvCap.FrameHeight = 240;
 
             m_updateDel = null;
-
-#if DEBUG
-            addDisplayFPS();
-#endif
         }
 
         /// <summary>
@@ -62,16 +58,31 @@ namespace HandGesture
 
 #if DEBUG
         static CvFont font;
+        static System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 
-        private static void addDisplayFPS()
+        public static void addDisplayFPS()
         {
-            //font = new CvFont( )
+            font = new CvFont(FontFace.HersheyComplexSmall, 1.0, 1.0);
+            sw.Reset();
+            sw.Start();
+            m_updateDel += displayFPS;
+        }
+        public static void subDisplayFPS()
+        {
+            m_updateDel -= displayFPS;
         }
 
         private static void displayFPS()
         {
-            //TODO FPS표시하기 구현
+            sw.Stop();
+            displayString( (1000 / sw.ElapsedMilliseconds).ToString() , 5, 10);
+            sw.Reset();
+            sw.Start();
+        }
 
+        private static void displayString(String str, int xPos, int yPos)
+        {
+            m_cvImg.PutText(str, new CvPoint(10, 20), font, new CvScalar(255, 255, 255));
         }
 #endif
     }

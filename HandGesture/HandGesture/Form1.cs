@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-//using OpenCvSharp;
+using OpenCvSharp;
 //using OpenCvSharp.Extensions;
 
 namespace HandGesture
@@ -32,9 +32,12 @@ namespace HandGesture
         private void timer1_Tick(object sender, EventArgs e)
         {
             WebcamController.updateFrame();
+            
             pictureBox1.Image = WebcamController.getFrameAsBMP();
 
-            
+            IplImage ycrcbImg = ImageProcessingController.RGBToYCbCr(WebcamController.getImg());
+            ResultBox.Image = ImageProcessingController.IplToBitmap(ImageProcessingController.ImageToBinary(ycrcbImg));
+
         }
     }
 

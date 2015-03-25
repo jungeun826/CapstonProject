@@ -102,5 +102,19 @@ namespace HandGesture
             else
                 return (byte)-a;
         }
+
+        //yong's codes
+        public static IplImage ConvertToBinaryIpl(IplImage target)
+        {
+            IplImage retImg = new IplImage(target.Width, target.Height, BitDepth.U8, 1);
+            target.CvtColor(target, ColorConversion.BgrToCrCb);
+            target.InRangeS(new CvScalar(0, 135, 30), new CvScalar(255, 170, 160), retImg);
+            return retImg;
+        }
+        public static Bitmap ConvertToBinaryBMP(IplImage target)
+        {
+            return ConvertToBinaryIpl(target).ToBitmap();
+        }
+
     }
 }

@@ -35,8 +35,9 @@ namespace HandGesture
             
             pictureBox1.Image = WebcamController.getFrameAsBMP();
 
-            IplImage ycrcbImg = ImageProcessingController.RGBToYCbCr(WebcamController.getImg());
-            ResultBox.Image = ImageProcessingController.IplToBitmap(ImageProcessingController.ImageToBinary(ycrcbImg));
+            //IplImage ycrcbImg = ImageProcessingController.RGBToYCbCr(WebcamController.getImg());
+            //ResultBox.Image = ImageProcessingController.IplToBitmap(ImageProcessingController.ImageToBinary(ycrcbImg));
+            ResultBox.Image = ImageProcessingController.ConvertToBinaryBMP(WebcamController.getImg());
 
         }
     }

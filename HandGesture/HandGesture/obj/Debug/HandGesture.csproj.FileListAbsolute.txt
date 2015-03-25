@@ -9,3 +9,12 @@ C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debu
 C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.csproj.GenerateResource.Cache
 C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.exe
 C:\Users\민수\Documents\GitHub\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.pdb
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.exe.config
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.exe
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.csprojResolveAssemblyReference.cache
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.Form1.resources
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.Properties.Resources.resources
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.csproj.GenerateResource.Cache
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.exe
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.pdb
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.pdb

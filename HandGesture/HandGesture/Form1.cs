@@ -37,9 +37,8 @@ namespace HandGesture
 
             //IplImage ycrcbImg = ImageProcessingController.RGBToYCbCr(WebcamController.getImg());
             //ResultBox.Image = ImageProcessingController.IplToBitmap(ImageProcessingController.ImageToBinary(ycrcbImg));
-            IplImage skinImg = ImageProcessingController.extractSkinAsIpl(WebcamController.getImg());
-            
-            ResultBox.Image = ImageProcessingController.extractSkinAsBMP(WebcamController.getImg());
+
+            ResultBox.Image = DetectorManager.Instance.GetBitmapImage(GestureType.Point);
 
         }
     }

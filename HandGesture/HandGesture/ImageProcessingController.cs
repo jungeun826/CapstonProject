@@ -7,6 +7,7 @@ using OpenCvSharp;
 using System.Drawing;
 using System.Drawing.Imaging;
 using OpenCvSharp.Extensions;
+using OpenCvSharp.Blob;
 
 
 namespace HandGesture
@@ -114,6 +115,19 @@ namespace HandGesture
         public static Bitmap ConvertToBinaryBMP(IplImage target)
         {
             return ConvertToBinaryIpl(target).ToBitmap();
+        }
+
+        public static IplImage extractSkinAsIpl(IplImage target)
+        {
+            IplImage origin = target.Clone();
+            IplImage maskImg = ConvertToBinaryIpl(origin);
+            maskImg.Not(maskImg);
+            target.AndS(0, target, maskImg);
+            return target;
+        }
+        public static Bitmap extractSkinAsBMP(IplImage target)
+        {
+            return extractSkinAsIpl(target).ToBitmap();
         }
 
     }

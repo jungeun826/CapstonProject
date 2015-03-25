@@ -36,6 +36,9 @@
     <Reference Include="OpenCvSharp">
       <HintPath>..\..\..\..\OpenCvSharp-2.4.10-x86-20150309\OpenCvSharp.dll</HintPath>
     </Reference>
+    <Reference Include="OpenCvSharp.Blob">
+      <HintPath>..\..\..\..\..\Downloads\OpenCvSharp-2.4.10-x86-20150309\OpenCvSharp.Blob.dll</HintPath>
+    </Reference>
     <Reference Include="OpenCvSharp.CPlusPlus">
       <HintPath>..\..\..\..\Visual Studio 2012\Projects\GestureRecognitionProject\GestureRecognitionProject\bin\Debug\OpenCvSharp.CPlusPlus.dll</HintPath>
     </Reference>

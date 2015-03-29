@@ -14,11 +14,11 @@ namespace HandGesture
         public bool Detect() { return true; }
         public IplImage ExtractRecognitionImageIpl() 
         {
-            return ExtractSkinAsIplBinary(WebcamController.getImg());
+            return extractSkinAsIpl(WebcamController.getImg());
         }
         public Bitmap ExtractRecognitionImageBitmap()
         {
-            return ConvertIplToBitmap(ExtractSkinAsIplBinary(WebcamController.getImg()));
+            return ConvertIplToBitmap(extractSkinAsIpl(WebcamController.getImg()));
         }
         public bool RecognitionProcessing() { return true; }
         #endregion

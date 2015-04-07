@@ -17,6 +17,11 @@ namespace HandGesture
         private static IplImage m_cvImg;
         private static CvCapture m_cvCap;
         private static updateDelegate m_updateDel;
+        public static IplImage m_img
+        {
+            get { return m_cvImg!=null?m_cvImg.Clone():null; }
+        }
+
 
         static WebcamController()
         {
@@ -27,6 +32,8 @@ namespace HandGesture
             m_cvCap.FrameHeight = 240;
 
             m_updateDel = null;
+
+            updateFrame();
         }
 
         /// <summary>

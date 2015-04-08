@@ -25,9 +25,62 @@ namespace HandGesture
         {
             IplImage retImg = new IplImage(target.Width, target.Height, BitDepth.U8, 1);
             target.CvtColor(target, ColorConversion.BgrToCrCb);
-            target.InRangeS(new CvScalar(0, 140, 40), new CvScalar(255, 170, 150), retImg);
+            target.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
 
             return retImg;
+        }
+
+        public static Bitmap extractor(IplImage target)
+        {
+            IplImage origin = target.Clone();
+
+            //컬러맵 변환
+            target.CvtColor(target, ColorConversion.BgrToCrCb);
+            //피부색 검출
+            IplImage retImg = new IplImage(target.Width, target.Height, BitDepth.U8, 1);
+            target.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
+
+            ////침식 팽창을 이용한 노이즈 제거
+            ////retImg.Erode(retImg, null, 2);
+            //retImg.Dilate(retImg, null, 3);
+
+            ////스무스 사용
+            //retImg.Smooth(retImg, SmoothType.Median);
+
+            ////이진화데이터를 마스크로 추출
+            //target = origin.Clone();
+            //IplImage maskImg = retImg;
+            //maskImg.Not(maskImg);
+            //target.AndS(0, target, maskImg);
+
+            ////temp test code
+            //IplImage temp = new IplImage(target.Size, BitDepth.U8, 1);
+            //target.CvtColor(temp, ColorConversion.BgrToGray);
+            //target = temp;
+
+            ////윤곽선 검출
+            //IplImage contours = origin.Clone();
+            //contours = testContours(contours);
+            
+            IplImage cannyImg = testCanny(origin.Clone());
+            retImg.Sub(cannyImg, retImg);
+
+            //blobs 레이블링을 통해서 손 검출
+            CvBlobs blobs = new CvBlobs();
+            IplImage lableImg = new IplImage(target.Size, CvBlobLib.DepthLabel, 1);
+
+            blobs.Label(retImg);
+            CvBlob max = blobs.GreaterBlob();
+            if (max == null)
+            {
+                return retImg.ToBitmap();
+            }
+            blobs.FilterByArea(max.Area, max.Area);
+            blobs.FilterLabels(retImg);
+
+            return retImg.ToBitmap(); //testContoursBMP(retImg); //retImg.ToBitmap();
+            //return testContoursBMP(target);
+            //return cannyImg.ToBitmap();
         }
         public static Bitmap ConvertToBinaryBMP(IplImage target)
         {
@@ -75,6 +128,14 @@ namespace HandGesture
             return test(target).ToBitmap();
         }
 
+        public static IplImage testCanny(IplImage target)
+        {
+            IplImage cloneImg = new IplImage(target.Size, BitDepth.U8, 1);
+            //Cv.Canny(target, cloneImg, 50, 255);
+            target.Canny(cloneImg, 50, 255);
+
+            return cloneImg;
+        }
         ////////////////
         static IplImage g_gray;
         static IplImage g_binary;
@@ -100,16 +161,16 @@ namespace HandGesture
             g_gray.Threshold(g_gray, g_thresh, 255, ThresholdType.Binary);
             g_gray.Copy(g_binary);
 
-            g_gray.FindContours(g_storage, out contours, CvContour.SizeOf, ContourRetrieval.CComp);
+            g_gray.FindContours(g_storage, out contours, CvContour.SizeOf, ContourRetrieval.List, ContourChain.ApproxNone);
 
             g_gray.Zero();
 
             if (contours != null)
             {
                 contours.ApproxPoly(CvContour.SizeOf, g_storage, ApproxPolyMethod.DP, 3, true);
-                g_gray.DrawContours(contours, new CvScalar(255), new CvScalar(128), 100);
-            }
+                g_gray.DrawContours(contours, new CvScalar(255), new CvScalar(255), 150);
 
+            }
 
             //g_gray.Dilate(g_gray, null, 2);
             //g_gray.Erode(g_gray, null, 2);
@@ -150,7 +211,7 @@ namespace HandGesture
                     Cv.Resize(gray, smallImg, Interpolation.Linear);
                     Cv.EqualizeHist(smallImg, smallImg);
                 }
-                using (CvHaarClassifierCascade cascade = CvHaarClassifierCascade.FromFile("C:\\haarcascade_frontalface_default.xml"))
+                using (CvHaarClassifierCascade cascade = CvHaarClassifierCascade.FromFile("C:\\aGest.xml"))
                 using (CvMemStorage storage = new CvMemStorage())
                 {
                     storage.Clear();

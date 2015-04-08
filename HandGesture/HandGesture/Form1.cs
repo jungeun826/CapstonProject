@@ -14,9 +14,13 @@ namespace HandGesture
 {
     public partial class Form1 : Form
     {
+        IRecognition iRecgnition;
+
         public Form1()
         {
             InitializeComponent();
+
+            iRecgnition = new HandGesture_Yong();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -35,11 +39,13 @@ namespace HandGesture
             
             pictureBox1.Image = WebcamController.getFrameAsBMP();
 
-            //IplImage ycrcbImg = ImageProcessingController.RGBToYCbCr(WebcamController.getImg());
-            //ResultBox.Image = ImageProcessingController.IplToBitmap(ImageProcessingController.ImageToBinary(ycrcbImg));
-
-            ResultBox.Image = DetectorManager.Instance.GetBitmapImage(GestureType.Point);
-
+            ResultBox.Image = ImageProcessBase.extractor(WebcamController.m_img); //.RGBToYCbCr(WebcamController.getImg());
+            //ResultBox.Image = ImageProcessBase.ConvertToBinaryBMP( WebcamController.m_img );
+            //ResultBox.Image = ImageProcessBase.testContoursBMP(WebcamController.m_img);
+            //ResultBox.Image = DetectorManager.Instance.GetBitmapImage(GestureType.Point);
+            //ResultBox.Image = ImageProcessBase.handDetect(WebcamController.getImg());
+            //ResultBox.Image = ImageProcessBase.extractSkinAsBMP(WebcamController.getImg());
+            //ResultBox.Image = iRecgnition.ExtractRecognitionImageBitmap();
         }
     }
 

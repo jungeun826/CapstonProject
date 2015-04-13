@@ -59,6 +59,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiController.cs" />
     <Compile Include="DetectorManager.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

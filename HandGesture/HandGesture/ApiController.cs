@@ -9,12 +9,14 @@ using System.Windows.Forms; //현재 마우스위치를 위한 네임스페이�
 
 namespace HandGesture
 {
-    class ApiController
+    static class ApiController
     {
-        private const int MOUSEEVENTF_LEFTDOWN = 0x02;
-        private const int MOUSEEVENTF_LEFTUP = 0x04;
-        private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
-        private const int MOUSEEVENTF_RIGHTUP = 0x10;
+        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        public const int MOUSEEVENTF_LEFTUP = 0x04;
+        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
+        public const int MOUSEEVENTF_RIGHTUP = 0x10;
+        public const int KEYBOARD_DOWN = 0x00;
+        public const int KEYBOARD_UP = 0x02;
         /// <summary>
         /// 마우스 이벤트를 발생 시킨다.
         /// dwData랑 dwExtraInfo는 뭔지 나도 모름요
@@ -25,7 +27,7 @@ namespace HandGesture
         /// <param name="dwData"></param>
         /// <param name="dwExtraInfo"></param>
         [DllImport("user32.dll")]
-        static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData = 0, int dwExtraInfo = 0);
+        static public extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData = 0, int dwExtraInfo = 0);
         
         /// <summary>
         /// 마우스커서 위치 변경하는녀석임
@@ -34,7 +36,7 @@ namespace HandGesture
         /// <param name="y"></param>
         /// <returns></returns>
         [DllImport("user32.dll")]
-        static extern int SetCursorPos(int x, int y);
+        static public extern int SetCursorPos(int x, int y);
 
         /// <summary>
         /// 키보드이벤트를 발생시킨다.
@@ -45,5 +47,11 @@ namespace HandGesture
         /// <param name="extraInfo">일반키보드이므로 0 쓰세얌</param>
         [DllImport("user32.dll")]
         public static extern void keybd_event(uint vk, uint scan, uint flags, uint extraInfo);
+
+        public void ddd()
+        {
+            keybd_event((uint) Keys.D, 0, 0x00, 0);
+            keybd_event((uint) Keys.D, 0, 0x02, 0);
+        }
     }
 }

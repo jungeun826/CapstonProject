@@ -48,10 +48,5 @@ namespace HandGesture
         [DllImport("user32.dll")]
         public static extern void keybd_event(uint vk, uint scan, uint flags, uint extraInfo);
 
-        public void ddd()
-        {
-            keybd_event((uint) Keys.D, 0, 0x00, 0);
-            keybd_event((uint) Keys.D, 0, 0x02, 0);
-        }
     }
 }

@@ -17,7 +17,7 @@ namespace HandGesture
 
         public HandGesture_Yong()
         {
-            m_img = WebcamController.m_img;
+            m_img = WebcamController.Instance.WebcamImage;
             m_skinBinaryImg = new IplImage(m_img.Width, m_img.Height, BitDepth.U8, 1);
         }
 
@@ -43,7 +43,7 @@ namespace HandGesture
 
         void preProcessing()
         {
-            m_img = WebcamController.m_img;
+            m_img = WebcamController.Instance.WebcamImage;
 
             //CrCb컬러맵을 통해서 피부색부분 바이너리 뭐...그렇다고
             m_img.CvtColor(m_img, ColorConversion.BgrToCrCb);

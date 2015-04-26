@@ -9,24 +9,26 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenCvSharp;
 //using OpenCvSharp.Extensions;
+using HandGesture;
 
 namespace HandGesture
 {
     public partial class Form1 : Form
     {
-        IRecognition iRecgnition;
+        HandGestureDetector detector;
 
         public Form1()
         {
             InitializeComponent();
 
-            iRecgnition = new HandGesture_Yong();
+            detector = new HandGestureDetector();
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 #if DEBUG
-            WebcamController.addDisplayFPS();
+            WebcamController.Instance.addDisplayFPS();
 #endif
             //타이머 설정
             timer1.Interval = 20;
@@ -35,12 +37,14 @@ namespace HandGesture
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            WebcamController.updateFrame();
-            
-            pictureBox1.Image = WebcamController.getFrameAsBMP();
+            WebcamController.Instance.updateFrame();
+            IplImage webcamImg = WebcamController.Instance.WebcamImage;
+            if (webcamImg == null) return;
 
-            ResultBox.Image = WebcamController.getFrameAsBMP(); //ImageProcessBase.extractor(WebcamController.m_img); //.RGBToYCbCr(WebcamController.getImg());
-            ImageProcessBase.ReturnTracking(WebcamController.m_img);
+            pictureBox1.Image = detector.ConvertIplToBitmap(detector.ConvertToBinaryIpl(webcamImg));
+            ResultBox.Image = detector.ConvertIplToBitmap(detector.extractSkinAsIpl(webcamImg));//extractor(WebcamController.Instance.WebcamImage));
+
+            //ResultBox.Image = ImageProcessBase.ReturnTracking(ImageProcessBase.extractor(WebcamController.Instance.WebcamImage), ImageProcessBase.GetFaceFeature(WebcamController.Instance.WebcamImage));
             //ResultBox.Image = ImageProcessBase.ConvertToBinaryBMP( WebcamController.m_img );
             //ResultBox.Image = ImageProcessBase.testContoursBMP(WebcamController.m_img);
             //ResultBox.Image = DetectorManager.Instance.GetBitmapImage(GestureType.Point);

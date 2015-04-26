@@ -9,23 +9,23 @@ namespace HandGesture
 {
     class OpticalFlow : ImageProcessBase
     {
-        IplImage prevImg;
-        IplImage curImg;
+        //IplImage prevImg;
+        //IplImage curImg;
 
-        private static int blockSize = 10;
-        private static int shiftSize = 10;
+        //private static int blockSize = 10;
+        //private static int shiftSize = 10;
 
-        CvSize block = new CvSize(OpticalFlow.blockSize, OpticalFlow.blockSize);
-        CvSize shift = new CvSize(OpticalFlow.shiftSize, OpticalFlow.shiftSize);
-        CvSize maxRange = new CvSize(20, 20);
+        //CvSize block = new CvSize(OpticalFlow.blockSize, OpticalFlow.blockSize);
+        //CvSize shift = new CvSize(OpticalFlow.shiftSize, OpticalFlow.shiftSize);
+        //CvSize maxRange = new CvSize(20, 20);
 
-        CvSize velSize;
+        //CvSize velSize;
 
-        public OpticalFlow()
-        {
-            velSize = new CvSize((this.prevImg.Width - block.Width) / shift.Width,
-                                  (this.prevImg.Height - block.Height) / shift.Height);  
-        }
+        //public OpticalFlow()
+        //{
+        //    velSize = new CvSize((this.prevImg.Width - block.Width) / shift.Width,
+        //                          (this.prevImg.Height - block.Height) / shift.Height);  
+        //}
 
     }
 }

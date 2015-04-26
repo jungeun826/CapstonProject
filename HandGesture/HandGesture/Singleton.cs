@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Base
 {
-    interface ISingleTon
+    public interface ISingleTon
     {
         void Init();
     }
 
-    class Singletone<T> where T : class, ISingleTon, new()
+    public class Singletone<T> where T : class, ISingleTon, new()
     {
         private static T _instance = null;
         public static T Instance

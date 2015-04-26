@@ -21,16 +21,16 @@ namespace HandGesture
 
         //yong's codes
         //yong's codes
-        public static IplImage ConvertToBinaryIpl(IplImage target)
+        public IplImage ConvertToBinaryIpl(IplImage target)
         {
             IplImage retImg = new IplImage(target.Width, target.Height, BitDepth.U8, 1);
             target.CvtColor(target, ColorConversion.BgrToCrCb);
-            target.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
+            target.InRangeS(new CvScalar(0, 133, 77), new CvScalar(255, 173, 127), retImg);
 
             return retImg;
         }
 
-        public static Bitmap extractor(IplImage target)
+        public IplImage extractor(IplImage target)
         {
             IplImage origin = target.Clone();
 
@@ -46,20 +46,6 @@ namespace HandGesture
             retImg.Erode(retImg, null, 2);
             //retImg.Erode(retImg, null, 2);
             retImg.Dilate(retImg, null, 3);
-         
-            ////스무스 사용
-            //retImg.Smooth(retImg, SmoothType.Median);
-
-            ////이진화데이터를 마스크로 추출
-            //target = origin.Clone();
-            //IplImage maskImg = retImg;
-            //maskImg.Not(maskImg);
-            //target.AndS(0, target, maskImg);
-
-            ////temp test code
-            //IplImage temp = new IplImage(target.Size, BitDepth.U8, 1);
-            //target.CvtColor(temp, ColorConversion.BgrToGray);
-            //target = temp;
 
             //윤곽선 검출
             IplImage contours = origin.Clone();
@@ -109,7 +95,7 @@ namespace HandGesture
 
             if (max == null)
             {
-                return retImg.ToBitmap();
+                return retImg;//.ToBitmap();
             }
 
             blobs.FilterByArea(max.Area * 3 /4, max.Area);
@@ -127,17 +113,17 @@ namespace HandGesture
                 //CvRect interestArea =  Cv.GetImageROI(retImg);
                 CvRect interestArea = new CvRect(x, y, width, height);
 
-                Cv.DrawRect(retImg, interestArea, CvColor.Wheat, 10);
+                Cv.DrawRect(retImg, interestArea, CvColor.Red, 10);
 
                 CvPoint center = distTF(retImg, interestArea);
 
-                Cv.DrawCircle(retImg, center, 2, CvColor.Wheat, 10);
+                Cv.DrawCircle(retImg, center, 2, CvColor.Red, 10);
             }
 
             
            // Cv.DrawCircle(retImg, center, 30, new CvScalar(0, 135, 40), 10);
         
-            return retImg.ToBitmap();//testContoursBMP(retImg); //retImg.ToBitmap();
+            return retImg;//.ToBitmap();//testContoursBMP(retImg); //retImg.ToBitmap();
             //return testContoursBMP(target);
             //return cannyImg.ToBitmap();
         }//end of extractor
@@ -164,7 +150,7 @@ namespace HandGesture
          */
 
 
-        public static unsafe CvPoint distTF(IplImage img, CvRect interestArea)
+        public unsafe CvPoint distTF(IplImage img, CvRect interestArea)
         {
             // 초기화 :
             float[] mask = new float[3];
@@ -244,9 +230,7 @@ namespace HandGesture
             return p;
         }//end of distTF
  
-
-
-        public static unsafe CvPoint distTF(IplImage img){
+        public unsafe CvPoint distTF(IplImage img){
                // 초기화 :
              float[] mask = new float[3];
              IplImage dist = null;
@@ -299,12 +283,12 @@ namespace HandGesture
 }//end of distTF
  
 
-        public static Bitmap ConvertToBinaryBMP(IplImage target)
+        public Bitmap ConvertToBinaryBMP(IplImage target)
         {
             return ConvertToBinaryIpl(target).ToBitmap();
         }
 
-        public static IplImage extractSkinAsIpl(IplImage target)
+        public IplImage extractSkinAsIpl(IplImage target)
         {
             IplImage origin = target.Clone();
             IplImage maskImg = ConvertToBinaryIpl(origin);
@@ -319,12 +303,12 @@ namespace HandGesture
             //
             return target;
         }
-        public static Bitmap extractSkinAsBMP(IplImage target)
+        public Bitmap extractSkinAsBMP(IplImage target)
         {
             return extractSkinAsIpl(target).ToBitmap();
         }
 
-        public static IplImage test(IplImage target)
+        public IplImage test(IplImage target)
         {
             CvBlobs blobs = new CvBlobs();
             IplImage lableImg = new IplImage(target.Size, CvBlobLib.DepthLabel, 1);
@@ -340,12 +324,12 @@ namespace HandGesture
             blobs.FilterLabels(retImg);
             return retImg;
         }
-        public static Bitmap testBMP(IplImage target)
+        public Bitmap testBMP(IplImage target)
         {
             return test(target).ToBitmap();
         }
 
-        public static IplImage testCanny(IplImage target)
+        public IplImage testCanny(IplImage target)
         {
             IplImage cloneImg = new IplImage(target.Size, BitDepth.U8, 1);
             //Cv.Canny(target, cloneImg, 50, 255);
@@ -354,12 +338,12 @@ namespace HandGesture
             return cloneImg;
         }
         ////////////////
-        static IplImage g_gray;
-        static IplImage g_binary;
-        static int g_thresh = 50;
-        static CvMemStorage g_storage;
+        IplImage g_gray;
+        IplImage g_binary;
+        int g_thresh = 50;
+        CvMemStorage g_storage;
 
-        public static IplImage testContours(IplImage target)
+        public IplImage testContours(IplImage target)
         {
             if (g_storage == null)
             {
@@ -399,13 +383,13 @@ namespace HandGesture
 
             return g_gray;
         }
-        public static Bitmap testContoursBMP(IplImage target)
+        public Bitmap testContoursBMP(IplImage target)
         {
             return testContours(target).ToBitmap();
         }
 
         ///////////////////////
-        public static IplImage FaceDetect(IplImage src)
+        public IplImage FaceDetect(IplImage src)
         {
             IplImage FindFace;
             // CvHaarClassifierCascade, cvHaarDetectObjects
@@ -457,25 +441,26 @@ namespace HandGesture
             }
         }
 
-        public static Bitmap handDetect(IplImage target)
+        public Bitmap handDetect(IplImage target)
         {
             return FaceDetect(target).ToBitmap();
         }
 
-        public static Bitmap ReturnTracking(IplImage target, CvPoint2D32f[] frame1Features)
+        public Bitmap ReturnTracking(IplImage target, CvPoint2D32f[] frame1Features)
         {
             IplImage frame = null, frame1 = null, frame1_1c = null, frame2_1c = null, eigImg = null, tempImg = null, pyramid1 = null, pyramid2 = null;
-            CvSize frameSize = WebcamController.FrameSize;
+            CvSize frameSize = WebcamController.Instance.FrameSize;
             frame = target;
             
             AllocateOnDeman(ref frame1_1c, frameSize, BitDepth.U8, 1);
+
             Cv.ConvertImage(frame, frame1_1c, ConvertImageFlag.Flip);
 
             AllocateOnDeman(ref frame1, frameSize, BitDepth.U8, 3);
             Cv.ConvertImage(frame, frame1, ConvertImageFlag.Flip);
 
 
-            frame = WebcamController.getImg();
+            frame = WebcamController.Instance.getImg();
             if(frame == null)
             {
                 Console.WriteLine("Error!! cam Img is Null");
@@ -489,7 +474,6 @@ namespace HandGesture
             AllocateOnDeman(ref tempImg, frameSize, BitDepth.F32, 1);
             
             int numOfFeatures = 400;
-            CvPoint2D32f[] frame1Features = new CvPoint2D32f[numOfFeatures];
             char[] opticalFlowFoundFeature = new char[numOfFeatures];
             float[] opticalFlowFeatureError = new float[numOfFeatures];
           
@@ -541,14 +525,72 @@ namespace HandGesture
             return frame1.ToBitmap();
         }
 
-        static readonly double PI = 3.14159265358979323846;
+        public CvPoint2D32f[] GetFaceFeature(IplImage src)
+        {
+            IplImage FindFace;
+            // CvHaarClassifierCascade, cvHaarDetectObjects
+            // 얼굴을 검출하기 위해서 Haar 분류기의 캐스케이드를 이용한다
+            CvColor[] colors = new CvColor[]{
+                new CvColor(0,0,255),
+                new CvColor(0,128,255),
+                new CvColor(0,255,255),
+                new CvColor(0,255,0),
+                new CvColor(255,128,0),
+                new CvColor(255,255,0),
+                new CvColor(255,0,0),
+                new CvColor(255,0,255),
+            };
+            const double scale = 1;
+            const double scaleFactor = 1.139;
+            const int minNeighbors = 2;
+            IplImage img = src.Clone();
+            CvPoint2D32f[] features;
+            IplImage smallImg = new IplImage(new CvSize(Cv.Round(img.Width / scale), Cv.Round(img.Height / scale)), BitDepth.U8,1);
+            {
+                // 얼굴 검출용의 화상의 생성
+                using (IplImage gray = new IplImage(img.Size, BitDepth.U8, 1))
+                {
+                    Cv.CvtColor(img, gray, ColorConversion.BgrToGray);
+                    Cv.Resize(gray, smallImg, Interpolation.Linear);
+                    Cv.EqualizeHist(smallImg, smallImg);
+                }
+                using (CvHaarClassifierCascade cascade = CvHaarClassifierCascade.FromFile("C:\\aGest.xml"))
+                using (CvMemStorage storage = new CvMemStorage())
+                {
+                    storage.Clear();
+                    // 얼굴의 검출
+                    CvSeq<CvAvgComp> faces = Cv.HaarDetectObjects(smallImg, cascade, storage, scaleFactor, minNeighbors, 0, new CvSize(24, 24));
+                    features = new CvPoint2D32f[faces.Total];
+                    // 검출한 얼굴에 원을 그린다
+                    for (int i = 0; i < faces.Total; i++)
+                    {
+                        CvRect r = faces[i].Value.Rect;
+                        CvPoint center = new CvPoint
+                        {
+                            X = Cv.Round((r.X + r.Width * 0.5) * scale),
+                            Y = Cv.Round((r.Y + r.Height * 0.5) * scale)
+                        };
+                        features[i].X = faces[i].Value.Rect.X;
+                        features[i].Y = faces[i].Value.Rect.Y;
 
-        static double square(int a)
+                        int radius = Cv.Round((r.Width + r.Height) * 0.25 * scale);
+                        img.Circle(center, radius, colors[i % 8], 3, LineType.AntiAlias, 0);
+                    }
+                }
+
+                FindFace = img.Clone();
+                return features;
+            }
+        }
+
+        readonly double PI = 3.14159265358979323846;
+
+        double square(int a)
         {
             return a * a;
         }
 
-        static void AllocateOnDeman(ref IplImage img, CvSize size, BitDepth depth, int channels)
+        void AllocateOnDeman(ref IplImage img, CvSize size, BitDepth depth, int channels)
         {
             if(img != null) return;
             img = Cv.CreateImage(size, depth, channels);

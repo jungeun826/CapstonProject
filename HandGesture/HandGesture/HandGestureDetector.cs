@@ -8,17 +8,18 @@ using OpenCvSharp;
 
 namespace HandGesture
 {
+
     class HandGestureDetector : ImageProcessBase, IRecognition
     {
         #region implement IRecognition
         public bool Detect() { return true; }
-        public IplImage ExtractRecognitionImageIpl() 
+        public IplImage ExtractRecognitionImageIpl()
         {
-            return extractSkinAsIpl(WebcamController.getImg());
+            return extractSkinAsIpl(WebcamController.Instance.getImg());
         }
         public Bitmap ExtractRecognitionImageBitmap()
         {
-            return ConvertIplToBitmap(extractSkinAsIpl(WebcamController.getImg()));
+            return ConvertIplToBitmap(extractSkinAsIpl(WebcamController.Instance.getImg()));
         }
         public bool RecognitionProcessing() { return true; }
         #endregion

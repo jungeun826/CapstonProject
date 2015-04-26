@@ -17,6 +17,15 @@ namespace HandGesture
         private static IplImage m_cvImg;
         private static CvCapture m_cvCap;
         private static updateDelegate m_updateDel;
+        private static CvSize frameSize;
+        public static CvSize FrameSize
+        {
+            get
+            {
+                return frameSize;
+            }
+        }
+
         public static IplImage m_img
         {
             get { return m_cvImg!=null?m_cvImg.Clone():null; }
@@ -30,6 +39,9 @@ namespace HandGesture
             m_cvCap = CvCapture.FromCamera(0);
             m_cvCap.FrameWidth = 320;
             m_cvCap.FrameHeight = 240;
+            
+            frameSize.Height = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameHeight);
+            frameSize.Width = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameWidth);
 
             m_updateDel = null;
 

@@ -39,7 +39,8 @@ namespace HandGesture
             
             pictureBox1.Image = WebcamController.getFrameAsBMP();
 
-            ResultBox.Image = ImageProcessBase.extractor(WebcamController.m_img); //.RGBToYCbCr(WebcamController.getImg());
+            ResultBox.Image = WebcamController.getFrameAsBMP(); //ImageProcessBase.extractor(WebcamController.m_img); //.RGBToYCbCr(WebcamController.getImg());
+            ImageProcessBase.ReturnTracking(WebcamController.m_img);
             //ResultBox.Image = ImageProcessBase.ConvertToBinaryBMP( WebcamController.m_img );
             //ResultBox.Image = ImageProcessBase.testContoursBMP(WebcamController.m_img);
             //ResultBox.Image = DetectorManager.Instance.GetBitmapImage(GestureType.Point);

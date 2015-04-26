@@ -461,5 +461,98 @@ namespace HandGesture
         {
             return FaceDetect(target).ToBitmap();
         }
+
+        public static Bitmap ReturnTracking(IplImage target, CvPoint2D32f[] frame1Features)
+        {
+            IplImage frame = null, frame1 = null, frame1_1c = null, frame2_1c = null, eigImg = null, tempImg = null, pyramid1 = null, pyramid2 = null;
+            CvSize frameSize = WebcamController.FrameSize;
+            frame = target;
+            
+            AllocateOnDeman(ref frame1_1c, frameSize, BitDepth.U8, 1);
+            Cv.ConvertImage(frame, frame1_1c, ConvertImageFlag.Flip);
+
+            AllocateOnDeman(ref frame1, frameSize, BitDepth.U8, 3);
+            Cv.ConvertImage(frame, frame1, ConvertImageFlag.Flip);
+
+
+            frame = WebcamController.getImg();
+            if(frame == null)
+            {
+                Console.WriteLine("Error!! cam Img is Null");
+                return null;
+            }
+
+            AllocateOnDeman(ref frame2_1c, frameSize, BitDepth.U8, 1);
+            Cv.ConvertImage(frame, frame2_1c, ConvertImageFlag.Flip);
+
+            AllocateOnDeman(ref eigImg, frameSize, BitDepth.F32, 1);
+            AllocateOnDeman(ref tempImg, frameSize, BitDepth.F32, 1);
+            
+            int numOfFeatures = 400;
+            CvPoint2D32f[] frame1Features = new CvPoint2D32f[numOfFeatures];
+            char[] opticalFlowFoundFeature = new char[numOfFeatures];
+            float[] opticalFlowFeatureError = new float[numOfFeatures];
+          
+
+            Cv.GoodFeaturesToTrack(frame1_1c, eigImg, tempImg, out frame1Features, ref numOfFeatures, 0.01f, 0.01f, null);
+            CvSize opticalFlowWindow = new CvSize(3, 3);
+            CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);
+
+            AllocateOnDeman(ref pyramid1, frameSize, BitDepth.U8, 1);
+            AllocateOnDeman(ref pyramid2, frameSize, BitDepth.U8, 1);
+
+            CvPoint2D32f[] frame2Features = new CvPoint2D32f[400];
+            
+
+            sbyte[] status = new sbyte[numOfFeatures];
+            Cv.CalcOpticalFlowPyrLK(frame1_1c, frame2_1c, pyramid1, pyramid2, frame1Features, out frame2Features, opticalFlowWindow, 5, out status, opticalFlowTerminationCriteria, LKFlowFlag.InitialGuesses);
+
+            int lineThickness = 1;
+            CvScalar lineColor = Cv.RGB(255, 0, 0);
+            CvPoint p, q;
+
+            double angle;
+            double pypotenuse;
+            for (int i = 0; i < numOfFeatures; i++)
+            {
+                if (opticalFlowFoundFeature[i] == 0) continue;
+                p.X = (int)frame1Features[i].X;
+                p.Y = (int)frame1Features[i].Y;
+                q.X = (int)frame2Features[i].X;
+                q.Y = (int)frame2Features[i].Y;
+
+                angle = Math.Atan2((double)p.Y - q.Y, (double)p.X - q.X);
+                pypotenuse = Math.Sqrt(square(p.Y - q.Y) + square(p.X - q.X));
+
+                q.X = (int)(p.X - 3 * pypotenuse * Math.Cos(angle));
+                q.Y = (int)(p.Y - 3 * pypotenuse * Math.Sin(angle));
+                Cv.Line(frame1, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+
+                p.X = (int)(q.X + 9 * Math.Cos(angle + PI / 4));
+                p.Y = (int)(q.Y + 9 * Math.Cos(angle + PI / 4));
+                Cv.Line(frame1, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+
+                p.X = (int)(q.X + 9 * Math.Cos(angle - PI / 4));
+                p.Y = (int)(q.Y + 9 * Math.Cos(angle - PI / 4));
+                Cv.Line(frame1, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+            }
+            //Cv.ShowImage("OpticalFlow", frame1);
+
+            return frame1.ToBitmap();
+        }
+
+        static readonly double PI = 3.14159265358979323846;
+
+        static double square(int a)
+        {
+            return a * a;
+        }
+
+        static void AllocateOnDeman(ref IplImage img, CvSize size, BitDepth depth, int channels)
+        {
+            if(img != null) return;
+            img = Cv.CreateImage(size, depth, channels);
+            if(img == null) return;
+        }
     }
 }

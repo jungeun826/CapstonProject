@@ -571,6 +571,12 @@ namespace HandGesture
         protected CvPoint2D32f[] GetHandFeature(IplImage src)
         {
             //http://cafe.naver.com/opencvsharp 보고 수정하기
+            //http://lueseypid.tistory.com/98
+            //http://codens.info/594
+            //http://stackoverflow.com/questions/10161351/opencv-how-to-plot-velocity-vectors-as-arrows-in-using-single-static-image
+            //http://paeton.tistory.com/18
+            //http://nikq.nothing.sh/pkn/ms.cgi?ShowDiary_file=/program/1140018030&blogid=&t=sketch
+            //http://javava79.tistory.com/124
 
             IplImage FindFace;
             // CvHaarClassifierCascade, cvHaarDetectObjects

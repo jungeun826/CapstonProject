@@ -31,17 +31,19 @@ namespace HandGesture
             get { return m_cvImg!=null?m_cvImg.Clone():null; }
         }
 
+        private int totalFrame = 0;
+
         public void Init()
         {
             //카메라 지정
             //0번카메라를 사용한다.
-            m_cvCap = Cv.CreateFileCapture("hand.avi");//CvCapture.FromCamera(0);
+            m_cvCap = Cv.CreateFileCapture("hand2.avi");//CvCapture.FromCamera(0);
             //m_cvCap.FrameWidth = 320;
             //m_cvCap.FrameHeight = 240;
 
             frameSize.Height = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameHeight);
             frameSize.Width = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameWidth);
-
+            totalFrame = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameCount);
             m_updateDel = null;
 
             updateFrame();
@@ -76,6 +78,9 @@ namespace HandGesture
         public void updateFrame()
         {
             m_cvImg = m_cvCap.QueryFrame();
+            int curFrame = m_cvCap.PosFrames;
+            if(curFrame == totalFrame)
+                m_cvCap = Cv.CreateFileCapture("hand2.avi");
             if (m_updateDel != null) m_updateDel();
         }
 

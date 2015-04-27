@@ -18,3 +18,12 @@ D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\Hand
 D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.exe
 D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.pdb
 D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.pdb
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.exe.config
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.exe
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.exe
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\bin\Debug\HandGesture.pdb
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.csprojResolveAssemblyReference.cache
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.Form1.resources
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.Properties.Resources.resources
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.csproj.GenerateResource.Cache
+D:\프로젝트\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.pdb

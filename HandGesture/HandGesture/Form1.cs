@@ -41,9 +41,18 @@ namespace HandGesture
             IplImage webcamImg = WebcamController.Instance.WebcamImage;
             if (webcamImg == null) return;
 
-            pictureBox1.Image = detector.ConvertIplToBitmap(detector.ConvertToBinaryIpl(webcamImg));
-            ResultBox.Image = detector.ConvertIplToBitmap(detector.extractSkinAsIpl(webcamImg));//extractor(WebcamController.Instance.WebcamImage));
+            pictureBox2.Image = detector.ConvertIplToBitmap(webcamImg);
+            pictureBox1.Image = detector.ConvertIplToBitmap(detector.extractSkinAsIpl(webcamImg));
 
+            ResultBox.Image = detector.ConvertIplToBitmap(detector.extractor(webcamImg));
+            IplImage frame1, frame2;
+            pictureBox3.Image = detector.ReturnTracking(webcamImg, out frame1, out frame2);
+
+            detector.CheckFeature(ref frame1, Cv.RGB(0, 255, 0));
+            detector.CheckFeature(ref frame2, Cv.RGB(0, 0, 255));
+
+            pictureBox4.Image = detector.ConvertIplToBitmap(frame1);
+            pictureBox5.Image = detector.ConvertIplToBitmap(frame2);
             //ResultBox.Image = ImageProcessBase.ReturnTracking(ImageProcessBase.extractor(WebcamController.Instance.WebcamImage), ImageProcessBase.GetFaceFeature(WebcamController.Instance.WebcamImage));
             //ResultBox.Image = ImageProcessBase.ConvertToBinaryBMP( WebcamController.m_img );
             //ResultBox.Image = ImageProcessBase.testContoursBMP(WebcamController.m_img);

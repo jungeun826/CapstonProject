@@ -21,11 +21,12 @@ namespace HandGesture
 
         //yong's codes
         //yong's codes
-        public IplImage ConvertToBinaryIpl(IplImage target)
+        protected IplImage ConvertToBinaryIpl(IplImage target)
         {
+            IplImage origin = target.Clone();
             IplImage retImg = new IplImage(target.Width, target.Height, BitDepth.U8, 1);
             target.CvtColor(target, ColorConversion.BgrToCrCb);
-            target.InRangeS(new CvScalar(0, 133, 77), new CvScalar(255, 173, 127), retImg);
+            target.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
 
             return retImg;
         }
@@ -38,9 +39,8 @@ namespace HandGesture
             target.CvtColor(target, ColorConversion.BgrToCrCb);
             //피부색 검출
             IplImage retImg = new IplImage(target.Width, target.Height, BitDepth.U8, 1);
-            
-            //피부색 범위를 새로지정해야한다.
             target.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
+
 
             //////침식 팽창을 이용한 노이즈 제거
             retImg.Erode(retImg, null, 2);
@@ -150,7 +150,7 @@ namespace HandGesture
          */
 
 
-        public unsafe CvPoint distTF(IplImage img, CvRect interestArea)
+        private unsafe CvPoint distTF(IplImage img, CvRect interestArea)
         {
             // 초기화 :
             float[] mask = new float[3];
@@ -229,8 +229,9 @@ namespace HandGesture
             //}
             return p;
         }//end of distTF
- 
-        public unsafe CvPoint distTF(IplImage img){
+
+        private unsafe CvPoint distTF(IplImage img)
+        {
                // 초기화 :
              float[] mask = new float[3];
              IplImage dist = null;
@@ -283,7 +284,7 @@ namespace HandGesture
 }//end of distTF
  
 
-        public Bitmap ConvertToBinaryBMP(IplImage target)
+        protected Bitmap ConvertToBinaryBMP(IplImage target)
         {
             return ConvertToBinaryIpl(target).ToBitmap();
         }
@@ -291,17 +292,20 @@ namespace HandGesture
         public IplImage extractSkinAsIpl(IplImage target)
         {
             IplImage origin = target.Clone();
-            IplImage maskImg = ConvertToBinaryIpl(origin);
+            IplImage processImg = origin.Clone();
+            IplImage maskImg = ConvertToBinaryIpl(processImg);
             maskImg.Not(maskImg);
-            target.AndS(0, target, maskImg);
-            target.Smooth(target, SmoothType.Median);
+            processImg.AndS(0, processImg, maskImg);
+            processImg.CvtColor(processImg, ColorConversion.CrCbToBgr);
+            //processImg.AndS(0, processImg, maskImg);
+            processImg.Smooth(processImg, SmoothType.Median);
 
             //temp test code
-            IplImage temp = new IplImage(target.Size, BitDepth.U8, 1);
-            target.CvtColor(temp, ColorConversion.BgrToGray);
-            target = temp;
+            //IplImage temp = new IplImage(origin.Size, BitDepth.U8, 1);
+            //origin.CvtColor(temp, ColorConversion.BgrToGray);
+            //target = temp;
             //
-            return target;
+            return processImg;
         }
         public Bitmap extractSkinAsBMP(IplImage target)
         {
@@ -329,7 +333,7 @@ namespace HandGesture
             return test(target).ToBitmap();
         }
 
-        public IplImage testCanny(IplImage target)
+        protected IplImage testCanny(IplImage target)
         {
             IplImage cloneImg = new IplImage(target.Size, BitDepth.U8, 1);
             //Cv.Canny(target, cloneImg, 50, 255);
@@ -446,19 +450,17 @@ namespace HandGesture
             return FaceDetect(target).ToBitmap();
         }
 
-        public Bitmap ReturnTracking(IplImage target, CvPoint2D32f[] frame1Features)
+        public Bitmap ReturnTracking(IplImage target, out IplImage frame1_1c, out IplImage frame2_1c)
         {
-            IplImage frame = null, frame1 = null, frame1_1c = null, frame2_1c = null, eigImg = null, tempImg = null, pyramid1 = null, pyramid2 = null;
+            frame1_1c = null; frame2_1c = null;
+            IplImage frame = null, eigImg = null, tempImg = null, pyramid1 = null, pyramid2 = null;
             CvSize frameSize = WebcamController.Instance.FrameSize;
             frame = target;
-            
+            IplImage retImg = frame.Clone();
+
+            //초기화 , 두 개의 영상을 불러온다. / grayScale
             AllocateOnDeman(ref frame1_1c, frameSize, BitDepth.U8, 1);
-
             Cv.ConvertImage(frame, frame1_1c, ConvertImageFlag.Flip);
-
-            AllocateOnDeman(ref frame1, frameSize, BitDepth.U8, 3);
-            Cv.ConvertImage(frame, frame1, ConvertImageFlag.Flip);
-
 
             frame = WebcamController.Instance.getImg();
             if(frame == null)
@@ -470,26 +472,33 @@ namespace HandGesture
             AllocateOnDeman(ref frame2_1c, frameSize, BitDepth.U8, 1);
             Cv.ConvertImage(frame, frame2_1c, ConvertImageFlag.Flip);
 
+            //추적할 특징을 검출하기 시작함.
             AllocateOnDeman(ref eigImg, frameSize, BitDepth.F32, 1);
             AllocateOnDeman(ref tempImg, frameSize, BitDepth.F32, 1);
             
-            int numOfFeatures = 400;
-            char[] opticalFlowFoundFeature = new char[numOfFeatures];
-            float[] opticalFlowFeatureError = new float[numOfFeatures];
-          
+            int corner_cnt = 400;
 
-            Cv.GoodFeaturesToTrack(frame1_1c, eigImg, tempImg, out frame1Features, ref numOfFeatures, 0.01f, 0.01f, null);
+            //이미지에서 코너를 추출함
+            CvPoint2D32f[] frame1Features = new CvPoint2D32f[corner_cnt];
+            Cv.GoodFeaturesToTrack(frame1_1c, eigImg, tempImg, out frame1Features, ref corner_cnt, 0.01f, 0.01f, null);
+
             CvSize opticalFlowWindow = new CvSize(3, 3);
             CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);
-
+            
+            //서브 픽셀을 검출하여 정확한 서브 픽셀 위치를 산출함.
+            Cv.FindCornerSubPix(frame1_1c, frame1Features, corner_cnt, opticalFlowWindow, new CvSize(-1, -1), opticalFlowTerminationCriteria);
+            
+            //루카스 카나데 알고리즘
+            char[] opticalFlowFoundFeature = new char[corner_cnt];
+            float[] opticalFlowFeatureError = new float[corner_cnt];
+          
             AllocateOnDeman(ref pyramid1, frameSize, BitDepth.U8, 1);
             AllocateOnDeman(ref pyramid2, frameSize, BitDepth.U8, 1);
 
-            CvPoint2D32f[] frame2Features = new CvPoint2D32f[400];
-            
+            CvPoint2D32f[] frame2Features = new CvPoint2D32f[corner_cnt];
 
-            sbyte[] status = new sbyte[numOfFeatures];
-            Cv.CalcOpticalFlowPyrLK(frame1_1c, frame2_1c, pyramid1, pyramid2, frame1Features, out frame2Features, opticalFlowWindow, 5, out status, opticalFlowTerminationCriteria, LKFlowFlag.InitialGuesses);
+            sbyte[] status = new sbyte[corner_cnt];
+            Cv.CalcOpticalFlowPyrLK(frame1_1c, frame2_1c, pyramid1, pyramid2, frame1Features, out frame2Features, opticalFlowWindow, 5, out status , out opticalFlowFeatureError, opticalFlowTerminationCriteria, LKFlowFlag.InitialGuesses);
 
             int lineThickness = 1;
             CvScalar lineColor = Cv.RGB(255, 0, 0);
@@ -497,36 +506,72 @@ namespace HandGesture
 
             double angle;
             double pypotenuse;
-            for (int i = 0; i < numOfFeatures; i++)
+            for (int i = 0; i < corner_cnt; i++)
             {
-                if (opticalFlowFoundFeature[i] == 0) continue;
-                p.X = (int)frame1Features[i].X;
-                p.Y = (int)frame1Features[i].Y;
-                q.X = (int)frame2Features[i].X;
-                q.Y = (int)frame2Features[i].Y;
+                //feature_found[i]값이 0이 리턴이 되면 대응점을 발견하지 못함
+                //feature_errors[i] 현재 프레임과 이전프레임 사이의 거리가 550이 넘으면 예외로 처리
 
+                if (opticalFlowFoundFeature[i] == 0) continue;
+                if (opticalFlowFoundFeature[i] > 550) continue;
+
+                p = new CvPoint(Cv.Round(frame1Features[i].X), Cv.Round(frame1Features[i].Y));
+                q = new CvPoint(Cv.Round(frame2Features[i].X), Cv.Round(frame2Features[i].Y));
+
+                Cv.Line(retImg, p, q, lineColor);
                 angle = Math.Atan2((double)p.Y - q.Y, (double)p.X - q.X);
                 pypotenuse = Math.Sqrt(square(p.Y - q.Y) + square(p.X - q.X));
 
                 q.X = (int)(p.X - 3 * pypotenuse * Math.Cos(angle));
                 q.Y = (int)(p.Y - 3 * pypotenuse * Math.Sin(angle));
-                Cv.Line(frame1, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
 
                 p.X = (int)(q.X + 9 * Math.Cos(angle + PI / 4));
                 p.Y = (int)(q.Y + 9 * Math.Cos(angle + PI / 4));
-                Cv.Line(frame1, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
 
                 p.X = (int)(q.X + 9 * Math.Cos(angle - PI / 4));
                 p.Y = (int)(q.Y + 9 * Math.Cos(angle - PI / 4));
-                Cv.Line(frame1, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
             }
             //Cv.ShowImage("OpticalFlow", frame1);
 
-            return frame1.ToBitmap();
+            return retImg.ToBitmap();
         }
 
-        public CvPoint2D32f[] GetFaceFeature(IplImage src)
+        public void CheckFeature(ref IplImage target, CvScalar lineColor)
         {
+            CvSize frameSize = WebcamController.Instance.FrameSize;
+            IplImage eigImg = null, tempImg = null;
+
+            //추적할 특징을 검출하기 시작함.
+            AllocateOnDeman(ref eigImg, frameSize, BitDepth.F32, 1);
+            AllocateOnDeman(ref tempImg, frameSize, BitDepth.F32, 1);
+
+            int corner_cnt = 400;
+
+            //이미지에서 코너를 추출함
+            CvPoint2D32f[] frame1Features = GetHandFeature(target);
+            //Cv.GoodFeaturesToTrack(target, eigImg, tempImg, out frame1Features, ref corner_cnt, 0.01f, 0.01f, null);
+
+            CvSize opticalFlowWindow = new CvSize(3, 3);
+            CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);
+
+            //서브 픽셀을 검출하여 정확한 서브 픽셀 위치를 산출함.
+            Cv.FindCornerSubPix(target, frame1Features, corner_cnt, opticalFlowWindow, new CvSize(-1, -1), opticalFlowTerminationCriteria);
+
+            for (int i = 0; i < corner_cnt; i++)
+            {
+                //feature_found[i]값이 0이 리턴이 되면 대응점을 발견하지 못함
+                //feature_errors[i] 현재 프레임과 이전프레임 사이의 거리가 550이 넘으면 예외로 처리
+
+                Cv.Line(target, frame1Features[i], frame1Features[i], lineColor, 5);
+            }
+        }
+
+        protected CvPoint2D32f[] GetHandFeature(IplImage src)
+        {
+            //http://cafe.naver.com/opencvsharp 보고 수정하기
+
             IplImage FindFace;
             // CvHaarClassifierCascade, cvHaarDetectObjects
             // 얼굴을 검출하기 위해서 Haar 분류기의 캐스케이드를 이용한다
@@ -550,7 +595,7 @@ namespace HandGesture
                 // 얼굴 검출용의 화상의 생성
                 using (IplImage gray = new IplImage(img.Size, BitDepth.U8, 1))
                 {
-                    Cv.CvtColor(img, gray, ColorConversion.BgrToGray);
+                    //Cv.CvtColor(img, gray, ColorConversion.BgrToGray);
                     Cv.Resize(gray, smallImg, Interpolation.Linear);
                     Cv.EqualizeHist(smallImg, smallImg);
                 }
@@ -560,7 +605,7 @@ namespace HandGesture
                     storage.Clear();
                     // 얼굴의 검출
                     CvSeq<CvAvgComp> faces = Cv.HaarDetectObjects(smallImg, cascade, storage, scaleFactor, minNeighbors, 0, new CvSize(24, 24));
-                    features = new CvPoint2D32f[faces.Total];
+                    features = new CvPoint2D32f[400];
                     // 검출한 얼굴에 원을 그린다
                     for (int i = 0; i < faces.Total; i++)
                     {
@@ -590,7 +635,7 @@ namespace HandGesture
             return a * a;
         }
 
-        void AllocateOnDeman(ref IplImage img, CvSize size, BitDepth depth, int channels)
+        private void AllocateOnDeman(ref IplImage img, CvSize size, BitDepth depth, int channels)
         {
             if(img != null) return;
             img = Cv.CreateImage(size, depth, channels);

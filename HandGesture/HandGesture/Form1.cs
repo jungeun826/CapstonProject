@@ -49,15 +49,16 @@ namespace HandGesture
             pictureBox2.Image = detector.ConvertIplToBitmap(webcamImg);
             pictureBox1.Image = detector.ConvertIplToBitmap(detector.extractSkinAsIpl(webcamImg));
 
-            ResultBox.Image = detector.ConvertIplToBitmap(detector.extractor(webcamImg));
+            IplImage handImg = detector.extractor(webcamImg);
+            ResultBox.Image = detector.ConvertIplToBitmap(handImg);
 
-            pictureBox3.Image = opticalFlow.ConvertIplToBitmap(opticalFlow.OpticalFlow_BM(webcamImg));
+            pictureBox3.Image = opticalFlow.ConvertIplToBitmap(opticalFlow.OpticalFlow_BM(handImg));
 
-            //detector.CheckFeature(ref frame1, Cv.RGB(0, 255, 0));
-            //detector.CheckFeature(ref frame2, Cv.RGB(0, 0, 255));
+            IplImage prevImg = opticalFlow.CheckFeature(opticalFlow.PrevImg, Cv.RGB(0, 255, 0));
+            IplImage curImg = opticalFlow.CheckFeature(opticalFlow.CurImg, Cv.RGB(0, 0, 255));
 
-            //pictureBox4.Image = detector.ConvertIplToBitmap(frame1);
-            //pictureBox5.Image = detector.ConvertIplToBitmap(frame2);
+            pictureBox4.Image = detector.ConvertIplToBitmap(prevImg);
+            pictureBox5.Image = detector.ConvertIplToBitmap(curImg);
             //ResultBox.Image = ImageProcessBase.ReturnTracking(ImageProcessBase.extractor(WebcamController.Instance.WebcamImage), ImageProcessBase.GetFaceFeature(WebcamController.Instance.WebcamImage));
             //ResultBox.Image = ImageProcessBase.ConvertToBinaryBMP( WebcamController.m_img );
             //ResultBox.Image = ImageProcessBase.testContoursBMP(WebcamController.m_img);

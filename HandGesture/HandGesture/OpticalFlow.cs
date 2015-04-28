@@ -9,14 +9,18 @@ namespace HandGesture
 {
     class OpticalFlow : ImageProcessBase
     {
-        IplImage prevImg;
-        IplImage curImg;
+        private IplImage prevImg;
+        public IplImage PrevImg { get { return prevImg; } }
+        private IplImage curImg;
+        public IplImage CurImg { get { return prevImg; } }
 
-        private static int blockSize = 10;
-        private static int shiftSize = 10;
+        private readonly int blockSize = 10;
+        private readonly int shiftSize = 10;
 
-        CvSize block = new CvSize(OpticalFlow.blockSize, OpticalFlow.blockSize);
-        CvSize shift = new CvSize(OpticalFlow.shiftSize, OpticalFlow.shiftSize);
+        private CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);
+
+        CvSize block;
+        CvSize shift;
         CvSize maxRange = new CvSize(20, 20);
 
         CvSize velSize;
@@ -27,24 +31,38 @@ namespace HandGesture
             prevImg = null;
             curImg = null;
 
+            block = new CvSize(blockSize, blockSize);
+            shift = new CvSize(shiftSize, shiftSize);
+
             velSize = new CvSize((frameSize.Width - block.Width) / shift.Width,
                                   (frameSize.Height - block.Height) / shift.Height);
+
         }
 
-        
-        public IplImage OpticalFlow_BM(IplImage frame)
+        private bool ChangeFrame(IplImage frame)
         {
-            if(prevImg == null)
+            if (prevImg == null)
             {
                 prevImg = new IplImage(WebcamController.Instance.FrameSize, BitDepth.U8, 1);
-                frame.CvtColor(prevImg, ColorConversion.BgrToGray);
+                //frame.CvtColor(prevImg, ColorConversion.BgrToGray);
                 curImg = new IplImage(WebcamController.Instance.FrameSize, BitDepth.U8, 1);
-                frame.CvtColor(curImg, ColorConversion.BgrToGray);
-                return null;
+                //frame.CvtColor(curImg, ColorConversion.BgrToGray);
+                prevImg = frame;
+                curImg = frame;
+                return false;
             }
 
             prevImg = curImg;
-            frame.CvtColor(curImg, ColorConversion.BgrToGray);
+            curImg = frame;
+            return true;
+        }
+        
+        public IplImage OpticalFlow_BM(IplImage frame)
+        {
+            if (!ChangeFrame(frame))
+            {
+                return null;
+            }
             
             // cvCalcOpticalFlowBM
             // 블록 매칭에 의한 옵티컬 플로우의 계산
@@ -58,15 +76,17 @@ namespace HandGesture
                 // (1) 속도벡터를 보관하는 구조체의 확보
                 int rows = (int)Math.Ceiling((double)prevImg.Height / blockSize);
                 int cols = (int)Math.Ceiling((double)prevImg.Width / blockSize);
-                using (CvMat velx = Cv.CreateMat(rows, cols, MatrixType.F32C1))
-                using (CvMat vely = Cv.CreateMat(rows, cols, MatrixType.F32C1))
+                CvMat velx = Cv.CreateMat(rows, cols, MatrixType.F32C1);
+                CvMat vely = Cv.CreateMat(rows, cols, MatrixType.F32C1);
                 {
                     //try
                     //{
                         Cv.SetZero(velx);
                         Cv.SetZero(vely);
                         // (2) 옵티컬 플로우의 계산 
-                        Cv.CalcOpticalFlowBM(prevImg, curImg, block, shift, maxRange, false, velx, vely);
+                        
+
+                        
                         // (3) 계산된 플로우를 그리기
                         for (int j = 0; j < vely.Height; j++) //첨부된 소스에는 이부분이 잘못되어 있습니다
                         {
@@ -96,17 +116,11 @@ namespace HandGesture
 
         public IplImage OpticalFlow_LK(IplImage frame)
         {
-            if (prevImg == null)
+            if (!ChangeFrame(frame))
             {
-                prevImg = new IplImage(WebcamController.Instance.FrameSize, BitDepth.U8, 1);
-                frame.CvtColor(prevImg, ColorConversion.BgrToGray);
-                curImg = new IplImage(WebcamController.Instance.FrameSize, BitDepth.U8, 1);
-                frame.CvtColor(curImg, ColorConversion.BgrToGray);
                 return null;
             }
-
-            prevImg = curImg;
-            frame.CvtColor(curImg, ColorConversion.BgrToGray);
+            //frame.CvtColor(curImg, ColorConversion.BgrToGray);
 
             IplImage frameClone = null, eigImg = null, tempImg = null, pyramid1 = null, pyramid2 = null;
             CvSize frameSize = WebcamController.Instance.FrameSize;
@@ -192,6 +206,39 @@ namespace HandGesture
             //Cv.ShowImage("OpticalFlow", frame1);
 
             return retImg;
+        }
+
+        public IplImage CheckFeature(IplImage target, CvScalar lineColor)
+        {
+            CvSize frameSize = WebcamController.Instance.FrameSize;
+            IplImage eigImg = null, tempImg = null;
+
+            //추적할 특징을 검출하기 시작함.
+            AllocateOnDeman(ref eigImg, frameSize, BitDepth.F32, 1);
+            AllocateOnDeman(ref tempImg, frameSize, BitDepth.F32, 1);
+
+            int corner_cnt = 400;
+
+            //이미지에서 코너를 추출함
+            CvPoint2D32f[] frame1Features = new CvPoint2D32f[400];//GetHandFeature(target);
+            Cv.GoodFeaturesToTrack(target, eigImg, tempImg, out frame1Features, ref corner_cnt, 0.01f, 0.01f, null);
+
+            CvSize opticalFlowWindow = new CvSize(3, 3);
+            CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);
+
+            //서브 픽셀을 검출하여 정확한 서브 픽셀 위치를 산출함.
+            Cv.FindCornerSubPix(target, frame1Features, corner_cnt, opticalFlowWindow, new CvSize(-1, -1), opticalFlowTerminationCriteria);
+
+            CvSize rectSize = new CvSize(3,3);
+            for (int i = 0; i < corner_cnt; i++)
+            {
+                //feature_found[i]값이 0이 리턴이 되면 대응점을 발견하지 못함
+                //feature_errors[i] 현재 프레임과 이전프레임 사이의 거리가 550이 넘으면 예외로 처리
+
+                Cv.Rectangle(target, new CvRect(new CvPoint((int)frame1Features[i].X, (int)frame1Features[i].Y), rectSize), lineColor);
+            }
+
+            return target;
         }
 
         readonly double PI = 3.14159265358979323846;

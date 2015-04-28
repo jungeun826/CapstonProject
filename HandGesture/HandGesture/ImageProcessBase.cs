@@ -116,11 +116,11 @@ namespace HandGesture
                 //CvRect interestArea =  Cv.GetImageROI(retImg);
                 CvRect interestArea = new CvRect(x, y, width, height);
 
-                Cv.DrawRect(retImg, interestArea, CvColor.Red, 10);
+                //Cv.DrawRect(retImg, interestArea, CvColor.Red, 10);
 
                 CvPoint center = distTF(retImg, interestArea);
 
-                Cv.DrawCircle(retImg, center, 2, CvColor.Red, 10);
+                //Cv.DrawCircle(retImg, center, 2, CvColor.Red, 10);
             }
 
             
@@ -519,7 +519,7 @@ namespace HandGesture
 
                 p = new CvPoint(Cv.Round(frame1Features[i].X), Cv.Round(frame1Features[i].Y));
                 q = new CvPoint(Cv.Round(frame2Features[i].X), Cv.Round(frame2Features[i].Y));
-
+                
                 Cv.Line(retImg, p, q, lineColor);
                 //angle = Math.Atan2((double)p.Y - q.Y, (double)p.X - q.X);
                 //pypotenuse = Math.Sqrt(square(p.Y - q.Y) + square(p.X - q.X));
@@ -541,35 +541,7 @@ namespace HandGesture
             return retImg.ToBitmap();
         }
 
-        public void CheckFeature(ref IplImage target, CvScalar lineColor)
-        {
-            CvSize frameSize = WebcamController.Instance.FrameSize;
-            IplImage eigImg = null, tempImg = null;
-
-            //추적할 특징을 검출하기 시작함.
-            AllocateOnDeman(ref eigImg, frameSize, BitDepth.F32, 1);
-            AllocateOnDeman(ref tempImg, frameSize, BitDepth.F32, 1);
-
-            int corner_cnt = 400;
-
-            //이미지에서 코너를 추출함
-            CvPoint2D32f[] frame1Features = new CvPoint2D32f[400];//GetHandFeature(target);
-            Cv.GoodFeaturesToTrack(target, eigImg, tempImg, out frame1Features, ref corner_cnt, 0.01f, 0.01f, null);
-
-            CvSize opticalFlowWindow = new CvSize(3, 3);
-            CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);
-
-            //서브 픽셀을 검출하여 정확한 서브 픽셀 위치를 산출함.
-            Cv.FindCornerSubPix(target, frame1Features, corner_cnt, opticalFlowWindow, new CvSize(-1, -1), opticalFlowTerminationCriteria);
-
-            for (int i = 0; i < corner_cnt; i++)
-            {
-                //feature_found[i]값이 0이 리턴이 되면 대응점을 발견하지 못함
-                //feature_errors[i] 현재 프레임과 이전프레임 사이의 거리가 550이 넘으면 예외로 처리
-
-                Cv.Line(target, frame1Features[i], frame1Features[i], lineColor, 5);
-            }
-        }
+        
 
         protected CvPoint2D32f[] GetHandFeature(IplImage src)
         {

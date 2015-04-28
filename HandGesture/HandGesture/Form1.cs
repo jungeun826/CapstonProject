@@ -52,7 +52,7 @@ namespace HandGesture
             IplImage handImg = detector.extractor(webcamImg);
             ResultBox.Image = detector.ConvertIplToBitmap(handImg);
 
-            pictureBox3.Image = opticalFlow.ConvertIplToBitmap(opticalFlow.OpticalFlow_BM(handImg));
+            pictureBox3.Image = opticalFlow.ConvertIplToBitmap(opticalFlow.OpticalFlow_LK(handImg));
 
             IplImage prevImg = opticalFlow.CheckFeature(opticalFlow.PrevImg, Cv.RGB(0, 255, 0));
             IplImage curImg = opticalFlow.CheckFeature(opticalFlow.CurImg, Cv.RGB(0, 0, 255));

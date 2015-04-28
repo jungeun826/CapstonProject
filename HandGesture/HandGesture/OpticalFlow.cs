@@ -14,8 +14,8 @@ namespace HandGesture
         private IplImage curImg;
         public IplImage CurImg { get { return prevImg; } }
 
-        private readonly int blockSize = 10;
-        private readonly int shiftSize = 10;
+        private readonly int blockSize = 30;
+        private readonly int shiftSize = 1;
 
         private CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);
 
@@ -66,10 +66,6 @@ namespace HandGesture
             
             // cvCalcOpticalFlowBM
             // 블록 매칭에 의한 옵티컬 플로우의 계산
-            const int blockSize = 10;
-            const int shiftSize = 1;
-            CvSize block = new CvSize(blockSize, blockSize);
-            CvSize shift = new CvSize(shiftSize, shiftSize);
             CvSize maxRange = new CvSize(50, 50);
 
             IplImage dstImg = frame.Clone();
@@ -84,9 +80,12 @@ namespace HandGesture
                         Cv.SetZero(velx);
                         Cv.SetZero(vely);
                         // (2) 옵티컬 플로우의 계산 
-                        
 
-                        
+                        Cv.CalcOpticalFlowBM(prevImg, curImg, block, shift, maxRange, false, velx, vely);
+                        //Cv.CalcOpticalFlowHS(prevImg, curImg, false, velx, vely, 0f, opticalFlowTerminationCriteria);
+
+    
+
                         // (3) 계산된 플로우를 그리기
                         for (int j = 0; j < vely.Height; j++) //첨부된 소스에는 이부분이 잘못되어 있습니다
                         {
@@ -121,6 +120,7 @@ namespace HandGesture
                 return null;
             }
             //frame.CvtColor(curImg, ColorConversion.BgrToGray);
+            IplImage canvas = WebcamController.Instance.WebcamImage;
 
             IplImage frameClone = null, eigImg = null, tempImg = null, pyramid1 = null, pyramid2 = null;
             CvSize frameSize = WebcamController.Instance.FrameSize;
@@ -129,7 +129,7 @@ namespace HandGesture
 
             //초기화 , 두 개의 영상을 불러온다. / grayScale
             AllocateOnDeman(ref prevImg, frameSize, BitDepth.U8, 1);
-            Cv.ConvertImage(frameClone, prevImg, ConvertImageFlag.Flip);
+            prevImg = frameClone.Clone();
 
             frameClone = WebcamController.Instance.getImg();
             if(frameClone == null)
@@ -155,7 +155,7 @@ namespace HandGesture
             CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);
             
             //서브 픽셀을 검출하여 정확한 서브 픽셀 위치를 산출함.
-            Cv.FindCornerSubPix(prevImg, frame1Features, corner_cnt, opticalFlowWindow, new CvSize(-1, -1), opticalFlowTerminationCriteria);
+            //Cv.FindCornerSubPix(prevImg, frame1Features, corner_cnt, opticalFlowWindow, new CvSize(-1, -1), opticalFlowTerminationCriteria);
             
             //루카스 카나데 알고리즘
             char[] opticalFlowFoundFeature = new char[corner_cnt];
@@ -171,10 +171,13 @@ namespace HandGesture
 
             int lineThickness = 1;
             CvScalar lineColor = Cv.RGB(255, 0, 0);
+            CvScalar lineColor2 = Cv.RGB(0, 0, 255);
             CvPoint p, q;
 
             double angle;
-            double pypotenuse;
+            double pypotenuse = 1f;
+            List<CvPoint2D32f> vecList = new List<CvPoint2D32f>();
+
             for (int i = 0; i < corner_cnt; i++)
             {
                 //feature_found[i]값이 0이 리턴이 되면 대응점을 발견하지 못함
@@ -182,30 +185,48 @@ namespace HandGesture
 
                 if (status[i] == 0) continue;
                 //if (opticalFlowFoundFeature[i] == 0) continue;
-                //if (opticalFlowFeatureError[i] > 550) continue;
+                if (opticalFlowFeatureError[i] > 550) continue;
 
                 p = new CvPoint(Cv.Round(frame1Features[i].X), Cv.Round(frame1Features[i].Y));
                 q = new CvPoint(Cv.Round(frame2Features[i].X), Cv.Round(frame2Features[i].Y));
 
-                Cv.Line(retImg, p, q, lineColor);
-                //angle = Math.Atan2((double)p.Y - q.Y, (double)p.X - q.X);
+                vecList.Add(new CvPoint2D32f(p.X - q.X, p.Y - q.Y));
+                ////Cv.DrawLine(retImg, p, q, lineColor, 2);
+                angle = Math.Atan2((double)p.Y - q.Y, (double)p.X - q.X);
                 //pypotenuse = Math.Sqrt(square(p.Y - q.Y) + square(p.X - q.X));
 
-                //q.X = (int)(p.X - 3 * pypotenuse * Math.Cos(angle));
-                //q.Y = (int)(p.Y - 3 * pypotenuse * Math.Sin(angle));
-                //Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                q.X = (int)(p.X - 3 * pypotenuse * Math.Cos(angle));
+                q.Y = (int)(p.Y - 3 * pypotenuse * Math.Sin(angle));
+                Cv.Line(canvas, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
 
-                //p.X = (int)(q.X + 9 * Math.Cos(angle + PI / 4));
-                //p.Y = (int)(q.Y + 9 * Math.Cos(angle + PI / 4));
-                //Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                p.X = (int)(q.X + 9 * Math.Cos(angle + PI / 4));
+                p.Y = (int)(q.Y + 9 * Math.Sin(angle + PI / 4));
+                Cv.Line(canvas, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
 
-                //p.X = (int)(q.X + 9 * Math.Cos(angle - PI / 4));
-                //p.Y = (int)(q.Y + 9 * Math.Cos(angle - PI / 4));
-                //Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                p.X = (int)(q.X + 9 * Math.Cos(angle - PI / 4));
+                p.Y = (int)(q.Y + 9 * Math.Sin(angle - PI / 4));
+                Cv.Line(canvas, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
             }
+
+            CvPoint2D32f averageVec = new CvPoint2D32f(0, 0);
+            for (int i = 0; i < vecList.Count; i++)
+            {
+                averageVec.X += vecList[i].X;
+                averageVec.Y += vecList[i].Y;
+            }
+
+            if(vecList.Count != 0)
+            { 
+                averageVec.X = (averageVec.X / vecList.Count);
+                averageVec.Y = (averageVec.Y / vecList.Count);
+            }
+
+            CvPoint2D32f centerVec = new CvPoint2D32f(frameSize.Width / 2, frameSize.Height / 2);
+
+            Cv.Line(canvas, centerVec, centerVec + averageVec, lineColor2, lineThickness + 1, LineType.AntiAlias, 0);
             //Cv.ShowImage("OpticalFlow", frame1);
 
-            return retImg;
+            return canvas;
         }
 
         public IplImage CheckFeature(IplImage target, CvScalar lineColor)

@@ -22,8 +22,15 @@ namespace Base
                 {
                     if (_instance == null)
                     {
-                        _instance = new T();
-                        _instance.Init();
+                        try
+                        {
+                            _instance = new T();
+                            _instance.Init();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.InnerException.Message);
+                        }
                     }
                     return _instance;
                 }

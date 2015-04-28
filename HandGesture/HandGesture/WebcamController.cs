@@ -107,6 +107,7 @@ namespace HandGesture
 
         private void displayFPS()
         {
+            if (sw.ElapsedMilliseconds <= 0) return;
             sw.Stop();
             displayString( (1000 / sw.ElapsedMilliseconds).ToString() , 5, 10);
             sw.Reset();

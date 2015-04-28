@@ -16,7 +16,10 @@ namespace HandGesture
     {
         public Bitmap ConvertIplToBitmap(IplImage target)
         {
-            return target.ToBitmap();
+            if(target != null)
+                return target.ToBitmap();
+
+            return null;
         }
 
         //yong's codes
@@ -48,8 +51,8 @@ namespace HandGesture
             retImg.Dilate(retImg, null, 3);
 
             //윤곽선 검출
-            IplImage contours = origin.Clone();
-            contours = testContours(contours);
+            //IplImage contours = origin.Clone();
+            //contours = testContours(contours);
             
             ////엣지검출
             //IplImage cannyImg = testCanny(origin.Clone());
@@ -362,7 +365,7 @@ namespace HandGesture
 
             CvSeq<CvPoint> contours;
 
-            target.CvtColor(g_gray, ColorConversion.BgrToGray);
+            Cv.CvtColor(target, g_gray, ColorConversion.BgrToGray);
 
             g_gray.Threshold(g_gray, g_thresh, 255, ThresholdType.Binary);
             g_gray.Copy(g_binary);
@@ -518,20 +521,20 @@ namespace HandGesture
                 q = new CvPoint(Cv.Round(frame2Features[i].X), Cv.Round(frame2Features[i].Y));
 
                 Cv.Line(retImg, p, q, lineColor);
-                angle = Math.Atan2((double)p.Y - q.Y, (double)p.X - q.X);
-                pypotenuse = Math.Sqrt(square(p.Y - q.Y) + square(p.X - q.X));
+                //angle = Math.Atan2((double)p.Y - q.Y, (double)p.X - q.X);
+                //pypotenuse = Math.Sqrt(square(p.Y - q.Y) + square(p.X - q.X));
 
-                q.X = (int)(p.X - 3 * pypotenuse * Math.Cos(angle));
-                q.Y = (int)(p.Y - 3 * pypotenuse * Math.Sin(angle));
-                Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                //q.X = (int)(p.X - 3 * pypotenuse * Math.Cos(angle));
+                //q.Y = (int)(p.Y - 3 * pypotenuse * Math.Sin(angle));
+                //Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
 
-                p.X = (int)(q.X + 9 * Math.Cos(angle + PI / 4));
-                p.Y = (int)(q.Y + 9 * Math.Cos(angle + PI / 4));
-                Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                //p.X = (int)(q.X + 9 * Math.Cos(angle + PI / 4));
+                //p.Y = (int)(q.Y + 9 * Math.Cos(angle + PI / 4));
+                //Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
 
-                p.X = (int)(q.X + 9 * Math.Cos(angle - PI / 4));
-                p.Y = (int)(q.Y + 9 * Math.Cos(angle - PI / 4));
-                Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
+                //p.X = (int)(q.X + 9 * Math.Cos(angle - PI / 4));
+                //p.Y = (int)(q.Y + 9 * Math.Cos(angle - PI / 4));
+                //Cv.Line(retImg, p, q, lineColor, lineThickness, LineType.AntiAlias, 0);
             }
             //Cv.ShowImage("OpticalFlow", frame1);
 
@@ -550,8 +553,8 @@ namespace HandGesture
             int corner_cnt = 400;
 
             //이미지에서 코너를 추출함
-            CvPoint2D32f[] frame1Features = GetHandFeature(target);
-            //Cv.GoodFeaturesToTrack(target, eigImg, tempImg, out frame1Features, ref corner_cnt, 0.01f, 0.01f, null);
+            CvPoint2D32f[] frame1Features = new CvPoint2D32f[400];//GetHandFeature(target);
+            Cv.GoodFeaturesToTrack(target, eigImg, tempImg, out frame1Features, ref corner_cnt, 0.01f, 0.01f, null);
 
             CvSize opticalFlowWindow = new CvSize(3, 3);
             CvTermCriteria opticalFlowTerminationCriteria = Cv.TermCriteria(CriteriaType.Iteration | CriteriaType.Epsilon, 20, 0.3f);

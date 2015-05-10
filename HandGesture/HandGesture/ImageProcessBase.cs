@@ -10,10 +10,12 @@ using OpenCvSharp.Extensions;
 using OpenCvSharp.Blob;
 
 
+
 namespace HandGesture
 {
     abstract class ImageProcessBase
     {
+        public static IplImage ROIImg { get; set; }
         public Bitmap ConvertIplToBitmap(IplImage target)
         {
             if(target != null)
@@ -27,9 +29,19 @@ namespace HandGesture
         protected IplImage ConvertToBinaryIpl(IplImage target)
         {
             IplImage origin = target.Clone();
-            IplImage retImg = new IplImage(target.Width, target.Height, BitDepth.U8, 1);
-            target.CvtColor(target, ColorConversion.BgrToCrCb);
-            target.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
+            IplImage retImg = new IplImage(origin.Width, origin.Height, BitDepth.U8, 1);
+            if (origin.Depth != BitDepth.U8 || origin.NChannels == 3)
+            {
+                origin.CvtColor(origin, ColorConversion.BgrToCrCb);
+                if (retImg.Depth != BitDepth.U8)
+                    Console.WriteLine("s");
+                Cv.InRangeS(origin, new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
+                //origin.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
+            }
+            else
+            {
+                retImg = origin;
+            }
 
             return retImg;
         }
@@ -45,11 +57,9 @@ namespace HandGesture
             target.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), retImg);
 
 
-            //////침식 팽창을 이용한 노이즈 제거
-            retImg.Erode(retImg, null, 2);
-            //retImg.Erode(retImg, null, 2);
-            retImg.Dilate(retImg, null, 3);
+            Interpolate(retImg);
 
+                
             //윤곽선 검출
             //IplImage contours = origin.Clone();
             //contours = testContours(contours);
@@ -80,17 +90,9 @@ namespace HandGesture
             //    CvBlob blobLeft = left;
             //    CvBlob blobRight = right;
 
-
-
-
-
-
-
             //blobs 레이블링을 통해서 손 검출
             CvBlobs blobs = new CvBlobs();
             IplImage lableImg = new IplImage(retImg.Size, CvBlobLib.DepthLabel, 1);
-            blobs.Label(retImg);
-
 
             //큰덩어리를 나오게 해주세요
             blobs.Label(retImg);
@@ -104,24 +106,9 @@ namespace HandGesture
             blobs.FilterByArea(max.Area * 3 /4, max.Area);
 
             blobs.FilterLabels(retImg);
-
-            foreach (CvBlob ttt in blobs.Values)
-            {
-                //관심영역설정
-                int x = ttt.MinX;
-                int y = ttt.MinY;
-                int width = ttt.MaxX - x;
-                int height = ttt.MaxY - y;
-
-                //CvRect interestArea =  Cv.GetImageROI(retImg);
-                CvRect interestArea = new CvRect(x, y, width, height);
-
-                //Cv.DrawRect(retImg, interestArea, CvColor.Red, 10);
-
-                CvPoint center = distTF(retImg, interestArea);
-
-                //Cv.DrawCircle(retImg, center, 2, CvColor.Red, 10);
-            }
+            int maxDist = 0;
+            CvPoint? centerPoint;
+            maxDist = GetHandDist(retImg, blobs, out centerPoint);
 
             
            // Cv.DrawCircle(retImg, center, 30, new CvScalar(0, 135, 40), 10);
@@ -131,8 +118,53 @@ namespace HandGesture
             //return cannyImg.ToBitmap();
         }//end of extractor
 
+        private int GetHandDist(IplImage srcImg, CvBlobs blobs, out CvPoint? centerPoint)
+        {
+            int maxDist = 0;
+            centerPoint = null;
+            CvRect interestArea = new CvRect(0, 0, 0, 0);
+            IplImage webcamImg = WebcamController.Instance.WebcamImage;
+            IplImage cloneImg = webcamImg.Clone();
+            foreach (CvBlob ttt in blobs.Values)
+            {
+                //관심영역설정
+                int x = ttt.MinX;
+                int y = ttt.MinY;
+                int width = ttt.MaxX - x;
+                int height = ttt.MaxY - y;
 
+                //CvRect interestArea =  Cv.GetImageROI(retImg);
+                interestArea = new CvRect(x, y, width, height);
 
+                //Cv.DrawRect(retImg, interestArea, CvColor.Red, 10);
+
+                centerPoint = distTF(srcImg, interestArea, out maxDist);
+                Cv.DrawCircle(cloneImg, centerPoint.Value, 2, CvColor.Red, 10);
+                Cv.DrawCircle(srcImg, centerPoint.Value, 2, CvColor.Red, 10);
+            }
+            
+            //관심 영역 이외의 부분을 마스킹 해서 제거하도록 하고싶다.
+            //Cv.CreateImage
+            IplImage dist = Cv.CreateImage(new CvSize(interestArea.Width, interestArea.Height), cloneImg.Depth, cloneImg.NChannels);
+
+            Cv.SetImageROI(cloneImg, interestArea);
+            Cv.Copy(cloneImg, dist);
+            ROIImg = cloneImg;
+            Cv.ResetImageROI(dist);
+
+            //Mask(cloneImg, out cloneImg);
+            //srcImg = cloneImg;
+
+            return maxDist;
+        }
+
+        protected void Interpolate(IplImage img)
+        {
+            //////침식 팽창을 이용한 노이즈 제거
+            img.Erode(img, null, 2);
+            //retImg.Erode(retImg, null, 2);
+            img.Dilate(img, null, 2);
+        }
 
 
         /*
@@ -153,95 +185,26 @@ namespace HandGesture
          */
 
 
-        private unsafe CvPoint distTF(IplImage img, CvRect interestArea)
+        private unsafe CvPoint distTF(IplImage img, CvRect interestArea, out int maxDist)
         {
-            // 초기화 :
-            float[] mask = new float[3];
-            IplImage dist = null;
-            IplImage dist8u = null;
-            IplImage dist32s = null;
-
-            int max;
-            CvPoint p = new CvPoint();
-            byte* ptr;
-
-            dist = Cv.CreateImage(Cv.GetSize(img), BitDepth.F32, 1);
-            dist8u = Cv.CloneImage(img);
-            dist32s = Cv.CreateImage(Cv.GetSize(img), BitDepth.S32, 1);
-
             int x = interestArea.X;
             int y = interestArea.Y;
             int width = interestArea.Width;
             int height = interestArea.Height;
-            
 
-            //거리변환 행렬 생성 :
-            mask[0] = 1.0f;
-            mask[1] = 1.5f;
-
-            //거리변환 함수 사용 : 
-
-            Cv.DistTransform(img, dist, DistanceType.User, 3, mask, null);
-
-            // 눈에 보이게 변환 :
-            Cv.ConvertScale(dist, dist, 1000, 0);
-            Cv.Pow(dist, dist, 0.5);
-            Cv.ConvertScale(dist, dist32s, 1.0, 0.5);
-            Cv.AndS(dist32s, Cv.ScalarAll(255), dist32s, null);
-            Cv.ConvertScale(dist32s, dist8u, 1, 0);
-
-
-
-            //가장 큰 좌표값을 찾는다 :
-            for (int i = max = y; i < y+height; i++)
-            {
-                int index = i * dist8u.WidthStep;
-                for (int j = x; j < x + width; j++)
-                {
-
-                    ptr = (byte*)dist8u.ImageData;
-                    if ((char)ptr[index + j] > max)
-                    {
-                        max = (char)dist8u[index + j];
-                        p.X = j;
-                        p.Y = i;
-
-                    }
-                }
-
-            }
-
-
-            ////가장 큰 좌표값을 찾는다 :
-            //for (int i = max = 0; i < dist8u.Height; i++)
-            //{
-            //    int index = i * dist8u.WidthStep;
-            //    for (int j = 0; j < dist8u.Width; j++)
-            //    {
-
-            //        ptr = (byte*)dist8u.ImageData;
-            //        if ((char)ptr[index + j] > max)
-            //        {
-            //            max = (char)dist8u[index + j];
-            //            p.X = j;
-            //            p.Y = i;
-
-            //        }
-            //    }
-
-            //}
-            return p;
+            return distTF(img, out maxDist, new CvSize(x + width, y + height));
         }//end of distTF
 
-        private unsafe CvPoint distTF(IplImage img)
+        private unsafe CvPoint distTF(IplImage img, out int maxDist, CvSize? size = null )
         {
-               // 초기화 :
+            
+             // 초기화 :
              float[] mask = new float[3];
              IplImage dist = null;
              IplImage dist8u = null;
              IplImage dist32s = null;
              
-             int max;
+             //int max;
              CvPoint p = new CvPoint() ;
              byte* ptr;
  
@@ -255,7 +218,6 @@ namespace HandGesture
              mask[1] = 1.5f;
  
              //거리변환 함수 사용 : 
-             
               Cv.DistTransform(img, dist, DistanceType.User, 3, mask, null);
 
              // 눈에 보이게 변환 :
@@ -266,16 +228,21 @@ namespace HandGesture
             Cv.ConvertScale(dist32s, dist8u, 1, 0);
             
             //가장 큰 좌표값을 찾는다 :
-            for (int i = max = 0; i < dist8u.Height; i++)
+            if (size == null)
+            {
+                size = new CvSize(dist8u.Width, dist8u.Height);
+            }
+
+            for (int i = maxDist = 0; i < size.Value.Height; i++)
             {
                 int index = i * dist8u.WidthStep;
-                for (int j = 0; j < dist8u.Width; j++)
+                for (int j = 0; j < size.Value.Width; j++)
                 {
 
                     ptr = (byte*)dist8u.ImageData;
-                    if ((char)ptr[index + j] > max)
+                    if ((char)ptr[index + j] > maxDist)
                     {
-                        max = (char)dist8u[index + j];
+                        maxDist = (char)dist8u[index + j];
                         p.X = j;
                         p.Y = i;
 
@@ -284,7 +251,7 @@ namespace HandGesture
 
             }
             return p;
-}//end of distTF
+    }//end of distTF
  
 
         protected Bitmap ConvertToBinaryBMP(IplImage target)
@@ -292,28 +259,36 @@ namespace HandGesture
             return ConvertToBinaryIpl(target).ToBitmap();
         }
 
-        public IplImage extractSkinAsIpl(IplImage target)
-        {
-            IplImage origin = target.Clone();
-            IplImage processImg = origin.Clone();
-            IplImage maskImg = ConvertToBinaryIpl(processImg);
-            maskImg.Not(maskImg);
-            processImg.AndS(0, processImg, maskImg);
-            processImg.CvtColor(processImg, ColorConversion.CrCbToBgr);
-            //processImg.AndS(0, processImg, maskImg);
-            processImg.Smooth(processImg, SmoothType.Median);
+        //protected  IplImage extractSkinAsIpl(IplImage target)
+        //{
+        //    IplImage origin = target.Clone();
+        //    IplImage processImg = origin.Clone();
+        //    IplImage maskImg = ConvertToBinaryIpl(processImg);
+        //    maskImg.Not(maskImg);
+        //    processImg.AndS(0, processImg, maskImg);
+        //    processImg.Smooth(processImg, SmoothType.Median);
 
-            //temp test code
-            //IplImage temp = new IplImage(origin.Size, BitDepth.U8, 1);
-            //origin.CvtColor(temp, ColorConversion.BgrToGray);
-            //target = temp;
-            //
-            return processImg;
-        }
-        public Bitmap extractSkinAsBMP(IplImage target)
+        //    //추출된 피부색 이미지만 마스킹 해서 보여줌.
+        //    processImg.CvtColor(processImg, ColorConversion.CrCbToBgr);
+
+        //    return processImg;
+        //}
+
+        public void Mask(IplImage origin, out IplImage dist)
         {
-            return extractSkinAsIpl(target).ToBitmap();
+            IplImage origin2 = origin.Clone();
+            dist = origin.Clone();
+            IplImage maskImg = ConvertToBinaryIpl(dist);
+            maskImg.Not(maskImg);
+            dist.AndS(0, dist, maskImg);
+            dist.Smooth(dist, SmoothType.Median);
+
+            //추출된 피부색 이미지만 마스킹 해서 보여줌.
+            dist.CvtColor(dist, ColorConversion.CrCbToBgr);
+
+            //return processImg;
         }
+        
 
         public IplImage test(IplImage target)
         {
@@ -541,7 +516,111 @@ namespace HandGesture
             return retImg.ToBitmap();
         }
 
-        
+
+
+        protected bool FilterByMaximalBlob(IplImage imgSrc, out IplImage imgDst, out int maxDist, out CvPoint
+? centerPoint)
+        {
+            CvBlobs blobs = new CvBlobs();
+            IplImage lableImg = new IplImage(imgSrc.Size, BitDepth.U8, 1);
+            blobs.Label(imgSrc);
+
+            //큰덩어리를 나오게 해주세요
+            CvBlob max = blobs.GreaterBlob();
+
+            if (max == null)
+            {
+                imgDst = lableImg;//.ToBitmap();
+                maxDist = 0;
+                centerPoint = null;
+                return false;
+            }
+
+            blobs.FilterByArea(max.Area * 3 / 4, max.Area);
+            blobs.FilterLabels(lableImg);
+
+            imgDst = lableImg;
+            maxDist = GetHandDist(imgDst, blobs, out centerPoint);
+
+            return true;
+        }
+
+        public bool FindContours(IplImage img, CvMemStorage storage, out CvSeq<CvPoint> contours)
+        {
+            // 윤곽 추출
+            IplImage imgClone = img.Clone();
+            Cv.FindContours(imgClone, storage, out contours);
+            if (contours == null)
+            {
+                contours = null;
+                return false;
+            }
+
+            contours = Cv.ApproxPoly(contours, CvContour.SizeOf, storage, ApproxPolyMethod.DP, 3, true);
+
+            // 제일 긴 것 같은 윤곽만을 얻는다
+            CvSeq<CvPoint> max = contours;
+            for (CvSeq<CvPoint> c = contours; c != null; c = c.HNext)
+            {
+                if (max.Total < c.Total)
+                {
+                    max = c;
+                }
+            }
+            contours = max;
+            return true;
+        }
+
+        public void DrawDefects(ref IplImage img, CvSeq<CvConvexityDefect> defect)
+        {
+            try
+            {
+                int count = 0;
+                CvPoint? p1 = null, p2 = null;
+                    foreach (CvConvexityDefect item in defect)
+                    {
+                        p1 = item.Start;
+                        p2 = item.End;
+                        double dist = GetDistance(p1.Value, p2.Value);
+                        CvPoint2D64f mid = GetMidpoint(p1.Value, p2.Value);
+                        img.DrawLine(p1.Value, p2.Value, CvColor.White, 2);
+                        img.DrawCircle(item.Start, 8, CvColor.Green, -1);
+                        img.DrawLine(mid, item.DepthPoint, CvColor.White, 1);
+                        count++;
+                    }
+                    if(p2.HasValue)
+                        img.DrawCircle(p2.Value, 8, CvColor.Green, -1);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public double GetDistance(CvPoint p1, CvPoint p2)
+        {
+            return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
+        }
+
+        private CvPoint2D64f GetMidpoint(CvPoint p1, CvPoint p2)
+        {
+            return new CvPoint2D64f
+            {
+                X = (p1.X + p2.X) / 2.0,
+                Y = (p1.Y + p2.Y) / 2.0
+            };
+        }
+
+        public void DrawConvexHull(CvSeq hull, IplImage img)
+        {
+            CvPoint pt0 = Cv.GetSeqElem<Pointer<CvPoint>>(hull, hull.Total - 1).Value.Entity;
+            for (int i = 0; i < hull.Total; i++)
+            {
+                CvPoint pt = Cv.GetSeqElem<Pointer<CvPoint>>(hull, i).Value.Entity;
+                Cv.Line(img, pt0, pt, new CvColor(255, 255, 255));
+                pt0 = pt;
+            }
+        }
 
         protected CvPoint2D32f[] GetHandFeature(IplImage src)
         {

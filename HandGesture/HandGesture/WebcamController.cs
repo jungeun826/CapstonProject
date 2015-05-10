@@ -14,6 +14,7 @@ namespace HandGesture
     /// </summary>
     public class WebcamController : Base.Singletone<WebcamController>, Base.ISingleTon
     {
+        public bool Pause { get; set; }
         private IplImage m_cvImg;
         private CvCapture m_cvCap;
         private updateDelegate m_updateDel;
@@ -38,6 +39,7 @@ namespace HandGesture
             //카메라 지정
             //0번카메라를 사용한다.
             m_cvCap = Cv.CreateFileCapture("hand2.avi");//CvCapture.FromCamera(0);
+            Pause = false;
             //m_cvCap.FrameWidth = 320;
             //m_cvCap.FrameHeight = 240;
 
@@ -77,6 +79,8 @@ namespace HandGesture
         /// </summary>
         public void updateFrame()
         {
+            if (Pause) return;
+
             m_cvImg = m_cvCap.QueryFrame();
             int curFrame = m_cvCap.PosFrames;
             if(curFrame == totalFrame)

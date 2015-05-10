@@ -25,22 +25,64 @@ namespace HandGesture
 
     class DetectorManager : Base.Singletone<DetectorManager>, Base.ISingleTon
     {
-        private HandGestureDetector handGestureDetector = null;
-        
+
+        public DetectorMode DetectMode { get; set; }
+
+        private Dictionary<DetectorMode, List<IRecognition>> detectorDic = new Dictionary<DetectorMode, List<IRecognition>>();
+
         public void Init()
         {
-            handGestureDetector = new HandGestureDetector();
+
         }
 
-        public Bitmap GetBitmapImage(GestureType type)
+        public void Init(HandGestureDetector handGestureDetector)
         {
-            switch (type)
+            if (!detectorDic.ContainsKey(DetectorMode.Basic))
             {
-                case GestureType.Point:
-                    return handGestureDetector.ExtractRecognitionImageBitmap();
+                List<IRecognition> list = new List<IRecognition>();
+                list.Add(handGestureDetector);
+                detectorDic.Add(DetectorMode.Basic, list);
             }
-            return null;
+            else
+            {
+                List<IRecognition> list = detectorDic[DetectorMode.Basic];
+                list.Add(handGestureDetector);
+            }
         }
+
+        public void UpdateManager()
+        {
+            switch (DetectMode)
+            {
+                case DetectorMode.Basic:
+                    foreach (IRecognition recogn in detectorDic[DetectMode])
+                    {
+                        if (recogn.Detect())
+                        {
+                            Console.WriteLine("dd");
+                        }
+                    }
+                    break;
+                case DetectorMode.FPS:
+                    break;
+                case DetectorMode.Racing:
+                    break;
+                case DetectorMode.Custom:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //public Bitmap GetBitmapImage(GestureType type)
+        //{
+        //    switch (type)
+        //    {
+        //        case GestureType.Point:
+        //            return handGestureDetector.ExtractRecognitionImageBitmap();
+        //    }
+        //    return null;
+        //}
 
     }
 }

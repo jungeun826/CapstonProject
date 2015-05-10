@@ -67,6 +67,26 @@ namespace HandGesture
             //ResultBox.Image = ImageProcessBase.extractSkinAsBMP(WebcamController.getImg());
             //ResultBox.Image = iRecgnition.ExtractRecognitionImageBitmap();
         }
+
+        private void radioButton1_Click(object sender, EventArgs e)
+        {
+            label1.Text = ((RadioButton)sender).Name;
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            label1.Text = ((RadioButton)sender).Name;
+        }
+
+        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            label1.Text = ((RadioButton)sender).Name;
+        }
+
+        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        {
+            label1.Text = ((RadioButton)sender).Name;
+        }
     }
 
 }

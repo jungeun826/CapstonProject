@@ -8,6 +8,14 @@ using System.Drawing;
 
 namespace HandGesture
 {
+    public enum DetectorMode
+    {
+        Basic,
+        FPS,
+        Racing,
+        Custom,
+    }
+
     public enum GestureType
     {
         RightClick,

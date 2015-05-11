@@ -192,6 +192,9 @@ namespace HandGesture
             int width = interestArea.Width;
             int height = interestArea.Height;
 
+            //팔까지 관심영역으로 만들기는 싫어요... by.yong
+            if (height > width) height = width;
+
             return distTF(img, out maxDist, new CvSize(x + width, y + height));
         }//end of distTF
 

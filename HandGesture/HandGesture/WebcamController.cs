@@ -19,6 +19,7 @@ namespace HandGesture
         private CvCapture m_cvCap;
         private updateDelegate m_updateDel;
         private CvSize frameSize;
+
         public CvSize FrameSize
         {
             get
@@ -38,22 +39,21 @@ namespace HandGesture
         {
             //카메라 지정
             //0번카메라를 사용한다.
-            m_cvCap = Cv.CreateFileCapture("hand2.avi");//CvCapture.FromCamera(0);
+            m_cvCap = CvCapture.FromCamera(CaptureDevice.DShow,0);
+            
             Pause = false;
-            //m_cvCap.FrameWidth = 320;
-            //m_cvCap.FrameHeight = 240;
+            m_cvCap.SetCaptureProperty(CaptureProperty.FrameWidth, 320);
+            m_cvCap.SetCaptureProperty(CaptureProperty.FrameHeight, 240);
 
             frameSize.Height = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameHeight);
             frameSize.Width = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameWidth);
-            totalFrame = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameCount);
+            //totalFrame = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameCount);
             m_updateDel = null;
-
-            updateFrame();
         }
 
         public WebcamController()
         {
-            Init();
+            //Init();
         }
 
         /// <summary>
@@ -79,13 +79,18 @@ namespace HandGesture
         /// </summary>
         public void updateFrame()
         {
-            if (Pause) return;
+            lock (m_cvCap)
+            {
+                if (Pause) return;
 
-            m_cvImg = m_cvCap.QueryFrame();
-            int curFrame = m_cvCap.PosFrames;
-            if(curFrame == totalFrame)
-                m_cvCap = Cv.CreateFileCapture("hand2.avi");
-            if (m_updateDel != null) m_updateDel();
+                m_cvImg = m_cvCap.QueryFrame();
+                if (m_updateDel != null) m_updateDel();
+            }
+            //m_cvImg = Cv.QueryFrame(m_cvCap);
+            ////int curFrame = m_cvCap.PosFrames;
+            ////if(curFrame == totalFrame)
+            ////    m_cvCap = Cv.CreateFileCapture("hand2.avi");
+            //if (m_updateDel != null) m_updateDel();
         }
 
         public IplImage GetCurQueryFrameImg()

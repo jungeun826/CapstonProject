@@ -25,7 +25,7 @@ namespace Base
                         try
                         {
                             _instance = new T();
-                            _instance.Init();
+                            //_instance.Init();
                         }
                         catch (Exception e)
                         {

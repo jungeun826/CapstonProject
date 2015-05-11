@@ -27,6 +27,7 @@ namespace HandGesture
             DetectorManager.Instance.Init(detector);
             
             opticalFlow = new OpticalFlow();
+            WebcamController.Instance.Init();
             WebcamController.Instance.updateFrame();
         }
 

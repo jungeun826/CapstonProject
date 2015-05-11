@@ -47,6 +47,8 @@ namespace HandGesture
         {
             //컬러맵 변환
             IplImage webcamImg = WebcamController.Instance.WebcamImage;
+            if (webcamImg == null) return false;
+
             IplImage origin = webcamImg.Clone();
             IplImage origin2 = webcamImg.Clone();
             origin.CvtColor(origin, ColorConversion.BgrToCrCb);

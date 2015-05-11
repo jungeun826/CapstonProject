@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using OpenCvSharp;
+using OpenCvSharp.Blob;
 
 namespace HandGesture
 {
@@ -68,6 +69,7 @@ namespace HandGesture
             float ratioX = MonitorSize.Value.Width / resultImg.Width;
             float ratioY = MonitorSize.Value.Height / resultImg.Height;
             // 해당 위치로 마우스 이동
+            if(false)//맘대로움직이지마 ㅡㅡ 마우스야 by.Yong
             ApiController.SetCursorPos((int)(ratioX * centerPoint.Value.X), (int)(ratioY * centerPoint.Value.Y));
 
             // 2.
@@ -84,11 +86,46 @@ namespace HandGesture
             DrawDefects(ref origin2, defect);
             ConvexHullImg = origin2;
             //pixel to radius 필요
-            resultImg.DrawCircle(centerPoint.Value, (int)(maxDist / 4.5), CvColor.Navy);
-            resultImg.DrawCircle(centerPoint.Value, (int)(maxDist / 3), CvColor.Navy);
+            //resultImg.DrawCircle(centerPoint.Value, (int)(maxDist / 4.5), CvColor.Navy);
+            //resultImg.DrawCircle(centerPoint.Value, (int)(maxDist / 3), CvColor.Navy);
+            //resultImg.DrawCircle(centerPoint.Value, (int)(maxDist/1.7), CvColor.Navy);
 
-            resultImg.DrawCircle(centerPoint.Value, (int)(maxDist/1.7), CvColor.Navy);
+            #region 손가락 개수 세기...
+            ////손가락개수를 세자 ... by.Yong
+            ///* 두꺼운 원으로 마스킹해서 손가락을 가져오는곳 */
+            //IplImage temp = resultImg.Clone();
+            //temp.Zero();
+            //temp.DrawCircle(centerPoint.Value, (int)(maxDist / 2.5), CvColor.Aqua, 15);
+            //resultImg.And(temp, resultImg);
+            //resultImg.Erode(resultImg, null, 1);
+            //////////////////////////////////////////////////
 
+            ///*위의 마스킹된 손가락의 겹쳐지는 부분을 라벨링 이용해 카운트 */
+            //CvBlobs blobs = new CvBlobs();
+            //blobs.Label(resultImg); //blobs.Count를 이용한다. 손목도 있으니까 1이 모든 손가락이 접힌거
+            //String msg;
+            //msg = blobs.Count == 1 ? "fist" : "hand";
+            //resultImg.PutText(msg, new CvPoint(10, 20), new CvFont( FontFace.HersheyComplex, 1, 1), new CvScalar(255, 255, 255));
+            ////////////////////////////////////////////////////////////////
+
+            //이건 다른거...
+            resultImg = webcamImg.Clone();
+            int cntFinger = 0;
+            foreach (CvConvexityDefect ccd in defect)
+            {
+                if (ccd.End.Y < centerPoint.Value.Y)
+                {
+                    int dis = (int)ccd.End.DistanceTo(centerPoint.Value);
+                    if (dis < maxDist / 4) continue;
+                    resultImg.DrawCircle(ccd.End, 2, CvColor.Red, -1);
+                    resultImg.DrawLine(ccd.End, centerPoint.Value, CvColor.Aqua);
+                    //resultImg.PutText(((int)(maxDist/dis)).ToString(), ccd.End, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
+                    cntFinger++;
+                    resultImg.PutText(cntFinger.ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
+                }
+            }
+            resultImg.PutText(cntFinger.ToString(), new CvPoint(10, 50), new CvFont(FontFace.HersheyComplex, 1, 1), new CvScalar(255, 255, 255));
+            #endregion
             return true; 
         }
         public IplImage ExtractRecognitionImageIpl()

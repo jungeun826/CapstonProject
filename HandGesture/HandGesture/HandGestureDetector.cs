@@ -46,6 +46,8 @@ namespace HandGesture
 
         public bool Detect()
         {
+            CvPoint moustPos = new CvPoint(-1, -1);
+
             //컬러맵 변환
             IplImage webcamImg = WebcamController.Instance.WebcamImage;
             if (webcamImg == null) return false;
@@ -80,9 +82,9 @@ namespace HandGesture
                 CvRect roi = c.BoundingRect();
                 x = roi.X; y = roi.Y; height = roi.Height; width = roi.Width;
                 if (height > width * 1.5) height = (int)(width * 1.5);
-                for (int i = x; i < x+width; i++)
+                for (int i = x; i < x + width; i++)
                 {
-                    for (int j = y; j < y+height; j++)
+                    for (int j = y; j < y + height; j++)
                     {
                         conDist = Cv.PointPolygonTest(c, new CvPoint(i, j), true);
                         if (conDist > maxConDist)
@@ -94,8 +96,8 @@ namespace HandGesture
                     }
                 }
                 resultImg.DrawCircle(conCenter, 2, CvColor.White, -1);
-                if(maxConDist > 0)
-                resultImg.DrawCircle(conCenter, (int)maxConDist, CvColor.Violet);
+                if (maxConDist > 0)
+                    resultImg.DrawCircle(conCenter, (int)maxConDist, CvColor.Violet);
 
                 foreach (CvConvexityDefect ccd in defect)
                 {
@@ -111,10 +113,23 @@ namespace HandGesture
                         resultImg.PutText(cntFinger.ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
                     }
                 }
+                if (cntFinger == 1)
+                {
+                    moustPos = conCenter;
+                }
                 resultImg.PutText(cntFinger.ToString(), conCenter, new CvFont(FontFace.HersheyComplex, 1, 1), new CvScalar(255, 255, 255));
-
-                centerPoint = conCenter;
             }
+
+            // 1.
+            // 해상도 구하기
+            // 해상도 전체 좌표에서 포인팅 된 곳 맵핑
+            float ratioX = MonitorSize.Value.Width / resultImg.Width;
+            float ratioY = MonitorSize.Value.Height / resultImg.Height;
+            // 해당 위치로 마우스 이동
+            if (moustPos.X != -1)//맘대로움직이지마 ㅡㅡ 마우스야 by.Yong
+                ApiController.SetCursorPos((int)(ratioX * moustPos.X), (int)(ratioY * moustPos.Y));
+
+
             return true;
         }
 

@@ -756,6 +756,7 @@ namespace HandGesture
                 int area = blobs.GreaterBlob().Area;
                 temp.FilterByArea(area, area);
                 temp.FilterLabels(blobImg);
+                blobImg.Smooth(blobImg, SmoothType.Blur);
                 blobs.FilterByArea(0, area - 1);
                 retList.Add(blobImg.Clone());
             }

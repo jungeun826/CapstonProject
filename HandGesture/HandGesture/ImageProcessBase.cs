@@ -548,6 +548,29 @@ namespace HandGesture
             return true;
         }
 
+        protected bool FilterByMaximalBlob(IplImage imgSrc, out IplImage imgDst)
+        {
+            CvBlobs blobs = new CvBlobs();
+            IplImage lableImg = new IplImage(imgSrc.Size, BitDepth.U8, 1);
+            blobs.Label(imgSrc);
+
+            //큰덩어리를 나오게 해주세요
+            CvBlob max = blobs.GreaterBlob();
+
+            if (max == null)
+            {
+                imgDst = lableImg;//.ToBitmap();
+                return false;
+            }
+
+            blobs.FilterByArea(max.Area * 3 / 4, max.Area);
+            blobs.FilterLabels(lableImg);
+            imgDst = lableImg;
+            
+            return true;
+        }
+
+
         public bool FindContours(IplImage img, CvMemStorage storage, out CvSeq<CvPoint> contours)
         {
             // 윤곽 추출

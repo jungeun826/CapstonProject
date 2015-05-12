@@ -10,7 +10,6 @@ using OpenCvSharp.Extensions;
 using OpenCvSharp.Blob;
 
 
-
 namespace HandGesture
 {
     abstract class ImageProcessBase
@@ -726,6 +725,42 @@ namespace HandGesture
             if(img != null) return;
             img = Cv.CreateImage(size, depth, channels);
             if(img == null) return;
+        }
+
+        public List<IplImage> FilterBlobImgList(IplImage imgSrc, IplImage imgDst)
+        {
+            List<IplImage> retList = new List<IplImage>();
+            CvBlobs blobs = new CvBlobs();
+            IplImage lableImg = new IplImage(imgSrc.Size, BitDepth.U8, 1);
+            int cntOfBlobs;
+            blobs.Label(imgSrc);
+
+            //큰덩어리를 나오게 해주세요
+            CvBlob max = blobs.GreaterBlob();
+
+            if (max == null)
+            {
+                imgDst = null;
+                return retList;
+            }
+            blobs.FilterByArea(max.Area * 1 / 4, max.Area);
+            blobs.FilterLabels(lableImg);
+            imgDst = lableImg;
+
+            IplImage blobImg = new IplImage(imgSrc.Size, BitDepth.U8, 1);
+            IplImage blobImg2 = new IplImage(imgSrc.Size, BitDepth.U8, 1);
+            cntOfBlobs = blobs.Count;
+            while(blobs.Count != 0){
+                blobImg.Zero();
+                CvBlobs temp = blobs.Clone();
+                int area = blobs.GreaterBlob().Area;
+                temp.FilterByArea(area, area);
+                temp.FilterLabels(blobImg);
+                blobs.FilterByArea(0, area - 1);
+                retList.Add(blobImg.Clone());
+            }
+
+            return retList;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace HandGesture
 {
     class Finger
@@ -24,5 +25,15 @@ namespace HandGesture
 
         private FingerType _fingerPos;
         public FingerType FingerPos { get { return _fingerPos; } }
+
+        public OpenCvSharp.CvPoint FingerDepthPoint;
+        public OpenCvSharp.CvPoint FingerStart;
+        public OpenCvSharp.CvPoint FingerEnd;
+
+        public float GetFingerAngle()
+        {
+            return 0.0f;
+        }
+        
     }
 }

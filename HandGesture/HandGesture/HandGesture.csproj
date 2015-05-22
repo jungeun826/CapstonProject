@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="ApiController.cs" />
     <Compile Include="DetectorManager.cs" />
+    <Compile Include="Finger.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

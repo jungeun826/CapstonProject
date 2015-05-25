@@ -59,7 +59,8 @@ namespace HandGesture
                     {
                         if (recogn.Detect())
                         {
-                            Console.WriteLine("dd");
+                            //이거 계속 출력되는거 거슬려서 주석처리함 by.yong
+                            //Console.WriteLine("dd");
                         }
                     }
                     break;

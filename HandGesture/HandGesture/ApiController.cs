@@ -28,7 +28,11 @@ namespace HandGesture
         /// <param name="dwExtraInfo"></param>
         [DllImport("user32.dll")]
         static public extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData = 0, int dwExtraInfo = 0);
-        
+
+        static public void mouse_event(uint dwFlags)
+        {
+            mouse_event(dwFlags, (uint)Control.MousePosition.X, (uint)Control.MousePosition.Y);
+        }
         /// <summary>
         /// 마우스커서 위치 변경하는녀석임
         /// </summary>

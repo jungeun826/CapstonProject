@@ -60,6 +60,7 @@ namespace HandGesture
             Interpolate(filterImg);
 
             List<IplImage> listOfBlobImg = FilterBlobImgList(filterImg, BlobImg);
+            List<Finger> fingers = new List<Finger>();
             //BlobImg = resultImg;
             int cnt = listOfBlobImg.Count;
             if (cnt == 0) return false;
@@ -97,29 +98,48 @@ namespace HandGesture
                 }
                 resultImg.DrawCircle(conCenter, 2, CvColor.White, -1);
                 if (maxConDist > 0)
-                    resultImg.DrawCircle(conCenter, (int)maxConDist, CvColor.Violet);
+                {
+                    Finger finger = new Finger(conCenter, (int)maxConDist);
+                    fingers.Add(finger);
+                    //resultImg.DrawCircle(conCenter, (int)maxConDist, CvColor.Violet);
+                }
+                else continue;
+
+
 
                 foreach (CvConvexityDefect ccd in defect)
                 {
-                    if (ccd.End.Y < conCenter.Y)
+                    if (ccd.End.Y < conCenter.Y + maxConDist/2)
                     {
                         int dis = (int)ccd.End.DistanceTo(conCenter);
                         if (dis < maxConDist * 1.6) continue;
+                        fingers[k].addTip(ccd.End);
+                        fingers[k].addDepth(ccd.DepthPoint);
+
                         resultImg.DrawCircle(ccd.End, 2, CvColor.Red, -1);
                         resultImg.DrawLine(ccd.End, conCenter, CvColor.Aqua);
                         resultImg.DrawLine(ccd.End, ccd.DepthPoint, CvColor.Red);
-                        //resultImg.PutText(((int)(maxDist/dis)).ToString(), ccd.End, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
                         cntFinger++;
                         resultImg.PutText(cntFinger.ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
                     }
                 }
-                if (cntFinger == 1)
-                {
-                    moustPos = conCenter;
-                }
-                resultImg.PutText(cntFinger.ToString(), conCenter, new CvFont(FontFace.HersheyComplex, 1, 1), new CvScalar(255, 255, 255));
+                //if (cntFinger == 1)
+                //{
+                //    moustPos = conCenter;
+                //}
+                //resultImg.PutText(cntFinger.ToString(), conCenter, new CvFont(FontFace.HersheyComplex, 1, 1), new CvScalar(255, 255, 255));
             }
 
+            StateManager.update(fingers);
+
+            //for (int k = 0; k < cnt; k++)
+            //{
+            //    double angle = fingers[k].GetFingerAngle();
+            //    if (angle > 0)
+            //    {
+            //        resultImg.PutText(angle.ToString(), fingers[k].m_depthPoint[0], new CvFont(FontFace.HersheyComplex, 1, 1), CvColor.Blue);
+            //    }
+            //}
             // 1.
             // 해상도 구하기
             // 해상도 전체 좌표에서 포인팅 된 곳 맵핑

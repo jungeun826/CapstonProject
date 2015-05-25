@@ -8,17 +8,18 @@ using System.Threading.Tasks;
 
 namespace HandGesture
 {
-    class Finger
+    public class Finger
     {
-        //[Flags]
-        //public enum FingerType
-        //{
-        //    ForeFinger,
-        //    IndexFinger,
-        //    MiddleFinger,
-        //    RingFinger,
-        //    LittleFinger,
-        //}
+        [Flags]
+        public enum FingerType
+        {
+            None,
+            ForeFinger,
+            IndexFinger,
+            MiddleFinger,
+            RingFinger,
+            LittleFinger,
+        }
 
         //private int _fingerCnt = 0;
         //public int FingerCnt { get { return _fingerCnt; } }
@@ -66,9 +67,54 @@ namespace HandGesture
             p1 = m_tipPoint[0] - m_centerPoint;
             p2 = m_tipPoint[1] - m_centerPoint;
 
-            double angle = Math.Acos( Math.Abs( p1.DotProduct(p2) / Math.Sqrt( (p1.DotProduct(p1) * p2.DotProduct(p2)))));
+            double angle = GetFingerAngle(p1, p2);
             return angle;
         }
-        
+
+        private double GetFingerAngle(OpenCvSharp.CvPoint p1, OpenCvSharp.CvPoint p2)
+        {
+            return Math.Acos(p1.DotProduct(p2) / Math.Sqrt((p1.DotProduct(p1) * p2.DotProduct(p2))));
+        }
+
+        public FingerType GetFingerType()
+        {
+            if (m_depthPoint.Count < 1) return FingerType.None;
+            double r;
+            OpenCvSharp.CvPoint tempPoint = m_centerPoint;
+            double angle;
+            FingerType type = FingerType.None;
+            foreach (OpenCvSharp.CvPoint depthPoint in m_depthPoint)
+            {
+                r = GetDist(depthPoint, m_centerPoint);
+                tempPoint.X = m_centerPoint.X + (int)r;
+                angle = GetFingerAngle(depthPoint - m_centerPoint, tempPoint - m_centerPoint);
+                if (2.4 < angle && angle < 3.0f)
+                    type |= FingerType.ForeFinger;
+                else if (2.0 < angle && angle < 1.6f)
+                    type |= FingerType.IndexFinger;
+                else if ( 1.4 < angle &&angle < 1.2f)
+                    type |= FingerType.MiddleFinger;
+                else if (1.0 < angle && angle < 0.8f)
+                    type |= FingerType.RingFinger;
+                else if (0.8 < angle && angle < 0.4f)
+                    type |= FingerType.LittleFinger;
+            }
+
+            return type;
+        }
+
+        //public double GetFingerAngle2(OpenCvSharp.CvPoint depthPoint, OpenCvSharp.CvPoint centerPoint)
+        //{
+        //    double r = GetDist(depthPoint, m_centerPoint);
+        //    OpenCvSharp.CvPoint tempPoint = m_centerPoint;
+        //    tempPoint.X = m_centerPoint.X + (int)r;
+        //    return GetFingerAngle(depthPoint - m_centerPoint, tempPoint - m_centerPoint);
+        //}
+
+        private double GetDist(OpenCvSharp.CvPoint p1, OpenCvSharp.CvPoint p2)
+        {
+            return Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
+        }
+
     }
 }

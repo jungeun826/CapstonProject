@@ -37,9 +37,12 @@ namespace HandGesture
 
         public void Init()
         {
-            //카메라 지정
-            //0번카메라를 사용한다.
-            m_cvCap = CvCapture.FromCamera(CaptureDevice.DShow,0);
+#if PCVer
+            m_cvCap = CvCapture.FromFile("hand3.avi");
+            totalFrame = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameCount);
+#elif !PCVer
+            m_cvCap = CvCapture.FromCamera(CaptureDevice.DShow, 0);
+#endif
             
             Pause = false;
             m_cvCap.SetCaptureProperty(CaptureProperty.FrameWidth, 320);
@@ -47,7 +50,6 @@ namespace HandGesture
 
             frameSize.Height = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameHeight);
             frameSize.Width = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameWidth);
-            //totalFrame = (int)Cv.GetCaptureProperty(m_cvCap, CaptureProperty.FrameCount);
             m_updateDel = null;
         }
 
@@ -79,6 +81,15 @@ namespace HandGesture
         /// </summary>
         public void updateFrame()
         {
+#if PCVer
+            m_cvImg = Cv.QueryFrame(m_cvCap);
+            int curFrame = m_cvCap.PosFrames;
+            if (curFrame == totalFrame)
+            {
+                m_cvCap = Cv.CreateFileCapture("hand3.avi");
+                curFrame = 0;
+            }
+#elif !PCVer
             lock (m_cvCap)
             {
                 if (Pause) return;
@@ -86,11 +97,8 @@ namespace HandGesture
                 m_cvImg = m_cvCap.QueryFrame();
                 if (m_updateDel != null) m_updateDel();
             }
-            //m_cvImg = Cv.QueryFrame(m_cvCap);
-            ////int curFrame = m_cvCap.PosFrames;
-            ////if(curFrame == totalFrame)
-            ////    m_cvCap = Cv.CreateFileCapture("hand2.avi");
-            //if (m_updateDel != null) m_updateDel();
+#endif
+            if (m_updateDel != null) m_updateDel();
         }
 
         public IplImage GetCurQueryFrameImg()

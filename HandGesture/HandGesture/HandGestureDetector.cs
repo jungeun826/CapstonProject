@@ -28,7 +28,7 @@ namespace HandGesture
                 return _monitorSize;
             }
         }
-
+        BasicStateManager manager = null;
         private IplImage resultImg;
         private IplImage filterImg;
         private CvSeq<CvPoint> contours;
@@ -46,6 +46,9 @@ namespace HandGesture
 
         public bool Detect()
         {
+            if (manager == null)
+                manager = new BasicStateManager();
+
             CvPoint moustPos = new CvPoint(-1, -1);
 
             //컬러맵 변환
@@ -105,8 +108,6 @@ namespace HandGesture
                 }
                 else continue;
 
-
-
                 foreach (CvConvexityDefect ccd in defect)
                 {
                     if (ccd.End.Y < conCenter.Y + maxConDist/2)
@@ -117,10 +118,11 @@ namespace HandGesture
                         fingers[k].addDepth(ccd.DepthPoint);
 
                         resultImg.DrawCircle(ccd.End, 2, CvColor.Red, -1);
-                        resultImg.DrawLine(ccd.End, conCenter, CvColor.Aqua);
-                        resultImg.DrawLine(ccd.End, ccd.DepthPoint, CvColor.Red);
+                        //resultImg.DrawLine(ccd.End, conCenter, CvColor.Aqua);
+                        resultImg.DrawLine(conCenter, ccd.DepthPoint, CvColor.Aqua);
                         cntFinger++;
-                        resultImg.PutText(cntFinger.ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
+                        resultImg.PutText(cntFinger.ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
+                        //resultImg.PutText(((int)fingers[k].GetFingerAngle2(ccd.DepthPoint, conCenter)).ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
                     }
                 }
                 //if (cntFinger == 1)
@@ -130,7 +132,7 @@ namespace HandGesture
                 //resultImg.PutText(cntFinger.ToString(), conCenter, new CvFont(FontFace.HersheyComplex, 1, 1), new CvScalar(255, 255, 255));
             }
 
-            StateManager.update(fingers);
+            manager.Update(fingers);
 
             //for (int k = 0; k < cnt; k++)
             //{

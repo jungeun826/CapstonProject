@@ -15,6 +15,8 @@ namespace HandGesture
 {
     public partial class Form1 : Form
     {
+        DetectorMode mode = DetectorMode.Basic;
+
         //DetectorManager detectManager;
         HandGestureDetector detector;
         OpticalFlow opticalFlow;
@@ -39,6 +41,9 @@ namespace HandGesture
             //타이머 설정
             timer1.Interval = 20;
             timer1.Enabled = true;
+
+
+            BasicRadioBtn.Checked = true;
         }
 
         private void timer1_Tick(object sender, EventArgs e)

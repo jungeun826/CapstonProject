@@ -9,7 +9,9 @@ namespace HandGesture
     {
         static public void Log(string str)
         {
+#if DEBUG
             Console.WriteLine(str);
+#endif
         }
     }
 }

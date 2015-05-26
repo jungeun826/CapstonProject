@@ -15,22 +15,31 @@ namespace HandGesture
 {
     public partial class Form1 : Form
     {
-        DetectorMode mode = DetectorMode.Basic;
+
+        public bool Pause { get; set; }
 
         //DetectorManager detectManager;
         HandGestureDetector detector;
-        OpticalFlow opticalFlow;
+        FPSGestureDetector fpsDetector;
+
+        //OpticalFlow opticalFlow;
 
         public Form1()
         {
             InitializeComponent();
 
             detector = new HandGestureDetector();
-            DetectorManager.Instance.Init(detector);
+            fpsDetector = new FPSGestureDetector();
+
+            DetectorManager.Instance.Init(DetectorMode.Basic, detector);
+            DetectorManager.Instance.Init(DetectorMode.FPS, fpsDetector);
             
-            opticalFlow = new OpticalFlow();
+            //opticalFlow = new OpticalFlow();
             WebcamController.Instance.Init();
             WebcamController.Instance.updateFrame();
+
+
+            Pause = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -48,6 +57,9 @@ namespace HandGesture
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+
+            if (Pause) return;
+
             WebcamController.Instance.updateFrame();
             DetectorManager.Instance.UpdateManager();
 
@@ -60,8 +72,8 @@ namespace HandGesture
             detector.Mask(webcamImg, out webcamImgMask);
 
             DrawImg(webcamImg, ImageProcessBase.ROIImg, detector.FilterImg, detector.BlobImg, detector.ConvexHullImg, detector.ResultImg);
-            if (detector.centerPoint.HasValue)
-                DebugLabel.Text = detector.centerPoint.Value.X.ToString() + " " + detector.centerPoint.Value.Y.ToString();
+            //if (detector.centerPoint.HasValue)
+            //    DebugLabel.Text = detector.centerPoint.Value.X.ToString() + " " + detector.centerPoint.Value.Y.ToString();
             //pictureBox2.Image = detector.ConvertIplToBitmap(webcamImg);
             //pictureBox1.Image = detector.ExtractRecognitionImageBitmap();
 
@@ -100,35 +112,36 @@ namespace HandGesture
                 pictureBox6.Image = detector.ConvertIplToBitmap(img6);
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void FPSRadioBtn_CheckedChanged(object sender, EventArgs e)
         {
-            label1.Text = ((RadioButton)sender).Name;
+            DetectorManager.Instance.ChangeDetectMode(DetectorMode.FPS);
+            label1.Text = ((RadioButton)sender).Name + " / " + DetectorManager.Instance.DetectMode.ToString();
         }
 
-        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        private void RacingRadioBtn_CheckedChanged(object sender, EventArgs e)
         {
-            label1.Text = ((RadioButton)sender).Name;
+            DetectorManager.Instance.ChangeDetectMode(DetectorMode.Racing);
+            label1.Text = ((RadioButton)sender).Name + " / " + DetectorManager.Instance.DetectMode.ToString();
         }
 
-        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        private void CustomRadioBtn_CheckedChanged(object sender, EventArgs e)
         {
-            label1.Text = ((RadioButton)sender).Name;
+            DetectorManager.Instance.ChangeDetectMode(DetectorMode.Custom);
+            label1.Text = ((RadioButton)sender).Name + " / " + DetectorManager.Instance.DetectMode.ToString();
         }
 
 
         //기본모드 : 마우스 포인팅과 클릭만 함.
         private void BasicRadioBtn_Click(object sender, EventArgs e)
         {
-            label1.Text = ((RadioButton)sender).Name;
-            DetectorManager.Instance.DetectMode = DetectorMode.Basic;
-
+            DetectorManager.Instance.ChangeDetectMode(DetectorMode.Basic);
+            label1.Text = ((RadioButton)sender).Name + " / " + DetectorManager.Instance.DetectMode.ToString();
         }
 
         private void PauseBtn_Click(object sender, EventArgs e)
         {
-            bool pause = !WebcamController.Instance.Pause;
-            WebcamController.Instance.Pause = pause;
-            if (pause)
+            this.Pause = !this.Pause;
+            if (!this.Pause)
             {
                 PauseBtn.Text = "StartFrame";
             }
@@ -137,6 +150,7 @@ namespace HandGesture
                 PauseBtn.Text = "StopFrame";
             }
         }
+
     }
 
 }

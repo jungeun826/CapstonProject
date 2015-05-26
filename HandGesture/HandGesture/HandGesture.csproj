@@ -71,6 +71,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FPSGestureDetector.cs" />
+    <Compile Include="FPSStateManager.cs" />
     <Compile Include="HandGestureDetector.cs" />
     <Compile Include="HandGesture_Yong.cs" />
     <Compile Include="ImageProcessBase.cs" />

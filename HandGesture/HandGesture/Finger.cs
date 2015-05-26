@@ -71,6 +71,16 @@ namespace HandGesture
             return angle;
         }
 
+        // 중심점과 손가락 끝점 사이의 거리와, 손의 반지름을 이용해 비율값을 구한다.
+        public double GetFingerRatio(OpenCvSharp.CvPoint fingerPoint)
+        {
+            if (m_rad == 0)
+                Debug.Log("Don't Use This Method : m_rad isn't initialize");
+
+            double fingerDist = GetDist(fingerPoint, m_centerPoint);
+            return fingerDist / m_rad;
+        }
+
         private double GetFingerAngle(OpenCvSharp.CvPoint p1, OpenCvSharp.CvPoint p2)
         {
             return Math.Acos(p1.DotProduct(p2) / Math.Sqrt((p1.DotProduct(p1) * p2.DotProduct(p2))));

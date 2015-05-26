@@ -12,8 +12,7 @@ namespace HandGesture
 
     class HandGestureDetector : ImageProcessBase, IRecognition
     {
-        #region implement IRecognition
-
+        #region member
         private CvSize? _monitorSize = null;
         public CvSize? MonitorSize
         {
@@ -36,20 +35,21 @@ namespace HandGesture
         private CvMemStorage storage = new CvMemStorage();
         private CvSeq<CvConvexityDefect> defect;
         private int maxDist = 0;
-        public CvPoint? centerPoint;
 
         public IplImage FilterImg { get { return filterImg; } }
         public IplImage BlobImg { get; set; }
         public IplImage ConvexHullImg { get; set; }
         public IplImage ResultImg { get { return resultImg; } }
         public int MaxDist { get { return maxDist; } }
+        #endregion
 
+        #region implement IRecognition
         public bool Detect()
         {
             if (manager == null)
                 manager = new BasicStateManager();
 
-            CvPoint moustPos = new CvPoint(-1, -1);
+            //CvPoint moustPos = new CvPoint(-1, -1);
 
             //컬러맵 변환
             IplImage webcamImg = WebcamController.Instance.WebcamImage;
@@ -57,6 +57,7 @@ namespace HandGesture
 
             IplImage origin = new IplImage(WebcamController.Instance.FrameSize, BitDepth.U8, 3);
             webcamImg.CvtColor(origin, ColorConversion.BgrToCrCb);
+
             //피부색 검출
             filterImg = new IplImage(WebcamController.Instance.FrameSize, BitDepth.U8, 1);
             origin.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), filterImg);
@@ -64,6 +65,7 @@ namespace HandGesture
 
             List<IplImage> listOfBlobImg = FilterBlobImgList(filterImg, BlobImg);
             List<Finger> fingers = new List<Finger>();
+
             //BlobImg = resultImg;
             int cnt = listOfBlobImg.Count;
             if (cnt == 0) return false;
@@ -142,14 +144,15 @@ namespace HandGesture
             //        resultImg.PutText(angle.ToString(), fingers[k].m_depthPoint[0], new CvFont(FontFace.HersheyComplex, 1, 1), CvColor.Blue);
             //    }
             //}
-            // 1.
-            // 해상도 구하기
-            // 해상도 전체 좌표에서 포인팅 된 곳 맵핑
-            float ratioX = MonitorSize.Value.Width / resultImg.Width;
-            float ratioY = MonitorSize.Value.Height / resultImg.Height;
-            // 해당 위치로 마우스 이동
-            if (moustPos.X != -1)//맘대로움직이지마 ㅡㅡ 마우스야 by.Yong
-                ApiController.SetCursorPos((int)(ratioX * moustPos.X), (int)(ratioY * moustPos.Y));
+            
+            //// 1.
+            //// 해상도 구하기
+            //// 해상도 전체 좌표에서 포인팅 된 곳 맵핑
+            //float ratioX = MonitorSize.Value.Width / resultImg.Width;
+            //float ratioY = MonitorSize.Value.Height / resultImg.Height;
+            //// 해당 위치로 마우스 이동
+            //if (moustPos.X != -1)//맘대로움직이지마 ㅡㅡ 마우스야 by.Yong
+            //    ApiController.SetCursorPos((int)(ratioX * moustPos.X), (int)(ratioY * moustPos.Y));
 
 
             return true;

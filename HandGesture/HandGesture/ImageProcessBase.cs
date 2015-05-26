@@ -12,7 +12,7 @@ using OpenCvSharp.Blob;
 
 namespace HandGesture
 {
-    abstract class ImageProcessBase
+    abstract public class ImageProcessBase
     {
         public static IplImage ROIImg { get; set; }
         public Bitmap ConvertIplToBitmap(IplImage target)

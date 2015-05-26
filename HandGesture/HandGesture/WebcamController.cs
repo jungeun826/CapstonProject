@@ -14,7 +14,6 @@ namespace HandGesture
     /// </summary>
     public class WebcamController : Base.Singletone<WebcamController>, Base.ISingleTon
     {
-        public bool Pause { get; set; }
         private IplImage m_cvImg;
         private CvCapture m_cvCap;
         private updateDelegate m_updateDel;
@@ -44,7 +43,6 @@ namespace HandGesture
             m_cvCap = CvCapture.FromCamera(CaptureDevice.DShow, 0);
 #endif
             
-            Pause = false;
             m_cvCap.SetCaptureProperty(CaptureProperty.FrameWidth, 320);
             m_cvCap.SetCaptureProperty(CaptureProperty.FrameHeight, 240);
 
@@ -92,8 +90,6 @@ namespace HandGesture
 #elif !PCVer
             lock (m_cvCap)
             {
-                if (Pause) return;
-
                 m_cvImg = m_cvCap.QueryFrame();
                 if (m_updateDel != null) m_updateDel();
             }

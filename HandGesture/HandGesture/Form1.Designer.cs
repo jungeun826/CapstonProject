@@ -37,9 +37,9 @@
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.BasicRadioBtn = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.FPSRadioBtn = new System.Windows.Forms.RadioButton();
+            this.RacingRadioBtn = new System.Windows.Forms.RadioButton();
+            this.CustomRadioBtn = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -127,38 +127,38 @@
             this.BasicRadioBtn.UseVisualStyleBackColor = true;
             this.BasicRadioBtn.Click += new System.EventHandler(this.BasicRadioBtn_Click);
             // 
-            // radioButton2
+            // FPSRadioBtn
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(1144, 47);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(46, 16);
-            this.radioButton2.TabIndex = 7;
-            this.radioButton2.Text = "FPS";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
+            this.FPSRadioBtn.AutoSize = true;
+            this.FPSRadioBtn.Location = new System.Drawing.Point(1144, 47);
+            this.FPSRadioBtn.Name = "FPSRadioBtn";
+            this.FPSRadioBtn.Size = new System.Drawing.Size(46, 16);
+            this.FPSRadioBtn.TabIndex = 7;
+            this.FPSRadioBtn.Text = "FPS";
+            this.FPSRadioBtn.UseVisualStyleBackColor = true;
+            this.FPSRadioBtn.CheckedChanged += new System.EventHandler(this.FPSRadioBtn_CheckedChanged);
             // 
-            // radioButton3
+            // RacingRadioBtn
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(1144, 69);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(59, 16);
-            this.radioButton3.TabIndex = 7;
-            this.radioButton3.Text = "레이싱";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButton3_CheckedChanged);
+            this.RacingRadioBtn.AutoSize = true;
+            this.RacingRadioBtn.Location = new System.Drawing.Point(1144, 69);
+            this.RacingRadioBtn.Name = "RacingRadioBtn";
+            this.RacingRadioBtn.Size = new System.Drawing.Size(59, 16);
+            this.RacingRadioBtn.TabIndex = 7;
+            this.RacingRadioBtn.Text = "레이싱";
+            this.RacingRadioBtn.UseVisualStyleBackColor = true;
+            this.RacingRadioBtn.CheckedChanged += new System.EventHandler(this.RacingRadioBtn_CheckedChanged);
             // 
-            // radioButton4
+            // CustomRadioBtn
             // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(1144, 91);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(47, 16);
-            this.radioButton4.TabIndex = 7;
-            this.radioButton4.Text = "기타";
-            this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton4_CheckedChanged);
+            this.CustomRadioBtn.AutoSize = true;
+            this.CustomRadioBtn.Location = new System.Drawing.Point(1144, 91);
+            this.CustomRadioBtn.Name = "CustomRadioBtn";
+            this.CustomRadioBtn.Size = new System.Drawing.Size(47, 16);
+            this.CustomRadioBtn.TabIndex = 7;
+            this.CustomRadioBtn.Text = "기타";
+            this.CustomRadioBtn.UseVisualStyleBackColor = true;
+            this.CustomRadioBtn.CheckedChanged += new System.EventHandler(this.CustomRadioBtn_CheckedChanged);
             // 
             // label1
             // 
@@ -285,9 +285,9 @@
             this.Controls.Add(this.DebugLabel);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.radioButton4);
-            this.Controls.Add(this.radioButton3);
-            this.Controls.Add(this.radioButton2);
+            this.Controls.Add(this.CustomRadioBtn);
+            this.Controls.Add(this.RacingRadioBtn);
+            this.Controls.Add(this.FPSRadioBtn);
             this.Controls.Add(this.BasicRadioBtn);
             this.Controls.Add(this.pictureBox6);
             this.Controls.Add(this.pictureBox5);
@@ -319,9 +319,9 @@
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.RadioButton BasicRadioBtn;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton4;
+        private System.Windows.Forms.RadioButton FPSRadioBtn;
+        private System.Windows.Forms.RadioButton RacingRadioBtn;
+        private System.Windows.Forms.RadioButton CustomRadioBtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;

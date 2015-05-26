@@ -26,8 +26,11 @@ namespace HandGesture
     class DetectorManager : Base.Singletone<DetectorManager>, Base.ISingleTon
     {
 
-        public DetectorMode DetectMode { get; set; }
+        public DetectorMode DetectMode { get; private set; }
 
+        //지금 생각해보니 list일 필요는 없다.
+        //예전에는 Fps인지, 뭔지 하나씩 처리한다는 말이 없어서 리스트로 해놓았음..
+        //하지만 변경 귀차나서 그냥 씀..
         private Dictionary<DetectorMode, List<IRecognition>> detectorDic = new Dictionary<DetectorMode, List<IRecognition>>();
 
         public void Init()
@@ -35,43 +38,51 @@ namespace HandGesture
 
         }
 
-        public void Init(HandGestureDetector handGestureDetector)
+        public void Init(DetectorMode mode, IRecognition detector)
         {
-            if (!detectorDic.ContainsKey(DetectorMode.Basic))
+            if (!detectorDic.ContainsKey(mode))
             {
                 List<IRecognition> list = new List<IRecognition>();
-                list.Add(handGestureDetector);
-                detectorDic.Add(DetectorMode.Basic, list);
+                list.Add(detector);
+                detectorDic.Add(mode, list);
             }
             else
             {
-                List<IRecognition> list = detectorDic[DetectorMode.Basic];
-                list.Add(handGestureDetector);
+                List<IRecognition> list = detectorDic[mode];
+                list.Add(detector);
             }
         }
 
+        public void ChangeDetectMode(DetectorMode changeMode)
+        {
+            this.DetectMode = changeMode;
+        }
+
+
         public void UpdateManager()
         {
-            switch (DetectMode)
+            //switch (DetectMode)
+            //{
+            //    case DetectorMode.Basic:
+                    
+            //        break;
+            //    case DetectorMode.FPS:
+
+            //        break;
+            //    case DetectorMode.Racing:
+            //        break;
+            //    case DetectorMode.Custom:
+            //        break;
+            //    default:
+            //        break;
+            //}
+            foreach (IRecognition recogn in detectorDic[DetectMode])
             {
-                case DetectorMode.Basic:
-                    foreach (IRecognition recogn in detectorDic[DetectMode])
-                    {
-                        if (recogn.Detect())
-                        {
-                            //이거 계속 출력되는거 거슬려서 주석처리함 by.yong
-                            //Console.WriteLine("dd");
-                        }
-                    }
-                    break;
-                case DetectorMode.FPS:
-                    break;
-                case DetectorMode.Racing:
-                    break;
-                case DetectorMode.Custom:
-                    break;
-                default:
-                    break;
+                if (recogn.Detect())
+                {
+                    //이거 계속 출력되는거 거슬려서 주석처리함 by.yong
+                    //Debug.Log("Detect HandGesture : " + DetectMode.ToString() + " Mode");
+                }
             }
         }
 

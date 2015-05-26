@@ -105,7 +105,7 @@ namespace HandGesture
     //    }
     //}
 
-    public enum TransitionType
+    public enum BasicModeTransitionType
     {
         Idle,
         Move,
@@ -115,7 +115,7 @@ namespace HandGesture
         RBUp,
     }
 
-    public enum StateType
+    public enum BasicModeStateType
     {
         Idle,
         Move,
@@ -149,7 +149,7 @@ namespace HandGesture
                 {
                     Finger.FingerType fingerType = context.hands[i].GetFingerType();
                     if (fingerType.HasFlag(Finger.FingerType.ForeFinger) && fingerType.HasFlag(Finger.FingerType.IndexFinger))
-                        context.manager.Transition((int)TransitionType.LBDown);
+                        context.manager.Transition((int)BasicModeTransitionType.LBDown);
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace HandGesture
             {
                 if (context.hands[i].m_tipPoint.Count > 1 && context.hands[i].GetFingerAngle() > 0.7)
                 {
-                    context.manager.Transition((int)TransitionType.LBUp);
+                    context.manager.Transition((int)BasicModeTransitionType.LBUp);
                     return;
                 }
                 ////move
@@ -194,7 +194,7 @@ namespace HandGesture
 
             }
 
-            context.manager.Transition((int)TransitionType.Idle);
+            context.manager.Transition((int)BasicModeTransitionType.Idle);
         }
 
         public override void OnExit()
@@ -229,11 +229,11 @@ namespace HandGesture
                 //move
                 if (context.hands[i].m_tipPoint.Count == 2)
                 {
-                    context.manager.Transition((int)TransitionType.Move);
+                    context.manager.Transition((int)BasicModeTransitionType.Move);
                 }
             }
 
-            context.manager.Transition((int)TransitionType.Idle);
+            context.manager.Transition((int)BasicModeTransitionType.Idle);
         }
 
         public override void OnExit()
@@ -258,13 +258,13 @@ namespace HandGesture
                 //move
                 if( context.hands[i].m_tipPoint.Count == 2 )
                 {
-                    context.manager.Transition((int)TransitionType.Move);
+                    context.manager.Transition((int)BasicModeTransitionType.Move);
                 }
                 
                 //lb down
                 if (context.hands[i].m_tipPoint.Count == 1 || context.hands[i].GetFingerAngle() < 0.5)
                 {
-                    context.manager.Transition((int)TransitionType.LBDown);
+                    context.manager.Transition((int)BasicModeTransitionType.LBDown);
                 }
 
                 context.hands[i].GetFingerType();
@@ -283,34 +283,34 @@ namespace HandGesture
         {
             manager = new StateManger2<BasicStateManager>(this);
 
-            manager.AddState((int)StateType.Idle, new IdleState<BasicStateManager>());
-            manager.AddState((int)StateType.Move, new MoveState<BasicStateManager>());
-            manager.AddState((int)StateType.LBDown, new LBDownState<BasicStateManager>());
-            manager.AddState((int)StateType.LBUp, new LBUpState<BasicStateManager>());
-            manager.AddState((int)StateType.RBDown, new RBDownState<BasicStateManager>());
-            manager.AddState((int)StateType.RBUp, new RBUpState<BasicStateManager>());
+            manager.AddState((int)BasicModeStateType.Idle, new IdleState<BasicStateManager>());
+            manager.AddState((int)BasicModeStateType.Move, new MoveState<BasicStateManager>());
+            manager.AddState((int)BasicModeStateType.LBDown, new LBDownState<BasicStateManager>());
+            manager.AddState((int)BasicModeStateType.LBUp, new LBUpState<BasicStateManager>());
+            manager.AddState((int)BasicModeStateType.RBDown, new RBDownState<BasicStateManager>());
+            manager.AddState((int)BasicModeStateType.RBUp, new RBUpState<BasicStateManager>());
             //manager.AddState((int)StateType.RBUp, new RBUpState<BasicStateManager>());
 
-            manager.AddTransition(-1, (int)TransitionType.Idle, (int)StateType.Idle);
+            manager.AddTransition(-1, (int)BasicModeTransitionType.Idle, (int)BasicModeStateType.Idle);
 
-            manager.AddTransition((int)StateType.Idle, (int)TransitionType.Move, (int)StateType.Move);
-            manager.AddTransition((int)StateType.Idle, (int)TransitionType.LBDown, (int)StateType.LBDown);
-            manager.AddTransition((int)StateType.Idle, (int)TransitionType.RBDown, (int)StateType.RBDown);
+            manager.AddTransition((int)BasicModeStateType.Idle, (int)BasicModeTransitionType.Move, (int)BasicModeStateType.Move);
+            manager.AddTransition((int)BasicModeStateType.Idle, (int)BasicModeTransitionType.LBDown, (int)BasicModeStateType.LBDown);
+            manager.AddTransition((int)BasicModeStateType.Idle, (int)BasicModeTransitionType.RBDown, (int)BasicModeStateType.RBDown);
 
-            manager.AddTransition((int)StateType.Move, (int)TransitionType.LBDown, (int)StateType.LBDown);
-            manager.AddTransition((int)StateType.LBDown, (int)TransitionType.LBUp, (int)StateType.LBUp);
-            manager.AddTransition((int)StateType.LBUp, (int)TransitionType.Move, (int)StateType.Move);
-            manager.AddTransition((int)StateType.Move, (int)TransitionType.RBDown, (int)StateType.RBDown);
-            manager.AddTransition((int)StateType.RBDown, (int)TransitionType.RBUp, (int)StateType.RBUp);
-            manager.AddTransition((int)StateType.RBUp, (int)TransitionType.Move, (int)StateType.Move);
+            manager.AddTransition((int)BasicModeStateType.Move, (int)BasicModeTransitionType.LBDown, (int)BasicModeStateType.LBDown);
+            manager.AddTransition((int)BasicModeStateType.LBDown, (int)BasicModeTransitionType.LBUp, (int)BasicModeStateType.LBUp);
+            manager.AddTransition((int)BasicModeStateType.LBUp, (int)BasicModeTransitionType.Move, (int)BasicModeStateType.Move);
+            manager.AddTransition((int)BasicModeStateType.Move, (int)BasicModeTransitionType.RBDown, (int)BasicModeStateType.RBDown);
+            manager.AddTransition((int)BasicModeStateType.RBDown, (int)BasicModeTransitionType.RBUp, (int)BasicModeStateType.RBUp);
+            manager.AddTransition((int)BasicModeStateType.RBUp, (int)BasicModeTransitionType.Move, (int)BasicModeStateType.Move);
 
 
-            manager.AddTransition((int)StateType.Move, (int)TransitionType.Idle, (int)StateType.Idle);
-            manager.AddTransition((int)StateType.LBDown, (int)TransitionType.Idle, (int)StateType.Idle);
-            manager.AddTransition((int)StateType.Move, (int)TransitionType.Idle, (int)StateType.Idle);
-            manager.AddTransition((int)StateType.RBDown, (int)TransitionType.Idle, (int)StateType.Idle);
+            manager.AddTransition((int)BasicModeStateType.Move, (int)BasicModeTransitionType.Idle, (int)BasicModeStateType.Idle);
+            manager.AddTransition((int)BasicModeStateType.LBDown, (int)BasicModeTransitionType.Idle, (int)BasicModeStateType.Idle);
+            manager.AddTransition((int)BasicModeStateType.Move, (int)BasicModeTransitionType.Idle, (int)BasicModeStateType.Idle);
+            manager.AddTransition((int)BasicModeStateType.RBDown, (int)BasicModeTransitionType.Idle, (int)BasicModeStateType.Idle);
 
-            manager.Transition((int)TransitionType.Idle);
+            manager.Transition((int)BasicModeTransitionType.Idle);
         }
 
         public void Update(List<Finger> hands)
@@ -345,20 +345,25 @@ namespace HandGesture
         IState<T> curState = null;
         int curStateType = -1;
 
+        //각 stateType에 따른 State정보를 담음
         Dictionary<int, IState<T>> stateDic = new Dictionary<int, IState<T>>();
+        //각 transition에 따른 cur/nextState정보를 담음(하나의 transition이 여러 다른 state로 전이하게 하므로 list사용)
         Dictionary<int, List<TransitionInfo>> transitionDic = new Dictionary<int, List<TransitionInfo>>();
         
+        //매니저 할 클래스의 현재 정보를 가지고 있어야 모든 state가 동시에 같은 정보에 접근할 수 있음.
         public StateManger2(T context)
         {
             this.context = context;
         }
 
+        //현재 state의 정보만을 update
         public void Update()
         {
             if(curState != null)
             curState.OnUpdate();
         }
 
+        //처음 스테이트 머신 초기화시에 사용할 state를 등록하는 함수
         public void AddState(int stateType, IState<T> state)
         {
             if (stateDic.ContainsKey(stateType))
@@ -371,6 +376,8 @@ namespace HandGesture
             }
         }
 
+        //처음 스테이트 머신에 사용할 transition를 등록하는 함수
+        //현재 state의 type, 해당 type에 넣어줄 transitionType, 현재 state에서 transition이 들어올 때 변경할 stateType을 받아서 추가
         public void AddTransition(int curStateType, int transitionType, int nextStateType)
         {
             TransitionInfo info = new TransitionInfo(curStateType, nextStateType);
@@ -390,6 +397,12 @@ namespace HandGesture
             }
         }
 
+        /// <summary>
+        /// transition을 담당해주는 manager함수
+        /// transitionType과 현재 state를 체크해서 다음 state가 무엇인지 찾아내고, 해당하는 state로 전이해줌. 
+        /// 변경된 state는 OnExit, OnEnter를 사용해 State처리 초기화해줌
+        /// </summary>
+        /// <param name="transitionType"></param>
         public void Transition(int transitionType)
         {
             int nextStateType = GetTransitionStateType(transitionType);
@@ -397,6 +410,14 @@ namespace HandGesture
                 return;
 
             IState<T> nextState = stateDic[nextStateType];
+
+            //context가 업데이트 되는지 의문이 든당.
+            //if (curState == nextState) return; 
+
+            if (curState != nextState)
+            {
+                Debug.Log("State Change : " + nextState.ToString());
+            }
 
             if (prevState != null)
                 prevState.OnExit();
@@ -408,6 +429,9 @@ namespace HandGesture
             curStateType = nextStateType;
         }
 
+        //넘겨온 transitionType과 현재 statetype을 비교하여 
+        //Dictionary에 다음 state에 대한 정보가 있으면 해당 type을 리턴,
+        //없으면 -1리턴
         private int GetTransitionStateType(int transitionType)
         {
             List<TransitionInfo> infoList = null;
@@ -431,7 +455,7 @@ namespace HandGesture
 
     }
 
-
+    //모든 state의 기본 구조
     public class IState<T> 
     {
         public T context;

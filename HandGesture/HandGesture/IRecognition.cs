@@ -11,7 +11,7 @@ namespace HandGesture
     interface IRecognition
     {
         //내부적으로 WebcamController를 얻어와서 처리함.
-        bool Detect();
+        List<Finger> Detect();
         IplImage ExtractRecognitionImageIpl();
         Bitmap ExtractRecognitionImageBitmap();
         bool RecognitionProcessing();

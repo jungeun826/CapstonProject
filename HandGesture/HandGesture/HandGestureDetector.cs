@@ -27,13 +27,11 @@ namespace HandGesture
                 return _monitorSize;
             }
         }
-        BasicStateManager manager = null;
         private IplImage resultImg;
         private IplImage filterImg;
         private CvSeq<CvPoint> contours;
         private int[] hull;
         private CvMemStorage storage = new CvMemStorage();
-        private CvSeq<CvConvexityDefect> defect;
         private int maxDist = 0;
 
         public IplImage FilterImg { get { return filterImg; } }
@@ -41,19 +39,15 @@ namespace HandGesture
         public IplImage ConvexHullImg { get; set; }
         public IplImage ResultImg { get { return resultImg; } }
         public int MaxDist { get { return maxDist; } }
+        private  List<Finger> fingers = new List<Finger>();
         #endregion
 
         #region implement IRecognition
-        public bool Detect()
+        public List<Finger> Detect()
         {
-            if (manager == null)
-                manager = new BasicStateManager();
-
-            //CvPoint moustPos = new CvPoint(-1, -1);
-
             //컬러맵 변환
             IplImage webcamImg = WebcamController.Instance.WebcamImage;
-            if (webcamImg == null) return false;
+            if (webcamImg == null) return null;
 
             IplImage origin = new IplImage(WebcamController.Instance.FrameSize, BitDepth.U8, 3);
             webcamImg.CvtColor(origin, ColorConversion.BgrToCrCb);
@@ -64,21 +58,20 @@ namespace HandGesture
             Interpolate(filterImg);
 
             List<IplImage> listOfBlobImg = FilterBlobImgList(filterImg, BlobImg);
-            List<Finger> fingers = new List<Finger>();
 
             //BlobImg = resultImg;
             int cnt = listOfBlobImg.Count;
-            if (cnt == 0) return false;
+            if (cnt == 0) return null;
 
             resultImg = webcamImg.Clone();
             for (int k = 0; k < cnt; k++)
             {
                 if (!FindContours(listOfBlobImg[k], storage, out contours))
                 {
-                    return false;
+                    return null;
                 }
                 contours.ConvexHull2(out hull, ConvexHullOrientation.Counterclockwise);
-                defect = contours.ConvexityDefects(hull);
+                CvSeq<CvConvexityDefect> defect = contours.ConvexityDefects(hull);
 
                 int cntFinger = 0;
                 CvSeq<CvPoint> c = contours;
@@ -110,7 +103,8 @@ namespace HandGesture
                 }
                 else continue;
 
-                foreach (CvConvexityDefect ccd in defect)
+                var tempLoop = defect.ToArray();
+                foreach (CvConvexityDefect ccd in tempLoop)
                 {
                     if (ccd.End.Y < conCenter.Y + maxConDist/2)
                     {
@@ -127,35 +121,9 @@ namespace HandGesture
                         //resultImg.PutText(((int)fingers[k].GetFingerAngle2(ccd.DepthPoint, conCenter)).ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
                     }
                 }
-                //if (cntFinger == 1)
-                //{
-                //    moustPos = conCenter;
-                //}
-                //resultImg.PutText(cntFinger.ToString(), conCenter, new CvFont(FontFace.HersheyComplex, 1, 1), new CvScalar(255, 255, 255));
             }
 
-            manager.Update(fingers);
-
-            //for (int k = 0; k < cnt; k++)
-            //{
-            //    double angle = fingers[k].GetFingerAngle();
-            //    if (angle > 0)
-            //    {
-            //        resultImg.PutText(angle.ToString(), fingers[k].m_depthPoint[0], new CvFont(FontFace.HersheyComplex, 1, 1), CvColor.Blue);
-            //    }
-            //}
-            
-            //// 1.
-            //// 해상도 구하기
-            //// 해상도 전체 좌표에서 포인팅 된 곳 맵핑
-            //float ratioX = MonitorSize.Value.Width / resultImg.Width;
-            //float ratioY = MonitorSize.Value.Height / resultImg.Height;
-            //// 해당 위치로 마우스 이동
-            //if (moustPos.X != -1)//맘대로움직이지마 ㅡㅡ 마우스야 by.Yong
-            //    ApiController.SetCursorPos((int)(ratioX * moustPos.X), (int)(ratioY * moustPos.Y));
-
-
-            return true;
+            return fingers;
         }
 
         //public bool Detect()

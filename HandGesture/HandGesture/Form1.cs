@@ -20,7 +20,7 @@ namespace HandGesture
 
         //DetectorManager detectManager;
         HandGestureDetector detector;
-        FPSGestureDetector fpsDetector;
+        //FPSGestureDetector fpsDetector;
 
         //OpticalFlow opticalFlow;
 
@@ -28,12 +28,16 @@ namespace HandGesture
         {
             InitializeComponent();
 
-            detector = new HandGestureDetector();
-            fpsDetector = new FPSGestureDetector();
+            //detector = new HandGestureDetector();
+            //fpsDetector = new FPSGestureDetector();
 
-            DetectorManager.Instance.Init(DetectorMode.Basic, detector);
-            DetectorManager.Instance.Init(DetectorMode.FPS, fpsDetector);
-            
+            //DetectorManager.Instance.Init(DetectorMode.Basic, detector);
+            //DetectorManager.Instance.Init(DetectorMode.FPS, fpsDetector);
+
+            DetectorManager.Instance.Init(DetectorMode.Basic);
+            DetectorManager.Instance.Init(DetectorMode.FPS);
+            detector = DetectorManager.Instance.handDetector;
+
             //opticalFlow = new OpticalFlow();
             WebcamController.Instance.Init();
             WebcamController.Instance.updateFrame();
@@ -62,18 +66,21 @@ namespace HandGesture
 
             WebcamController.Instance.updateFrame();
             DetectorManager.Instance.UpdateManager();
+            
 
             IplImage webcamImg = WebcamController.Instance.WebcamImage;
             if (webcamImg == null)
             {
                 return;
             }
-            IplImage webcamImgMask;
-            detector.Mask(webcamImg, out webcamImgMask);
+            //IplImage webcamImgMask;
+            //detector.Mask(webcamImg, out webcamImgMask);
 
             DrawImg(webcamImg, ImageProcessBase.ROIImg, detector.FilterImg, detector.BlobImg, detector.ConvexHullImg, detector.ResultImg);
             //if (detector.centerPoint.HasValue)
-            //    DebugLabel.Text = detector.centerPoint.Value.X.ToString() + " " + detector.centerPoint.Value.Y.ToString();
+            
+            DebugLabel.Text = DetectorManager.Instance.GetCurState();
+
             //pictureBox2.Image = detector.ConvertIplToBitmap(webcamImg);
             //pictureBox1.Image = detector.ExtractRecognitionImageBitmap();
 

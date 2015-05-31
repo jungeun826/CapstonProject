@@ -274,7 +274,7 @@ namespace HandGesture
     }
 
 
-    public class BasicStateManager
+    public class BasicStateManager : IStateManger
     {
         public StateManger2<BasicStateManager> manager;
         public List<Finger> hands;
@@ -319,6 +319,11 @@ namespace HandGesture
             manager.Update();
         }
 
+        public string GetCurState()
+        {
+            return ((BasicModeStateType)manager.GetCurStateType()).ToString();
+        }
+
         //public void ChangeTransition(TransitionType type)
         //{
         //    manager.Transition((int)type);
@@ -335,6 +340,12 @@ namespace HandGesture
             this.curStateType = curStateType;
             this.nextStateType = nextStateType;
         }
+    }
+
+    public interface IStateManger
+    {
+        void Update(List<Finger> finger);
+        string GetCurState();
     }
 
     public class StateManger2<T>
@@ -409,6 +420,12 @@ namespace HandGesture
             if (nextStateType == -1)
                 return;
 
+            if (!stateDic.ContainsKey(nextStateType))
+            {
+                Debug.Log("State Not Added");
+                return;
+            }
+
             IState<T> nextState = stateDic[nextStateType];
 
             //context가 업데이트 되는지 의문이 든당.
@@ -452,6 +469,9 @@ namespace HandGesture
 
             return nextType;
         }
+
+        public int GetCurStateType()
+        { return curStateType;  }
 
     }
 

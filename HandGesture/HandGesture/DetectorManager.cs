@@ -27,29 +27,42 @@ namespace HandGesture
     {
 
         public DetectorMode DetectMode { get; private set; }
+        public HandGestureDetector handDetector = new HandGestureDetector();
 
         //지금 생각해보니 list일 필요는 없다.
         //예전에는 Fps인지, 뭔지 하나씩 처리한다는 말이 없어서 리스트로 해놓았음..
         //하지만 변경 귀차나서 그냥 씀..
-        private Dictionary<DetectorMode, List<IRecognition>> detectorDic = new Dictionary<DetectorMode, List<IRecognition>>();
+        //private Dictionary<DetectorMode, List<IRecognition>> detectorDic = new Dictionary<DetectorMode, List<IRecognition>>();
+        private Dictionary<DetectorMode, IStateManger> fsmDic = new Dictionary<DetectorMode, IStateManger>();
+        
 
         public void Init()
         {
-
+            
         }
 
-        public void Init(DetectorMode mode, IRecognition detector)
+        public void Init(DetectorMode mode)
         {
-            if (!detectorDic.ContainsKey(mode))
+            switch (mode)
             {
-                List<IRecognition> list = new List<IRecognition>();
-                list.Add(detector);
-                detectorDic.Add(mode, list);
-            }
-            else
-            {
-                List<IRecognition> list = detectorDic[mode];
-                list.Add(detector);
+                case DetectorMode.Basic:
+                    BasicStateManager basicStateManager = new BasicStateManager();
+                    fsmDic.Add(mode, basicStateManager);
+                    break;
+                case DetectorMode.FPS:
+                    FPSStateManager FPSStateManager = new FPSStateManager();
+                    fsmDic.Add(mode, FPSStateManager);
+                    break;
+                case DetectorMode.Racing:
+                    //BasicStateManager stateManager = new BasicStateManager();
+                    //fsmDic.Add(mode, stateManager);
+                    break;
+                case DetectorMode.Custom:
+                    //BasicStateManager stateManager = new BasicStateManager();
+                    //fsmDic.Add(mode, stateManager);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -61,40 +74,23 @@ namespace HandGesture
 
         public void UpdateManager()
         {
-            //switch (DetectMode)
-            //{
-            //    case DetectorMode.Basic:
-                    
-            //        break;
-            //    case DetectorMode.FPS:
+            List<Finger> fingers = handDetector.Detect();
 
-            //        break;
-            //    case DetectorMode.Racing:
-            //        break;
-            //    case DetectorMode.Custom:
-            //        break;
-            //    default:
-            //        break;
-            //}
-            foreach (IRecognition recogn in detectorDic[DetectMode])
-            {
-                if (recogn.Detect())
-                {
-                    //이거 계속 출력되는거 거슬려서 주석처리함 by.yong
-                    //Debug.Log("Detect HandGesture : " + DetectMode.ToString() + " Mode");
-                }
-            }
+            if (fingers == null) return;
+
+            if (!fsmDic.ContainsKey(DetectMode))
+                return;
+
+            fsmDic[DetectMode].Update(fingers);
         }
 
-        //public Bitmap GetBitmapImage(GestureType type)
-        //{
-        //    switch (type)
-        //    {
-        //        case GestureType.Point:
-        //            return handGestureDetector.ExtractRecognitionImageBitmap();
-        //    }
-        //    return null;
-        //}
+        public string GetCurState()
+        {
+            if (!fsmDic.ContainsKey(DetectMode))
+                return "Not contains fsm / Mode : " + DetectMode.ToString();
+
+            return fsmDic[DetectMode].GetCurState();
+        }
 
     }
 }

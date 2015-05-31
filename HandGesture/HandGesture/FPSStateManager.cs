@@ -31,7 +31,7 @@ namespace HandGesture
 
     //손이 2개일 때 어느 것을 먼저 처리할 것인가..
     //오른손 왼손을 따로 돌려야하나?
-    public class FPSStateManager
+    public class FPSStateManager : IStateManger
     {
         public StateManger2<FPSStateManager> manager;
         public List<Finger> hands;
@@ -82,6 +82,11 @@ namespace HandGesture
         {
             this.hands = hands;
             manager.Update();
+        }
+
+        public string GetCurState()
+        {
+            return ((FPSModeTransitionType)manager.GetCurStateType()).ToString();
         }
     }
 

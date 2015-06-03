@@ -45,6 +45,7 @@ namespace HandGesture
         #region implement IRecognition
         public List<Finger> Detect()
         {
+            fingers.Clear();
             //컬러맵 변환
             IplImage webcamImg = WebcamController.Instance.WebcamImage;
             if (webcamImg == null) return null;
@@ -70,8 +71,6 @@ namespace HandGesture
                 {
                     return null;
                 }
-                contours.ConvexHull2(out hull, ConvexHullOrientation.Counterclockwise);
-                CvSeq<CvConvexityDefect> defect = contours.ConvexityDefects(hull);
 
                 int cntFinger = 0;
                 CvSeq<CvPoint> c = contours;
@@ -103,23 +102,39 @@ namespace HandGesture
                 }
                 else continue;
 
-                var tempLoop = defect.ToArray();
-                foreach (CvConvexityDefect ccd in tempLoop)
-                {
-                    if (ccd.End.Y < conCenter.Y + maxConDist/2)
-                    {
-                        int dis = (int)ccd.End.DistanceTo(conCenter);
-                        if (dis < maxConDist * 1.6) continue;
-                        fingers[k].addTip(ccd.End);
-                        fingers[k].addDepth(ccd.DepthPoint);
 
-                        resultImg.DrawCircle(ccd.End, 2, CvColor.Red, -1);
-                        //resultImg.DrawLine(ccd.End, conCenter, CvColor.Aqua);
-                        resultImg.DrawLine(conCenter, ccd.DepthPoint, CvColor.Aqua);
-                        cntFinger++;
-                        resultImg.PutText(cntFinger.ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
-                        //resultImg.PutText(((int)fingers[k].GetFingerAngle2(ccd.DepthPoint, conCenter)).ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
+                contours.ConvexHull2(out hull, ConvexHullOrientation.Counterclockwise);
+                CvSeq<CvConvexityDefect> defect = contours.ConvexityDefects(hull);
+                try
+                {
+                    if (defect.Storage == null)
+                    {
+                        return fingers;
                     }
+
+                    var tempLoop = defect.ToArray();
+
+                    foreach (CvConvexityDefect ccd in tempLoop)
+                    {
+                        if (ccd.End.Y < conCenter.Y + maxConDist / 2)
+                        {
+                            int dis = (int)ccd.End.DistanceTo(conCenter);
+                            if (dis < maxConDist * 1.6) continue;
+                            fingers[k].addTip(ccd.End);
+                            fingers[k].addDepth(ccd.DepthPoint);
+
+                            resultImg.DrawCircle(ccd.End, 2, CvColor.Red, -1);
+                            //resultImg.DrawLine(ccd.End, conCenter, CvColor.Aqua);
+                            resultImg.DrawLine(conCenter, ccd.DepthPoint, CvColor.Aqua);
+                            cntFinger++;
+                            resultImg.PutText(cntFinger.ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
+                            //resultImg.PutText(((int)fingers[k].GetFingerAngle2(ccd.DepthPoint, conCenter)).ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
+                        }
+                    }
+                }
+                catch (System.AccessViolationException e)
+                {
+                    Debug.Log("bb");
                 }
             }
 

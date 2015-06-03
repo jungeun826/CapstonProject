@@ -100,7 +100,7 @@ namespace HandGesture
                 angle = GetFingerAngle(depthPoint - m_centerPoint, tempPoint - m_centerPoint);
                 if (2.4 < angle && angle < 3.0f)
                     type |= FingerType.ForeFinger;
-                else if (2.0 < angle && angle < 1.6f)
+                else if (1.8 < angle && angle < 1.6f)
                     type |= FingerType.IndexFinger;
                 else if ( 1.4 < angle &&angle < 1.2f)
                     type |= FingerType.MiddleFinger;

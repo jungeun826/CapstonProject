@@ -84,10 +84,18 @@ namespace HandGesture
             fsmDic[DetectMode].Update(fingers);
         }
 
-        public string GetCurState()
+        public string GetCurStateString()
         {
             if (!fsmDic.ContainsKey(DetectMode))
                 return "Not contains fsm / Mode : " + DetectMode.ToString();
+
+            return fsmDic[DetectMode].GetCurStateString();
+        }
+
+        public int GetCurState()
+        {
+            if (!fsmDic.ContainsKey(DetectMode))
+                return -1; //"Not contains fsm / Mode : " + DetectMode.ToString();
 
             return fsmDic[DetectMode].GetCurState();
         }

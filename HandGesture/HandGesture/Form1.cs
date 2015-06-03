@@ -22,8 +22,6 @@ namespace HandGesture
         HandGestureDetector detector;
         //FPSGestureDetector fpsDetector;
 
-        readonly int ShowDelayCnt = 1000;
-        int showDelayCntTemp = 0;
         //OpticalFlow opticalFlow;
 
         public Form1()
@@ -81,21 +79,8 @@ namespace HandGesture
             DrawImg(webcamImg, ImageProcessBase.ROIImg, detector.FilterImg, detector.BlobImg, detector.ConvexHullImg, detector.ResultImg);
             //if (detector.centerPoint.HasValue)
             
-            
-            int curState = (int)DetectorManager.Instance.GetCurState();
-            //Debug.Log(curState.ToString());
-            if (curState > 0 && curState != 1)
-            {
-                DebugLabel.Text = DetectorManager.Instance.GetCurStateString();
-            }
-            else
-            {
-                if (ShowDelayCnt <= showDelayCntTemp++)
-                {
-                    DebugLabel.Text = DetectorManager.Instance.GetCurStateString();
-                    showDelayCntTemp = 0;
-                }
-            }
+            DebugLabel.Text = DetectorManager.Instance.GetCurState();
+
             //pictureBox2.Image = detector.ConvertIplToBitmap(webcamImg);
             //pictureBox1.Image = detector.ExtractRecognitionImageBitmap();
 

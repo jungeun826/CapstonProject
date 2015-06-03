@@ -84,14 +84,9 @@ namespace HandGesture
             manager.Update();
         }
 
-        public string GetCurStateString()
+        public string GetCurState()
         {
             return ((FPSModeTransitionType)manager.GetCurStateType()).ToString();
-        }
-
-        public int GetCurState()
-        {
-            return manager.GetCurStateType();
         }
     }
 

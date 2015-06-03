@@ -6,6 +6,105 @@ using System.Threading.Tasks;
 
 namespace HandGesture
 {
+    //static class StateManager
+    //{
+    //    delegate void fingersDel();
+
+    //    enum fstate
+    //    {
+    //        IDLE,
+    //        MOVE,
+    //        LBDOWN,
+    //        LBUP,
+    //        RBDOWN,
+    //        RBUP
+    //    }
+
+    //    static List<Finger> m_fingers;
+
+    //    static fingersDel func;
+        
+    //    static public void update(List<Finger> curFingers)
+    //    {
+    //        m_fingers = curFingers;
+    //        if (func != null) func();
+    //        else
+    //        {
+    //            func = idleFunc;
+    //            func();
+    //        }
+    //    }
+
+    //    static private void idleFunc()
+    //    {
+    //        int i;
+    //        for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++);
+    //        if (i == m_fingers.Count)
+    //        {
+    //            //idle
+    //            return;
+    //        }
+
+    //        if (m_fingers[i].m_tipPoint.Count == 2)
+    //        {
+    //            Console.WriteLine("changed move mode");
+    //            func -= idleFunc;
+    //            func += moveFunc;
+    //        }
+    //    }
+
+    //    private static void moveFunc()
+    //    {
+    //        int i;
+    //        for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
+    //        if (i == m_fingers.Count)
+    //        {
+    //            Console.WriteLine("changed idle mode");
+    //            func -= moveFunc;
+    //            func += idleFunc;
+    //            return;
+    //        }
+
+    //        if (m_fingers[i].m_tipPoint.Count == 1 || m_fingers[i].GetFingerAngle() < 0.7)
+    //        {
+    //            Console.WriteLine("changed left down mode");
+    //            func -= moveFunc;
+    //            func += lbdFunc;
+
+    //            ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
+    //            return;
+    //        }
+
+    //        ApiController.SetCursorPos(m_fingers[i].m_centerPoint.X, m_fingers[i].m_centerPoint.Y);
+
+    //        return;
+    //    }
+
+    //    private static void lbdFunc()
+    //    {
+    //        int i;
+    //        for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
+    //        if (i == m_fingers.Count)
+    //        {
+    //            Console.WriteLine("left up and changed idle mode");
+    //            ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
+    //            func -= lbdFunc;
+    //            func += idleFunc;
+    //            return;
+    //        }
+
+    //        if (m_fingers[i].m_tipPoint.Count > 1 && m_fingers[i].GetFingerAngle() > 0.7)
+    //        {
+    //            ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
+    //            Console.WriteLine("left up and changed move mode");
+    //            func -= lbdFunc;
+    //            func += moveFunc;
+    //            return;
+    //        }
+
+    //    }
+    //}
+
     public enum BasicModeTransitionType
     {
         Idle,
@@ -48,8 +147,8 @@ namespace HandGesture
                 
                 if (context.hands[i].m_tipPoint.Count == 1 || context.hands[i].GetFingerAngle() < 0.5)
                 {
-                    //Finger.FingerType fingerType = context.hands[i].GetFingerType();
-                    //if (!fingerType.HasFlag(Finger.FingerType.ForeFinger) && fingerType.HasFlag(Finger.FingerType.IndexFinger))
+                    Finger.FingerType fingerType = context.hands[i].GetFingerType();
+                    if (fingerType.HasFlag(Finger.FingerType.ForeFinger) && fingerType.HasFlag(Finger.FingerType.IndexFinger))
                         context.manager.Transition((int)BasicModeTransitionType.LBDown);
                 }
             }
@@ -82,12 +181,11 @@ namespace HandGesture
 
             for (int i = 0; i < context.hands.Count; i++)
             {
-                if (context.hands[i].m_tipPoint.Count > 1 && context.hands[i].GetFingerAngle() > 0.5)
+                if (context.hands[i].m_tipPoint.Count > 1 && context.hands[i].GetFingerAngle() > 0.7)
                 {
                     context.manager.Transition((int)BasicModeTransitionType.LBUp);
                     return;
                 }
-
                 ////move
                 //if (context.hands[i].m_tipPoint.Count == 2)
                 //{
@@ -96,7 +194,7 @@ namespace HandGesture
 
             }
 
-            //context.manager.Transition((int)BasicModeTransitionType.Idle);
+            context.manager.Transition((int)BasicModeTransitionType.Idle);
         }
 
         public override void OnExit()
@@ -121,8 +219,8 @@ namespace HandGesture
 
             if (isUp == false)
             {
-                Debug.Log("LB Mouse Up");
-                ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
+                Debug.Log("LB Mouse Down");
+                ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
                 isUp = true;
             }
 
@@ -191,7 +289,7 @@ namespace HandGesture
             manager.AddState((int)BasicModeStateType.LBUp, new LBUpState<BasicStateManager>());
             manager.AddState((int)BasicModeStateType.RBDown, new RBDownState<BasicStateManager>());
             manager.AddState((int)BasicModeStateType.RBUp, new RBUpState<BasicStateManager>());
-            
+            //manager.AddState((int)StateType.RBUp, new RBUpState<BasicStateManager>());
 
             manager.AddTransition(-1, (int)BasicModeTransitionType.Idle, (int)BasicModeStateType.Idle);
 
@@ -221,14 +319,9 @@ namespace HandGesture
             manager.Update();
         }
 
-        public string GetCurStateString()
+        public string GetCurState()
         {
-            return ((BasicModeStateType)GetCurState()).ToString();
-        }
-
-        public int GetCurState()
-        {
-            return manager.GetCurStateType();
+            return ((BasicModeStateType)manager.GetCurStateType()).ToString();
         }
 
         //public void ChangeTransition(TransitionType type)
@@ -252,8 +345,7 @@ namespace HandGesture
     public interface IStateManger
     {
         void Update(List<Finger> finger);
-        string GetCurStateString();
-        int GetCurState();
+        string GetCurState();
     }
 
     public class StateManger2<T>
@@ -328,11 +420,11 @@ namespace HandGesture
             if (nextStateType == -1)
                 return;
 
-            //if (!stateDic.ContainsKey(nextStateType))
-            //{
-            //    Debug.Log("State Not Added");
-            //    return;
-            //}
+            if (!stateDic.ContainsKey(nextStateType))
+            {
+                Debug.Log("State Not Added");
+                return;
+            }
 
             IState<T> nextState = stateDic[nextStateType];
 

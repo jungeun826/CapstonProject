@@ -54,8 +54,8 @@ namespace HandGesture
                     fsmDic.Add(mode, FPSStateManager);
                     break;
                 case DetectorMode.Racing:
-                    //BasicStateManager stateManager = new BasicStateManager();
-                    //fsmDic.Add(mode, stateManager);
+                    RacingStateManager racingStateManager = new RacingStateManager();
+                    fsmDic.Add(mode, racingStateManager);
                     break;
                 case DetectorMode.Custom:
                     //BasicStateManager stateManager = new BasicStateManager();
@@ -69,6 +69,26 @@ namespace HandGesture
         public void ChangeDetectMode(DetectorMode changeMode)
         {
             this.DetectMode = changeMode;
+            switch (this.DetectMode)
+            {
+                case DetectorMode.Basic:
+                    WebcamController.Instance.PlayFileName = "hand3.avi";
+                    break;
+                case DetectorMode.FPS:
+                    
+                    break;
+                case DetectorMode.Racing:
+                    //ApiController.keybd_event((uint)(System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Tab), 0, 0x00, 0);
+                    
+                    WebcamController.Instance.PlayFileName = "hand4.avi";
+                    break;
+                case DetectorMode.Custom:
+                    //BasicStateManager stateManager = new BasicStateManager();
+                    //fsmDic.Add(mode, stateManager);
+                    break;
+                default:
+                    break;
+            }
         }
 
 

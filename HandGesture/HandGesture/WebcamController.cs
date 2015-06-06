@@ -18,7 +18,17 @@ namespace HandGesture
         private CvCapture m_cvCap;
         private updateDelegate m_updateDel;
         private CvSize frameSize;
+        private string playFileName = "";
 
+        public string PlayFileName
+        {
+            get { return playFileName; }
+            set
+            {
+                playFileName = value;
+                m_cvCap = CvCapture.FromFile(value);
+            }
+        }
         public CvSize FrameSize
         {
             get
@@ -84,7 +94,7 @@ namespace HandGesture
             int curFrame = m_cvCap.PosFrames;
             if (curFrame == totalFrame)
             {
-                m_cvCap = Cv.CreateFileCapture("hand3.avi");
+                m_cvCap = Cv.CreateFileCapture(PlayFileName);
                 curFrame = 0;
             }
 #elif !PCVer

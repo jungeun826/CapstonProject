@@ -36,6 +36,7 @@ namespace HandGesture
 
             DetectorManager.Instance.Init(DetectorMode.Basic);
             DetectorManager.Instance.Init(DetectorMode.FPS);
+            DetectorManager.Instance.Init(DetectorMode.Racing);
             detector = DetectorManager.Instance.handDetector;
 
             //opticalFlow = new OpticalFlow();
@@ -76,7 +77,7 @@ namespace HandGesture
             //IplImage webcamImgMask;
             //detector.Mask(webcamImg, out webcamImgMask);
 
-            DrawImg(webcamImg, ImageProcessBase.ROIImg, detector.FilterImg, detector.BlobImg, detector.ConvexHullImg, detector.ResultImg);
+            DrawImg(webcamImg, ImageProcessBase.ROIImg, detector.BlobImg, detector.ConvexHullImg, detector.ResultImg);
             //if (detector.centerPoint.HasValue)
             
             DebugLabel.Text = DetectorManager.Instance.GetCurState();
@@ -129,6 +130,44 @@ namespace HandGesture
         {
             DetectorManager.Instance.ChangeDetectMode(DetectorMode.Racing);
             label1.Text = ((RadioButton)sender).Name + " / " + DetectorManager.Instance.DetectMode.ToString();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.Down:
+                case Keys.Up:
+                case Keys.Right:
+                case Keys.Left:
+                case Keys.Control | Keys.Down:
+                case Keys.Control | Keys.Up:
+                case Keys.Control | Keys.Right:
+                case Keys.Control | Keys.Left:
+                    // 방향키, 혹은 컨트롤키 + 방향키가 입력되었을때
+                    // 처리, 혹은 다른 메쏘드 호출을 여기에 적어주시면 됩니다.
+                    break;
+
+                case Keys.Control | Keys.X:
+                    // 잘라내기 (Ctrl + X)
+                    // 처리, 혹은 다른 메쏘드 호출을 여기에 적어주시면 됩니다.
+                    break;
+
+                case Keys.Control | Keys.C:
+                    // 복사하기 (Ctrl + C)
+                    // 처리, 혹은 다른 메쏘드 호출을 여기에 적어주시면 됩니다.
+                    break;
+
+                case Keys.Control | Keys.V:
+                    // 붙여넣기 (Ctrl + V)
+                    // 처리, 혹은 다른 메쏘드 호출을 여기에 적어주시면 됩니다.
+                    break;
+                case Keys.Control | Keys.Tab:
+
+                default:
+                    break;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void CustomRadioBtn_CheckedChanged(object sender, EventArgs e)

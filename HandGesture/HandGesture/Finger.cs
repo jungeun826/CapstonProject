@@ -113,6 +113,16 @@ namespace HandGesture
             return type;
         }
 
+        public double GetLengthOfIf()
+        {
+            if (m_tipPoint.Count == 2)
+                return m_tipPoint[0].Y > m_tipPoint[1].Y ?
+                        m_tipPoint[0].DistanceTo(m_centerPoint)
+                        : m_tipPoint[1].DistanceTo(m_centerPoint);
+
+            return 0.0;
+        }
+
         //public double GetFingerAngle2(OpenCvSharp.CvPoint depthPoint, OpenCvSharp.CvPoint centerPoint)
         //{
         //    double r = GetDist(depthPoint, m_centerPoint);

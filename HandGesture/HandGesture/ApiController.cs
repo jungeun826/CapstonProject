@@ -17,6 +17,7 @@ namespace HandGesture
         public const int MOUSEEVENTF_RIGHTUP = 0x10;
         public const int KEYBOARD_DOWN = 0x00;
         public const int KEYBOARD_UP = 0x02;
+        public static readonly int MOVE = 0x00000001;
         /// <summary>
         /// 마우스 이벤트를 발생 시킨다.
         /// dwData랑 dwExtraInfo는 뭔지 나도 모름요
@@ -41,6 +42,17 @@ namespace HandGesture
         /// <returns></returns>
         [DllImport("user32.dll")]
         static public extern int SetCursorPos(int x, int y);
+
+        /// <summary>
+        /// 현재 위치에서 마우스 커서 위치 이동해줌..
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        static public void MoveCursorPos(int x, int y)
+        {
+            mouse_event((uint)ApiController.MOVE, (uint)x, (uint)y);
+        }
 
         /// <summary>
         /// 키보드이벤트를 발생시킨다.

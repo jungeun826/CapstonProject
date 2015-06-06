@@ -10,16 +10,6 @@ namespace HandGesture
     {
         delegate void fingersDel();
 
-        enum fstate
-        {
-            IDLE,
-            MOVE,
-            LBDOWN,
-            LBUP,
-            RBDOWN,
-            RBUP
-        }
-
         static List<Finger> m_fingers;
         static fingersDel func;
         static int  x, y;
@@ -161,51 +151,6 @@ namespace HandGesture
                 }
             }
 
-        }
-        static public void handleFunc(){
-            int i;
-            int ri = 0, li = 0;
-
-            for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++)
-            {
-                int temp = m_fingers[i].m_centerPoint.X;
-                if (m_fingers[ri].m_centerPoint.X < temp)
-                {
-                    ri = i;
-                }
-
-                if (m_fingers[li].m_centerPoint.X > temp)
-                {
-                    li = i;
-                }
-            }
-
-            if (m_fingers.Count < 3)
-            {
-                Console.WriteLine("change idle state");
-                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Up, 0, 0x02, 0);
-                //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
-                //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
-                func = idleFunc;
-                return;
-            }
-
-            if (Math.Abs(m_fingers[li].m_centerPoint.Y - m_fingers[ri].m_centerPoint.Y) > m_fingers[li].m_rad)
-            {
-                if (m_fingers[li].m_centerPoint.Y < m_fingers[ri].m_centerPoint.Y)
-                {
-                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x00, 0);
-                    System.Threading.Thread.Sleep(100);
-                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
-                }
-                else
-                {
-                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x00, 0);
-                    System.Threading.Thread.Sleep(100);
-                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
-                }
-            }
-            return;
         }
     }
 }

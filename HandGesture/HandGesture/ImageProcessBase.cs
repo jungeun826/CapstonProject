@@ -727,7 +727,7 @@ namespace HandGesture
             if(img == null) return;
         }
 
-        public List<IplImage> FilterBlobImgList(IplImage imgSrc, IplImage imgDst)
+        public List<IplImage> FilterBlobImgList(IplImage imgSrc)
         {
             List<IplImage> retList = new List<IplImage>();
             CvBlobs blobs = new CvBlobs();
@@ -740,12 +740,10 @@ namespace HandGesture
 
             if (max == null)
             {
-                imgDst = null;
                 return retList;
             }
             blobs.FilterByArea(max.Area * 1 / 4, max.Area);
             blobs.FilterLabels(lableImg);
-            imgDst = lableImg;
 
             IplImage blobImg = new IplImage(imgSrc.Size, BitDepth.U8, 1);
             IplImage blobImg2 = new IplImage(imgSrc.Size, BitDepth.U8, 1);

@@ -34,7 +34,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;PCVer</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;PCVer</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -94,7 +94,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="FPSGestureDetector.cs" />
     <Compile Include="FPSStateManager.cs" />
     <Compile Include="HandGestureDetector.cs" />
     <Compile Include="HandGesture_Yong.cs" />

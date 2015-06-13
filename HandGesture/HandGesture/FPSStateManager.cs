@@ -137,7 +137,7 @@ namespace HandGesture
             {
                 if (context.hands[i].m_tipPoint.Count == 0)
                 {
-                    ApiController.SetCursorPos(context.hands[i].m_centerPoint.X, context.hands[i].m_centerPoint.Y);
+                    ApiController.MouseEvent(ApiController.eMouseEventType.SETPOS, context.hands[i].m_centerPoint.X, context.hands[i].m_centerPoint.Y);
                     return;
                 }
 

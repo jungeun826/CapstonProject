@@ -13,20 +13,7 @@ namespace HandGesture
     class HandGestureDetector : ImageProcessBase, IRecognition
     {
         #region member
-        private CvSize? _monitorSize = null;
-        public CvSize? MonitorSize
-        {
-            get
-            {
-                if (_monitorSize == null)
-                {
-                    _monitorSize = new CvSize(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width,
-                                              System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
-                }
-
-                return _monitorSize;
-            }
-        }
+        
         private IplImage resultImg;
         //private IplImage filterImg;
         private int maxDist = 0;
@@ -122,6 +109,7 @@ namespace HandGesture
                     CvSeq<CvConvexityDefect> defect = Cv.ConvexityDefects(contours, hull);
 
                     var tempLoop = defect.ToArray();
+                    resultImg.PutText(conCenter.X + "," + conCenter.Y, conCenter, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
                     foreach (CvConvexityDefect ccd in tempLoop)
                     {
                         if (ccd.End.Y < conCenter.Y + maxConDist / 2)
@@ -129,6 +117,7 @@ namespace HandGesture
                             int dis = (int)ccd.End.DistanceTo(conCenter);
                             if (dis < maxConDist * 1.6) continue;
                             fingers[k].addTip(ccd.End);
+                            resultImg.PutText(ccd.End.X + "," + ccd.End.Y, ccd.End, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
                             fingers[k].addDepth(ccd.DepthPoint);
 
                             resultImg.DrawCircle(ccd.End, 2, CvColor.Red, -1);

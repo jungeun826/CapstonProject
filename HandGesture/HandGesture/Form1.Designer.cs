@@ -52,6 +52,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.DebugLabel = new System.Windows.Forms.Label();
             this.PauseBtn = new System.Windows.Forms.Button();
+            this.DebugLogText = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -268,11 +269,20 @@
             this.PauseBtn.UseVisualStyleBackColor = true;
             this.PauseBtn.Click += new System.EventHandler(this.PauseBtn_Click);
             // 
+            // DebugLogText
+            // 
+            this.DebugLogText.Location = new System.Drawing.Point(1010, 424);
+            this.DebugLogText.Name = "DebugLogText";
+            this.DebugLogText.Size = new System.Drawing.Size(227, 218);
+            this.DebugLogText.TabIndex = 11;
+            this.DebugLogText.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1261, 654);
+            this.Controls.Add(this.DebugLogText);
             this.Controls.Add(this.PauseBtn);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label7);
@@ -334,6 +344,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label DebugLabel;
         private System.Windows.Forms.Button PauseBtn;
+        private System.Windows.Forms.RichTextBox DebugLogText;
     }
 }
 

@@ -43,8 +43,15 @@ namespace HandGesture
             WebcamController.Instance.Init();
             WebcamController.Instance.updateFrame();
 
+            ApiController.CallBack = UseApiController;
+
 
             Pause = false;
+        }
+
+        public void UseApiController(string text)
+        {
+            pointLabel.Text = text;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -80,7 +87,13 @@ namespace HandGesture
             DrawImg(webcamImg, ImageProcessBase.ROIImg, detector.BlobImg, detector.ConvexHullImg, detector.ResultImg);
             //if (detector.centerPoint.HasValue)
             
+            
+            string stateText = DetectorManager.Instance.GetCurState();
+            if(stateText != DebugLabel.Text)
+                DebugLogText.Text += DetectorManager.Instance.GetCurState() + "\n";
+
             DebugLabel.Text = DetectorManager.Instance.GetCurState();
+            
 
             //pictureBox2.Image = detector.ConvertIplToBitmap(webcamImg);
             //pictureBox1.Image = detector.ExtractRecognitionImageBitmap();

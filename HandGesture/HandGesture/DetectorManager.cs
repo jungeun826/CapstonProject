@@ -28,7 +28,20 @@ namespace HandGesture
 
         public DetectorMode DetectMode { get; private set; }
         public HandGestureDetector handDetector = new HandGestureDetector();
+        private CvSize? _monitorSize = null;
+        public CvSize? MonitorSize
+        {
+            get
+            {
+                if (_monitorSize == null)
+                {
+                    _monitorSize = new CvSize(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width,
+                                              System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+                }
 
+                return _monitorSize;
+            }
+        }
         //지금 생각해보니 list일 필요는 없다.
         //예전에는 Fps인지, 뭔지 하나씩 처리한다는 말이 없어서 리스트로 해놓았음..
         //하지만 변경 귀차나서 그냥 씀..
@@ -111,6 +124,5 @@ namespace HandGesture
 
             return fsmDic[DetectMode].GetCurState();
         }
-
     }
 }

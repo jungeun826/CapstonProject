@@ -16,13 +16,6 @@ namespace HandGesture
         Custom,
     }
 
-    public enum GestureType
-    {
-        RightClick,
-        LeftClick,
-        Point,
-    }
-
     class DetectorManager : Base.Singletone<DetectorManager>, Base.ISingleTon
     {
 
@@ -46,7 +39,7 @@ namespace HandGesture
         //예전에는 Fps인지, 뭔지 하나씩 처리한다는 말이 없어서 리스트로 해놓았음..
         //하지만 변경 귀차나서 그냥 씀..
         //private Dictionary<DetectorMode, List<IRecognition>> detectorDic = new Dictionary<DetectorMode, List<IRecognition>>();
-        private Dictionary<DetectorMode, IStateManger> fsmDic = new Dictionary<DetectorMode, IStateManger>();
+        //private Dictionary<DetectorMode, IStateManger> fsmDic = new Dictionary<DetectorMode, IStateManger>();
         
 
         public void Init()
@@ -59,16 +52,16 @@ namespace HandGesture
             switch (mode)
             {
                 case DetectorMode.Basic:
-                    BasicStateManager basicStateManager = new BasicStateManager();
-                    fsmDic.Add(mode, basicStateManager);
+                    //basicStateManager = new StateManager();
+                    //fsmDic.Add(mode, basicStateManager);
                     break;
                 case DetectorMode.FPS:
-                    FPSStateManager FPSStateManager = new FPSStateManager();
-                    fsmDic.Add(mode, FPSStateManager);
+                    //FPSStateManager FPSStateManager = new FPSStateManager();
+                    //fsmDic.Add(mode, FPSStateManager);
                     break;
                 case DetectorMode.Racing:
-                    RacingStateManager racingStateManager = new RacingStateManager();
-                    fsmDic.Add(mode, racingStateManager);
+                    //RacingStateManager racingStateManager = new RacingStateManager();
+                    //fsmDic.Add(mode, racingStateManager);
                     break;
                 case DetectorMode.Custom:
                     //BasicStateManager stateManager = new BasicStateManager();
@@ -86,7 +79,7 @@ namespace HandGesture
             switch (this.DetectMode)
             {
                 case DetectorMode.Basic:
-                    WebcamController.Instance.PlayFileName = "hand3.avi";
+                    WebcamController.Instance.PlayFileName = "hand5.avi";
                     break;
                 case DetectorMode.FPS:
                     
@@ -107,24 +100,44 @@ namespace HandGesture
         }
 
 
+
         public void UpdateManager()
         {
-            List<Finger> fingers = handDetector.Detect();
+            List<Finger> hands = handDetector.Detect();
 
-            if (fingers == null) return;
+            if (hands == null) return;
+            ProcessStateManager(hands);
+            //if (!fsmDic.ContainsKey(DetectMode))
+            //    return;
 
-            if (!fsmDic.ContainsKey(DetectMode))
-                return;
-
-            fsmDic[DetectMode].Update(fingers);
+            //fsmDic[DetectMode].Update(fingers);
         }
 
-        public string GetCurState()
+        public void ProcessStateManager(List<Finger> hands)
         {
-            if (!fsmDic.ContainsKey(DetectMode))
-                return "Not contains fsm / Mode : " + DetectMode.ToString();
-
-            return fsmDic[DetectMode].GetCurState();
+            switch (DetectMode)
+            {
+                case DetectorMode.Basic:
+                    BasicStateManager.Update(hands);
+                    break;
+                case DetectorMode.FPS:
+                    break;
+                case DetectorMode.Racing:
+                    RacingStateManager.Update(hands);
+                    break;
+                case DetectorMode.Custom:
+                    break;
+                default:
+                    break;
+            }
         }
+
+        //public string GetCurState()
+        //{
+        //    if (!fsmDic.ContainsKey(DetectMode))
+        //        return "Not contains fsm / Mode : " + DetectMode.ToString();
+
+        //    return fsmDic[DetectMode].GetCurState();
+        //}
     }
 }

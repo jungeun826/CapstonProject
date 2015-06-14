@@ -11,6 +11,15 @@ namespace HandGesture
 {
     static class ApiController
     {
+
+        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
+        public const int MOUSEEVENTF_LEFTUP = 0x04;
+        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
+        public const int MOUSEEVENTF_RIGHTUP = 0x10;
+        public const int KEYBOARD_DOWN = 0x00;
+        public const int KEYBOARD_UP = 0x02;
+        public static readonly int MOVE = 0x00000001;
+
         public enum eMouseEventType
         {
             SETPOS = 0,
@@ -71,9 +80,9 @@ namespace HandGesture
         /// <param name="dwData"></param>
         /// <param name="dwExtraInfo"></param>
         [DllImport("user32.dll")]
-        static private extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData = 0, int dwExtraInfo = 0);
+        static public extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData = 0, int dwExtraInfo = 0);
 
-        static private void mouse_event(uint dwFlags)
+        static public void mouse_event(uint dwFlags)
         {
             mouse_event(dwFlags, (uint)Control.MousePosition.X, (uint)Control.MousePosition.Y);
         }
@@ -84,7 +93,7 @@ namespace HandGesture
         /// <param name="y"></param>
         /// <returns></returns>
         [DllImport("user32.dll")]
-        static private extern int SetCursorPos(int x, int y);
+        static public extern int SetCursorPos(int x, int y);
 
 
         static public void GetCursorPos(out int x, out int y)
@@ -99,7 +108,7 @@ namespace HandGesture
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        static private void MoveCursorPos(int x, int y)
+        static public void MoveCursorPos(int x, int y)
         {
             mouse_event((uint)eMouseEventType.MOVEPOS, (uint)x, (uint)y);
         }

@@ -52,9 +52,11 @@ namespace HandGesture
             m_rad = rad;
         }
 
-        public void addTip(OpenCvSharp.CvPoint tipPoint){
+        public void addTip(OpenCvSharp.CvPoint tipPoint)
+        {
             m_tipPoint.Add(tipPoint);
         }
+
         public void addDepth(OpenCvSharp.CvPoint depthPoint)
         {
             m_depthPoint.Add(depthPoint);
@@ -126,22 +128,22 @@ namespace HandGesture
             {
                 r = GetDist(depthPoint, m_centerPoint);
                 tempPoint.X = m_centerPoint.X + (int)r;
-                angle = Math.Atan2(depthPoint.Y - tempPoint.Y, depthPoint.X - tempPoint.X);  //GetFingerAngle(depthPoint - m_centerPoint, tempPoint - m_centerPoint);
+                angle = 180 * Math.Atan2(depthPoint.Y - tempPoint.Y, depthPoint.X - tempPoint.X) % 180 ;  //GetFingerAngle(depthPoint - m_centerPoint, tempPoint - m_centerPoint);
 
                 FingerType curType = FingerType.None; 
                 if (-3.0f <= angle && angle < -2.6f)
-                    curType = FingerType.ForeFinger;
+                    curType = FingerType.LittleFinger;
                 else if (-2.6f <= angle && angle < -2.3f)
-                    curType = FingerType.IndexFinger;
+                    curType = FingerType.RingFinger;
                 else if ( -2.3 <= angle &&angle < -2.15f)
                     curType = FingerType.MiddleFinger;
-                else if (-2.15 <= angle && angle < -2.05f)
-                    curType = FingerType.RingFinger;
-                else if (-2.05f < angle && angle < 2f)
-                    curType = FingerType.LittleFinger;
+                else if (-2.15 <= angle && angle < -1.7f)
+                    curType = FingerType.IndexFinger;
+                else if (-1.7f <= angle && angle < 2f)
+                    curType = FingerType.ForeFinger;
                 type |= curType;
 #if DEBUG
-                if(curType != FingerType.None)
+                if (!angles.ContainsKey(curType))
                     angles.Add(curType, angle);
 #endif
             }

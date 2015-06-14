@@ -88,11 +88,11 @@ namespace HandGesture
             //if (detector.centerPoint.HasValue)
             
             
-            string stateText = DetectorManager.Instance.GetCurState();
-            if(stateText != DebugLabel.Text)
-                DebugLogText.Text += DetectorManager.Instance.GetCurState() + "\n";
+            //string stateText = DetectorManager.Instance.GetCurState();
+            //if(stateText != DebugLabel.Text)
+            //    DebugLogText.Text += DetectorManager.Instance.GetCurState() + "\n";
 
-            DebugLabel.Text = DetectorManager.Instance.GetCurState();
+            //DebugLabel.Text = DetectorManager.Instance.GetCurState();
             
 
             //pictureBox2.Image = detector.ConvertIplToBitmap(webcamImg);

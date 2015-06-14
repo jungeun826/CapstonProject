@@ -38,7 +38,7 @@ namespace HandGesture
             Cv.Copy(webcamImg, resultImg);
 
             using (var imgSrc = webcamImg.Clone())
-            using (var imgHSV = new IplImage(imgSrc.Size, BitDepth.U8, 3))
+            using (var imgYCBCR = new IplImage(imgSrc.Size, BitDepth.U8, 3))
             using (var imgH = new IplImage(imgSrc.Size, BitDepth.U8, 1))
             using (var imgS = new IplImage(imgSrc.Size, BitDepth.U8, 1))
             using (var imgV = new IplImage(imgSrc.Size, BitDepth.U8, 1))
@@ -50,12 +50,11 @@ namespace HandGesture
             using (var storage = new CvMemStorage())
             {
                 // RGB -> HSV
-                Cv.CvtColor(imgSrc, imgHSV, ColorConversion.BgrToHsv);
-                Cv.CvtPixToPlane(imgHSV, imgH, imgS, imgV, null);
-                IplImage[] hsvPlanes = { imgH, imgS, imgV };
+                resultImg.CvtColor(imgYCBCR, ColorConversion.BgrToCrCb);
 
-                // skin region
-                RetrieveFleshRegion(imgSrc, hsvPlanes, imgBackProjection);
+                //피부색 검출
+                imgYCBCR.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), imgBackProjection);
+
                 List<IplImage> listOfBlobImg = FilterBlobImgList(imgBackProjection);
                 int blobCnt = listOfBlobImg.Count;
 

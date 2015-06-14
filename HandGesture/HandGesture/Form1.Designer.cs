@@ -29,43 +29,39 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.BasicRadioBtn = new System.Windows.Forms.RadioButton();
-            this.FPSRadioBtn = new System.Windows.Forms.RadioButton();
-            this.RacingRadioBtn = new System.Windows.Forms.RadioButton();
-            this.CustomRadioBtn = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.pointLabel = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.DebugLabel = new System.Windows.Forms.Label();
-            this.PauseBtn = new System.Windows.Forms.Button();
-            this.DebugLogText = new System.Windows.Forms.RichTextBox();
+            this.button_basic = new System.Windows.Forms.Button();
+            this.button_fps = new System.Windows.Forms.Button();
+            this.button_racing = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.메뉴ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.사용법ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.정보ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.종료ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.WCC = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.open = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.BASIC = new System.Windows.Forms.ToolStripMenuItem();
+            this.FPS = new System.Windows.Forms.ToolStripMenuItem();
+            this.RACING = new System.Windows.Forms.ToolStripMenuItem();
+            this.INFO = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.EXIT = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            this.menuStrip1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(5, 26);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(290, 290);
+            this.pictureBox1.Size = new System.Drawing.Size(330, 250);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -75,164 +71,6 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Location = new System.Drawing.Point(339, 0);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(290, 290);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox3.TabIndex = 1;
-            this.pictureBox3.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Location = new System.Drawing.Point(0, 353);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(290, 290);
-            this.pictureBox2.TabIndex = 2;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Location = new System.Drawing.Point(339, 353);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(290, 290);
-            this.pictureBox4.TabIndex = 3;
-            this.pictureBox4.TabStop = false;
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.Location = new System.Drawing.Point(679, 353);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(290, 290);
-            this.pictureBox6.TabIndex = 5;
-            this.pictureBox6.TabStop = false;
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Location = new System.Drawing.Point(679, 0);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(290, 290);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox5.TabIndex = 4;
-            this.pictureBox5.TabStop = false;
-            // 
-            // BasicRadioBtn
-            // 
-            this.BasicRadioBtn.AutoSize = true;
-            this.BasicRadioBtn.Location = new System.Drawing.Point(1144, 25);
-            this.BasicRadioBtn.Name = "BasicRadioBtn";
-            this.BasicRadioBtn.Size = new System.Drawing.Size(47, 16);
-            this.BasicRadioBtn.TabIndex = 7;
-            this.BasicRadioBtn.Text = "기본";
-            this.BasicRadioBtn.UseVisualStyleBackColor = true;
-            this.BasicRadioBtn.Click += new System.EventHandler(this.BasicRadioBtn_Click);
-            // 
-            // FPSRadioBtn
-            // 
-            this.FPSRadioBtn.AutoSize = true;
-            this.FPSRadioBtn.Location = new System.Drawing.Point(1144, 47);
-            this.FPSRadioBtn.Name = "FPSRadioBtn";
-            this.FPSRadioBtn.Size = new System.Drawing.Size(46, 16);
-            this.FPSRadioBtn.TabIndex = 7;
-            this.FPSRadioBtn.Text = "FPS";
-            this.FPSRadioBtn.UseVisualStyleBackColor = true;
-            this.FPSRadioBtn.CheckedChanged += new System.EventHandler(this.FPSRadioBtn_CheckedChanged);
-            // 
-            // RacingRadioBtn
-            // 
-            this.RacingRadioBtn.AutoSize = true;
-            this.RacingRadioBtn.Location = new System.Drawing.Point(1144, 69);
-            this.RacingRadioBtn.Name = "RacingRadioBtn";
-            this.RacingRadioBtn.Size = new System.Drawing.Size(59, 16);
-            this.RacingRadioBtn.TabIndex = 7;
-            this.RacingRadioBtn.Text = "레이싱";
-            this.RacingRadioBtn.UseVisualStyleBackColor = true;
-            this.RacingRadioBtn.CheckedChanged += new System.EventHandler(this.RacingRadioBtn_CheckedChanged);
-            // 
-            // CustomRadioBtn
-            // 
-            this.CustomRadioBtn.AutoSize = true;
-            this.CustomRadioBtn.Location = new System.Drawing.Point(1144, 91);
-            this.CustomRadioBtn.Name = "CustomRadioBtn";
-            this.CustomRadioBtn.Size = new System.Drawing.Size(47, 16);
-            this.CustomRadioBtn.TabIndex = 7;
-            this.CustomRadioBtn.Text = "기타";
-            this.CustomRadioBtn.UseVisualStyleBackColor = true;
-            this.CustomRadioBtn.CheckedChanged += new System.EventHandler(this.CustomRadioBtn_CheckedChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1008, 25);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 12);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "label1";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(0, 297);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(146, 12);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "블랍 추출 후 CrCbToRGB";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(0, 338);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 12);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "원본";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(337, 297);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(113, 12);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "추출바이너리이미지";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(337, 338);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 12);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "옵티컬플로우";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(677, 297);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(109, 12);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "이전 프레임 특징점";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(677, 338);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(109, 12);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "현재 프레임 특징점";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(1008, 297);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(117, 12);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "현재프레임의 포인트";
-            // 
             // pointLabel
             // 
             this.pointLabel.AutoSize = true;
@@ -241,79 +79,180 @@
             this.pointLabel.Size = new System.Drawing.Size(0, 12);
             this.pointLabel.TabIndex = 8;
             // 
-            // button1
+            // button_basic
             // 
-            this.button1.Location = new System.Drawing.Point(1010, 198);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(115, 56);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "피부색 평균";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button_basic.Location = new System.Drawing.Point(6, 287);
+            this.button_basic.Name = "button_basic";
+            this.button_basic.Size = new System.Drawing.Size(105, 50);
+            this.button_basic.TabIndex = 9;
+            this.button_basic.Text = "BASIC";
+            this.button_basic.UseVisualStyleBackColor = true;
+            this.button_basic.Click += new System.EventHandler(this.button_basic_Click);
             // 
-            // DebugLabel
+            // button_fps
             // 
-            this.DebugLabel.AutoSize = true;
-            this.DebugLabel.Location = new System.Drawing.Point(1008, 379);
-            this.DebugLabel.Name = "DebugLabel";
-            this.DebugLabel.Size = new System.Drawing.Size(117, 12);
-            this.DebugLabel.TabIndex = 8;
-            this.DebugLabel.Text = "현재프레임의 포인트";
+            this.button_fps.Location = new System.Drawing.Point(119, 287);
+            this.button_fps.Name = "button_fps";
+            this.button_fps.Size = new System.Drawing.Size(105, 50);
+            this.button_fps.TabIndex = 10;
+            this.button_fps.Text = "FPS";
+            this.button_fps.UseVisualStyleBackColor = true;
+            this.button_fps.Click += new System.EventHandler(this.button_fps_Click);
             // 
-            // PauseBtn
+            // button_racing
             // 
-            this.PauseBtn.Location = new System.Drawing.Point(1134, 198);
-            this.PauseBtn.Name = "PauseBtn";
-            this.PauseBtn.Size = new System.Drawing.Size(115, 56);
-            this.PauseBtn.TabIndex = 10;
-            this.PauseBtn.Text = "StopFrame";
-            this.PauseBtn.UseVisualStyleBackColor = true;
-            this.PauseBtn.Click += new System.EventHandler(this.PauseBtn_Click);
+            this.button_racing.Location = new System.Drawing.Point(232, 287);
+            this.button_racing.Name = "button_racing";
+            this.button_racing.Size = new System.Drawing.Size(105, 50);
+            this.button_racing.TabIndex = 11;
+            this.button_racing.Text = "RACING";
+            this.button_racing.UseVisualStyleBackColor = true;
+            this.button_racing.Click += new System.EventHandler(this.button_racing_Click);
             // 
-            // DebugLogText
+            // menuStrip1
             // 
-            this.DebugLogText.Location = new System.Drawing.Point(1010, 424);
-            this.DebugLogText.Name = "DebugLogText";
-            this.DebugLogText.Size = new System.Drawing.Size(227, 218);
-            this.DebugLogText.TabIndex = 11;
-            this.DebugLogText.Text = "";
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.메뉴ToolStripMenuItem,
+            this.종료ToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(342, 24);
+            this.menuStrip1.TabIndex = 12;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // 메뉴ToolStripMenuItem
+            // 
+            this.메뉴ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.사용법ToolStripMenuItem,
+            this.정보ToolStripMenuItem});
+            this.메뉴ToolStripMenuItem.Name = "메뉴ToolStripMenuItem";
+            this.메뉴ToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.메뉴ToolStripMenuItem.Text = "메뉴";
+            // 
+            // 사용법ToolStripMenuItem
+            // 
+            this.사용법ToolStripMenuItem.Name = "사용법ToolStripMenuItem";
+            this.사용법ToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.사용법ToolStripMenuItem.Text = "사용법";
+            this.사용법ToolStripMenuItem.Click += new System.EventHandler(this.사용법ToolStripMenuItem_Click);
+            // 
+            // 정보ToolStripMenuItem
+            // 
+            this.정보ToolStripMenuItem.Name = "정보ToolStripMenuItem";
+            this.정보ToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.정보ToolStripMenuItem.Text = "정보";
+            this.정보ToolStripMenuItem.Click += new System.EventHandler(this.정보ToolStripMenuItem_Click);
+            // 
+            // 종료ToolStripMenuItem
+            // 
+            this.종료ToolStripMenuItem.Name = "종료ToolStripMenuItem";
+            this.종료ToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.종료ToolStripMenuItem.Text = "종료";
+            this.종료ToolStripMenuItem.Click += new System.EventHandler(this.종료ToolStripMenuItem_Click);
+            // 
+            // WCC
+            // 
+            this.WCC.Icon = ((System.Drawing.Icon)(resources.GetObject("WCC.Icon")));
+            this.WCC.Text = "notifyIcon1";
+            this.WCC.Visible = true;
+            this.WCC.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.open,
+            this.toolStripSeparator2,
+            this.BASIC,
+            this.FPS,
+            this.RACING,
+            this.INFO,
+            this.toolStripSeparator1,
+            this.EXIT});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(118, 148);
+            // 
+            // open
+            // 
+            this.open.Name = "open";
+            this.open.Size = new System.Drawing.Size(117, 22);
+            this.open.Text = "열기";
+            this.open.Click += new System.EventHandler(this.open_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(114, 6);
+            // 
+            // BASIC
+            // 
+            this.BASIC.Name = "BASIC";
+            this.BASIC.Size = new System.Drawing.Size(117, 22);
+            this.BASIC.Text = "BASIC";
+            this.BASIC.Click += new System.EventHandler(this.BASIC_Click);
+            // 
+            // FPS
+            // 
+            this.FPS.Name = "FPS";
+            this.FPS.Size = new System.Drawing.Size(117, 22);
+            this.FPS.Text = "FPS";
+            this.FPS.Click += new System.EventHandler(this.FPS_Click);
+            // 
+            // RACING
+            // 
+            this.RACING.Name = "RACING";
+            this.RACING.Size = new System.Drawing.Size(117, 22);
+            this.RACING.Text = "RACING";
+            this.RACING.Click += new System.EventHandler(this.RACING_Click);
+            // 
+            // INFO
+            // 
+            this.INFO.Name = "INFO";
+            this.INFO.Size = new System.Drawing.Size(117, 22);
+            this.INFO.Text = "정보";
+            this.INFO.Click += new System.EventHandler(this.INFO_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(114, 6);
+            // 
+            // EXIT
+            // 
+            this.EXIT.Name = "EXIT";
+            this.EXIT.Size = new System.Drawing.Size(117, 22);
+            this.EXIT.Text = "종료";
+            this.EXIT.Click += new System.EventHandler(this.EXIT_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("돋움", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label1.Location = new System.Drawing.Point(279, 271);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 15);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "MODE";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1261, 654);
-            this.Controls.Add(this.DebugLogText);
-            this.Controls.Add(this.PauseBtn);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.pointLabel);
-            this.Controls.Add(this.DebugLabel);
-            this.Controls.Add(this.label8);
+            this.ClientSize = new System.Drawing.Size(342, 345);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.CustomRadioBtn);
-            this.Controls.Add(this.RacingRadioBtn);
-            this.Controls.Add(this.FPSRadioBtn);
-            this.Controls.Add(this.BasicRadioBtn);
-            this.Controls.Add(this.pictureBox6);
-            this.Controls.Add(this.pictureBox5);
-            this.Controls.Add(this.pictureBox4);
-            this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.button_racing);
+            this.Controls.Add(this.button_fps);
+            this.Controls.Add(this.button_basic);
+            this.Controls.Add(this.pointLabel);
             this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Motion Recognition";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -323,28 +262,26 @@
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox4;
-        private System.Windows.Forms.PictureBox pictureBox6;
-        private System.Windows.Forms.PictureBox pictureBox5;
-        private System.Windows.Forms.RadioButton BasicRadioBtn;
-        private System.Windows.Forms.RadioButton FPSRadioBtn;
-        private System.Windows.Forms.RadioButton RacingRadioBtn;
-        private System.Windows.Forms.RadioButton CustomRadioBtn;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label pointLabel;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label DebugLabel;
-        private System.Windows.Forms.Button PauseBtn;
-        private System.Windows.Forms.RichTextBox DebugLogText;
+        private System.Windows.Forms.Button button_basic;
+        private System.Windows.Forms.Button button_fps;
+        private System.Windows.Forms.Button button_racing;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 메뉴ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 사용법ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 정보ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 종료ToolStripMenuItem;
+        private System.Windows.Forms.NotifyIcon WCC;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem open;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem BASIC;
+        private System.Windows.Forms.ToolStripMenuItem FPS;
+        private System.Windows.Forms.ToolStripMenuItem RACING;
+        private System.Windows.Forms.ToolStripMenuItem INFO;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem EXIT;
+        private System.Windows.Forms.Label label1;
     }
 }
 

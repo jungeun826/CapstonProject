@@ -83,14 +83,19 @@ namespace HandGesture
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
                 return;
             }
+            int beforeX = x;
+            int beforeY = y;
 
+            beforeX = (int)(m_fingers[i].m_centerPoint.X * 0.8 + beforeX * 0.2);
+            beforeY = (int)(m_fingers[i].m_centerPoint.Y * 0.8 + beforeY * 0.2);
 
             //ApiController.SetCursorPos(m_fingers[i].m_centerPoint.X, m_fingers[i].m_centerPoint.Y);
-            ApiController.MoveCursorPos(m_fingers[i].m_centerPoint.X -x, m_fingers[i].m_centerPoint.Y -y);
-
+            //ApiController.MoveCursorPos(m_fingers[i].m_centerPoint.X -x, m_fingers[i].m_centerPoint.Y -y);
+            ApiController.MoveCursorPos(beforeX -x, beforeY -y);
             //상대 좌표 이동을 위해 추가
-            x = m_fingers[i].m_centerPoint.X;
-            y = m_fingers[i].m_centerPoint.Y;
+            x = beforeX; y = beforeY;
+            //x = m_fingers[i].m_centerPoint.X;
+            //y = m_fingers[i].m_centerPoint.Y;
             return;
         }
 

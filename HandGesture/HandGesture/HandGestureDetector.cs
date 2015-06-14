@@ -87,7 +87,9 @@ namespace HandGesture
                         }
                     }
 
+#if Debug
                     resultImg.DrawCircle(conCenter, 2, CvColor.White, -1);
+#endif
                     if (maxConDist > 0)
                     {
                         Finger finger = new Finger(conCenter, (int)maxConDist);
@@ -95,21 +97,24 @@ namespace HandGesture
                         //resultImg.DrawCircle(conCenter, (int)maxConDist, CvColor.Violet);
                     }
                     else continue;
-
+#if DEBUG
                     Cv.DrawContours(imgContour, contours, CvColor.Red, CvColor.Green, 0, 3, LineType.AntiAlias);
-
+#endif
                     // finds convex hull
                     int[] hull;
                     Cv.ConvexHull2(contours, out hull, ConvexHullOrientation.Clockwise);
                     Cv.Copy(imgFlesh, imgHull);
+#if DEBUG
                     DrawConvexHull(contours, hull, resultImg);
-
+#endif
                     // gets convexity defexts
                     Cv.Copy(imgContour, imgDefect);
                     CvSeq<CvConvexityDefect> defect = Cv.ConvexityDefects(contours, hull);
 
                     var tempLoop = defect.ToArray();
+#if DEBUG
                     resultImg.PutText(conCenter.X + "," + conCenter.Y, conCenter, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
+#endif         
                     foreach (CvConvexityDefect ccd in tempLoop)
                     {
                         if (ccd.End.Y < conCenter.Y + maxConDist / 2)
@@ -117,15 +122,16 @@ namespace HandGesture
                             int dis = (int)ccd.End.DistanceTo(conCenter);
                             if (dis < maxConDist * 1.6) continue;
                             fingers[k].addTip(ccd.End);
-                            resultImg.PutText(ccd.End.X + "," + ccd.End.Y, ccd.End, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
                             fingers[k].addDepth(ccd.DepthPoint);
-
+                            cntFinger++;
+#if DEBUG
+                            resultImg.PutText(ccd.End.X + "," + ccd.End.Y, ccd.End, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
                             resultImg.DrawCircle(ccd.End, 2, CvColor.Red, -1);
                             //resultImg.DrawLine(ccd.End, conCenter, CvColor.Aqua);
                             resultImg.DrawLine(conCenter, ccd.DepthPoint, CvColor.Aqua);
-                            cntFinger++;
                             resultImg.PutText(cntFinger.ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Black);
                             //resultImg.PutText(((int)fingers[k].GetFingerAngle2(ccd.DepthPoint, conCenter)).ToString(), ccd.DepthPoint, new CvFont(FontFace.HersheyComplex, 0.5, 0.5), CvColor.Tomato);
+#endif
                         }
                     }
                 }
@@ -167,34 +173,6 @@ namespace HandGesture
                 hist.Normalize(imgSrc.Width * imgSrc.Height * 255 / maxValue);
                 hist.CalcBackProject(hsvPlanes, imgDst);
             }
-        }
-
-        /// <summary>
-        /// Gets the largest blob
-        /// </summary>
-        /// <param name="imgSrc"></param>
-        /// <param name="imgRender"></param>
-        private void FilterByMaximumBlob(IplImage imgSrc, IplImage imgDst)
-        {
-            CvBlobs blobs = new CvBlobs();
-
-            imgDst.Zero();
-            blobs.Label(imgSrc);
-            CvBlob max = blobs.GreaterBlob();
-            if (max == null)
-                return;
-            blobs.FilterByArea(max.Area, max.Area);
-            blobs.FilterLabels(imgDst);
-        }
-
-        /// <summary>
-        /// Opening
-        /// </summary>
-        /// <param name="img"></param>
-        private void Interpolate(IplImage img)
-        {
-            Cv.Dilate(img, img, null, 2);
-            Cv.Erode(img, img, null, 2);
         }
 
         /// <summary>
@@ -243,53 +221,6 @@ namespace HandGesture
                 Cv.Line(img, pt0, pt, new CvColor(255, 255, 255));
                 pt0 = pt;
             }
-        }
-
-        /// <summary>
-        /// ConvexityDefectsの描画
-        /// </summary>
-        /// <param name="img"></param>
-        /// <param name="defect"></param>
-        private void DrawDefects(IplImage img, CvSeq<CvConvexityDefect> defect)
-        {
-            int count = 0;
-            foreach (CvConvexityDefect item in defect)
-            {
-                CvPoint p1 = item.Start, p2 = item.End;
-                double dist = GetDistance(p1, p2);
-                CvPoint2D64f mid = GetMidpoint(p1, p2);
-                img.DrawLine(p1, p2, CvColor.White, 3);
-                img.DrawCircle(item.DepthPoint, 10, CvColor.Green, -1);
-                img.DrawLine(mid, item.DepthPoint, CvColor.White, 1);
-                Console.WriteLine("No:{0} Depth:{1} Dist:{2}", count, item.Depth, dist);
-                count++;
-            }
-        }
-
-        /// <summary>
-        /// 2点間の距離を得る
-        /// </summary>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
-        /// <returns></returns>
-        private double GetDistance(CvPoint p1, CvPoint p2)
-        {
-            return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
-        }
-
-        /// <summary>
-        /// 2点の中点を得る
-        /// </summary>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
-        /// <returns></returns>
-        private CvPoint2D64f GetMidpoint(CvPoint p1, CvPoint p2)
-        {
-            return new CvPoint2D64f
-            {
-                X = (p1.X + p2.X) / 2.0,
-                Y = (p1.Y + p2.Y) / 2.0
-            };
         }
     }
 }

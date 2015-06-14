@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HandGesture
 {
-    static class StateManager
+    static class BasicStateManager 
     {
         delegate void fingersDel();
 
@@ -15,7 +15,7 @@ namespace HandGesture
         static int  x, y;
         static double lengthOfIF = 0;
 
-        static public void update(List<Finger> curFingers)
+        static public void Update(List<Finger> curFingers)
         {
             m_fingers = curFingers;
             if (func != null) func();
@@ -31,19 +31,8 @@ namespace HandGesture
             int i;
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
 
-            if (i == 3)
-            {
-                Console.WriteLine("change handle");
-                ApiController.keybd_event( (uint)System.Windows.Forms.Keys.Up, 0, 0x00, 0);
-                func = handleFunc;
-                return;
-            }
-            
             if (i == m_fingers.Count)
-            {
-                //idle
-                return;
-            }
+                i = m_fingers.Count - 1;
 
             if (m_fingers[i].m_tipPoint.Count == 2)
             {
@@ -98,6 +87,9 @@ namespace HandGesture
             //ApiController.SetCursorPos(m_fingers[i].m_centerPoint.X, m_fingers[i].m_centerPoint.Y);
             ApiController.MoveCursorPos(m_fingers[i].m_centerPoint.X -x, m_fingers[i].m_centerPoint.Y -y);
 
+            //상대 좌표 이동을 위해 추가
+            x = m_fingers[i].m_centerPoint.X;
+            y = m_fingers[i].m_centerPoint.Y;
             return;
         }
 

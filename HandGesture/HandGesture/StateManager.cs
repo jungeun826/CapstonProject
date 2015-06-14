@@ -45,31 +45,31 @@ namespace HandGesture
             int i = context.GetHandIdx();
 
 
-            if (context.RBFingerLength == -1)
-            {
-                int rbFingerTipIdx = context.GetRBFingerTipIdx(i);
+            //if (context.RBFingerLength == -1)
+            //{
+            //    int rbFingerTipIdx = context.GetRBFingerTipIdx(i);
 
-                if (rbFingerTipIdx != -1)
-                {
-                    int pixelLegth = context.hands[i].GetPixelCntYFingerTip(rbFingerTipIdx);
-                    if (context.hands[i].m_rad <= pixelLegth)
-                        context.RBFingerLength = pixelLegth;
-                }
-            }
+            //    if (rbFingerTipIdx != -1)
+            //    {
+            //        int pixelLegth = context.hands[i].GetPixelCntYFingerTip(rbFingerTipIdx);
+            //        if (context.hands[i].m_rad <= pixelLegth)
+            //            context.RBFingerLength = pixelLegth;
+            //    }
+            //}
 
-            if (context.LBFingerLength == -1)
-            {
-                int lbFingerTipIdx = context.GetLBFingerTipIdx(i);
+            //if (context.LBFingerLength == -1)
+            //{
+            //    int lbFingerTipIdx = context.GetLBFingerTipIdx(i);
 
-                if (lbFingerTipIdx != -1)
-                {
-                    int pixelLegth = context.hands[i].GetPixelCntXFingerTip(lbFingerTipIdx);
+            //    if (lbFingerTipIdx != -1)
+            //    {
+            //        int pixelLegth = context.hands[i].GetPixelCntXFingerTip(lbFingerTipIdx);
 
-                    if (context.hands[i].m_rad <= pixelLegth)
-                        context.LBFingerLength = pixelLegth;
-                }
+            //        if (context.hands[i].m_rad <= pixelLegth)
+            //            context.LBFingerLength = pixelLegth;
+            //    }
 
-            }
+            //}
 
                 if (context.IsRightGesture(i, true))
                 {
@@ -94,7 +94,7 @@ namespace HandGesture
                 ApiController.MouseEvent(ApiController.eMouseEventType.MOVEPOS, dx, dy);
 
                 x = context.hands[i].m_centerPoint.X;
-            y = context.hands[i].m_centerPoint.Y;
+                y = context.hands[i].m_centerPoint.Y;
                 return;
             
         }
@@ -141,12 +141,12 @@ namespace HandGesture
     }
     public class LBUpState<T> : IState<T> where T : BasicStateManager
     {
-        private bool isUp = false;
+        //private bool isUp = false;
 
         public override void OnEnter(T t)
         {
             base.OnEnter(t);
-            isUp = false;
+            //isUp = false;
         }
 
         public override void OnUpdate()
@@ -173,7 +173,7 @@ namespace HandGesture
         public override void OnExit()
         {
             base.OnExit();
-            isUp = false;
+            //isUp = false;
         }
     }
     public class RBDownState<T> : IState<T> where T : BasicStateManager
@@ -234,11 +234,11 @@ namespace HandGesture
             }
 
             int i = context.GetHandIdx();
-            if (context.IsMoveGesture(i))
-            {
-                context.manager.Transition((int)BasicModeTransitionType.Move);
-                return;
-            }
+            //if (context.IsRightGesture(i,false))
+            //{
+            //    context.manager.Transition((int)BasicModeTransitionType.Move);
+            //    return;
+            //}
 
             context.manager.Transition((int)BasicModeTransitionType.Idle);
         }
@@ -264,19 +264,19 @@ namespace HandGesture
                     return;
                 }
                 
-                //lb down
-                if (context.IsLeftGesture(i, true))
-                {
-                    context.manager.Transition((int)BasicModeTransitionType.LBDown);
-                    return;
-                }
+                ////lb down
+                //if (context.IsLeftGesture(i, true))
+                //{
+                //    context.manager.Transition((int)BasicModeTransitionType.LBDown);
+                //    return;
+                //}
 
-                //rb down
-                if (context.IsRightGesture(i, true))
-                {
-                    context.manager.Transition((int)BasicModeTransitionType.RBDown);
-                    return;
-                }
+                ////rb down
+                //if (context.IsRightGesture(i, true))
+                //{
+                //    context.manager.Transition((int)BasicModeTransitionType.RBDown);
+                //    return;
+                //}
         }
 
         public override void OnExit()
@@ -312,8 +312,8 @@ namespace HandGesture
             manager.AddTransition(-1, (int)BasicModeTransitionType.Idle, (int)BasicModeStateType.Idle);
 
             manager.AddTransition((int)BasicModeStateType.Idle, (int)BasicModeTransitionType.Move, (int)BasicModeStateType.Move);
-            manager.AddTransition((int)BasicModeStateType.Idle, (int)BasicModeTransitionType.LBDown, (int)BasicModeStateType.LBDown);
-            manager.AddTransition((int)BasicModeStateType.Idle, (int)BasicModeTransitionType.RBDown, (int)BasicModeStateType.RBDown);
+            //manager.AddTransition((int)BasicModeStateType.Idle, (int)BasicModeTransitionType.LBDown, (int)BasicModeStateType.LBDown);
+            //manager.AddTransition((int)BasicModeStateType.Idle, (int)BasicModeTransitionType.RBDown, (int)BasicModeStateType.RBDown);
 
             manager.AddTransition((int)BasicModeStateType.Move, (int)BasicModeTransitionType.LBDown, (int)BasicModeStateType.LBDown);
             manager.AddTransition((int)BasicModeStateType.LBDown, (int)BasicModeTransitionType.LBUp, (int)BasicModeStateType.LBUp);
@@ -336,6 +336,8 @@ namespace HandGesture
         public void Update(List<Finger> hands)
         {
             this.hands = hands;
+            if(hands.Count > 0)
+                hands[0].GetFingerType();
             manager.Update();
         }
 
@@ -361,50 +363,67 @@ namespace HandGesture
 
         public bool IsMoveGesture(int handIdx)
         {
-            if(!(hands[handIdx].m_tipPoint.Count == 2)) return false;
+            return (hands[handIdx].m_tipPoint.Count == 2);
 
-            bool existType = hands[handIdx].HasFingerType(Finger.FingerType.ForeFinger | Finger.FingerType.IndexFinger);
-            if (existType) 
-                return true;
+            //bool existType = hands[handIdx].HasFingerType(Finger.FingerType.ForeFinger | Finger.FingerType.IndexFinger);
+            //if (existType) 
+            //    return true;
 
-            return false;
+            //return false;
         }
 
         public bool IsRightGesture(int handIdx, bool isDown)
         {
-            int tipIdx = GetRBFingerTipIdx(handIdx);
-            if (tipIdx == -1) return false;
-            double tempRBFingerLength = hands[handIdx].GetPixelCntYFingerTip(tipIdx);
-            if (RBFingerLength == -1) return false;
+
             if (hands[handIdx].m_tipPoint.Count > 1)
             {
-                if (isDown && RBFingerLength * 0.6f > tempRBFingerLength) 
-                    return true;
-                if (!isDown && RBFingerLength * 0.8f < tempRBFingerLength) 
-                    return true;
+                double tempLengthOfIF = hands[handIdx].GetLengthOfIf();
+                if (isDown)
+                    return (IdleLengthOfIf * 0.6 > tempLengthOfIF);
+                if (!isDown)
+                    return (IdleLengthOfIf * 0.6 <= tempLengthOfIF);
             }
 
             return false;
+
+            //int tipIdx = GetRBFingerTipIdx(handIdx);
+            //if (tipIdx == -1) return false;
+            //double tempRBFingerLength = hands[handIdx].GetPixelCntYFingerTip(tipIdx);
+            //if (RBFingerLength == -1) return false;
+            //if (hands[handIdx].m_tipPoint.Count > 1)
+            //{
+            //    if (isDown && RBFingerLength * 0.6f > tempRBFingerLength) 
+            //        return true;
+            //    if (!isDown && RBFingerLength * 0.8f < tempRBFingerLength) 
+            //        return true;
+            //}
+
+            //return false;
         }
 
         public bool IsLeftGesture(int handIdx, bool isDown)
         {
-            int tipIdx = GetLBFingerTipIdx(handIdx);
-            if (tipIdx == -1) return false;
-            int tempLBLength = hands[handIdx].GetPixelCntXFingerTip(tipIdx);
-            if (LBFingerLength == -1) return false;
-            if (isDown && hands[handIdx].m_tipPoint.Count == 1)
-            {
-                if (hands[handIdx].HasFingerType(Finger.FingerType.IndexFinger))
-                    return true;
-            }
-            
-            if (isDown && LBFingerLength * 0.5f > tempLBLength) 
-                return true;
-            if (!isDown && LBFingerLength * 0.5f < tempLBLength) 
-                return true;
+            if (hands[handIdx].m_tipPoint.Count == 1) return true;
+            if (isDown && hands[handIdx].GetFingerAngle() < 0.7) return true;
+            else if (!isDown && hands[handIdx].GetFingerAngle() > 0.7) return true;
 
             return false;
+            //int tipIdx = GetLBFingerTipIdx(handIdx);
+            //if (tipIdx == -1) return false;
+            //int tempLBLength = hands[handIdx].GetPixelCntXFingerTip(tipIdx);
+            //if (LBFingerLength == -1) return false;
+            //if (isDown && hands[handIdx].m_tipPoint.Count == 1)
+            //{
+            //    if (hands[handIdx].HasFingerType(Finger.FingerType.IndexFinger))
+            //        return true;
+            //}
+            
+            //if (isDown && LBFingerLength * 0.5f > tempLBLength) 
+            //    return true;
+            //if (!isDown && LBFingerLength * 0.5f < tempLBLength) 
+            //    return true;
+
+            //return false;
         }
 
         public int GetRBFingerTipIdx(int handIdx)

@@ -14,6 +14,8 @@ namespace HandGesture
     {
         public DebugForm()
         {
+            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            this.BackColor = Color.Transparent;
             InitializeComponent();
         }
     }

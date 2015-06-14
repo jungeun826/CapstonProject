@@ -82,6 +82,7 @@ namespace HandGesture
         public void ChangeDetectMode(DetectorMode changeMode)
         {
             this.DetectMode = changeMode;
+#if PCVer
             switch (this.DetectMode)
             {
                 case DetectorMode.Basic:
@@ -102,6 +103,7 @@ namespace HandGesture
                 default:
                     break;
             }
+#endif
         }
 
 

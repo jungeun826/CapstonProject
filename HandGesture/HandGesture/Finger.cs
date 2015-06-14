@@ -204,35 +204,7 @@ namespace HandGesture
 
             return pixelCnt;
         }
-
-        //public int GetYPos(int tipIdx)
-        //{
-        //    if(m_tipPoint.Count > tipIdx)
-        //        return m_tipPoint[tipIdx].Y;
-
-        //    return -1;
-        //}
-
-        //public bool CheckXPosClose(int targetTipIdx, int baseTipIdx)
-        //{
-        //    if (m_tipPoint.Count > Math.Max(targetTipIdx, baseTipIdx))
-        //    {
-        //        if (Math.Abs(m_tipPoint[targetTipIdx].X - m_tipPoint[baseTipIdx].X) < 30)
-        //            return true;
-        //        return false;
-        //    }
-
-        //    return false;
-        //}
-            
-        //public double GetFingerAngle2(OpenCvSharp.CvPoint depthPoint, OpenCvSharp.CvPoint centerPoint)
-        //{
-        //    double r = GetDist(depthPoint, m_centerPoint);
-        //    OpenCvSharp.CvPoint tempPoint = m_centerPoint;
-        //    tempPoint.X = m_centerPoint.X + (int)r;
-        //    return GetFingerAngle(depthPoint - m_centerPoint, tempPoint - m_centerPoint);
-        //}
-
+        
         private double GetDist(OpenCvSharp.CvPoint p1, OpenCvSharp.CvPoint p2)
         {
             return Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));

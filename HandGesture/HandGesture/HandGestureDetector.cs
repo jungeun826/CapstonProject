@@ -86,8 +86,9 @@ namespace HandGesture
                         }
                     }
 
-#if Debug
+#if DEBUG
                     resultImg.DrawCircle(conCenter, 2, CvColor.White, -1);
+                    resultImg.DrawCircle(conCenter, (int)maxConDist, CvColor.Beige);
 #endif
                     if (maxConDist > 0)
                     {

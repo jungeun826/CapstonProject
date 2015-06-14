@@ -52,14 +52,14 @@ namespace HandGesture
         {
             int i;
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
-            if (i == m_fingers.Count)
+            if (i == m_fingers.Count || m_fingers[i].m_tipPoint.Count > 2)
             {
                 Console.WriteLine("changed idle mode");
                 func = idleFunc;
                 return;
             }
 
-            if (m_fingers[i].m_tipPoint.Count > 1)
+            if (m_fingers[i].m_tipPoint.Count == 2)
             {
                 double tempLengthOfIF = m_fingers[i].m_tipPoint[0].Y < m_fingers[i].m_tipPoint[1].Y ?
                         m_fingers[i].m_tipPoint[0].DistanceTo(m_fingers[i].m_depthPoint[0])
@@ -83,6 +83,7 @@ namespace HandGesture
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
                 return;
             }
+
 
             //ApiController.SetCursorPos(m_fingers[i].m_centerPoint.X, m_fingers[i].m_centerPoint.Y);
             ApiController.MoveCursorPos(m_fingers[i].m_centerPoint.X -x, m_fingers[i].m_centerPoint.Y -y);
@@ -136,7 +137,7 @@ namespace HandGesture
                 if (lengthOfIF * 0.8 < tempLengthOfIF)
                 {
                     Console.WriteLine("changed rbd to move");
-                    func += moveFunc;
+                    func = moveFunc;
 
                     ApiController.mouse_event(ApiController.MOUSEEVENTF_RIGHTUP);
                     return;

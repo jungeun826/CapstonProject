@@ -82,7 +82,7 @@ namespace HandGesture
                     WebcamController.Instance.PlayFileName = "hand5.avi";
                     break;
                 case DetectorMode.FPS:
-                    
+                    WebcamController.Instance.PlayFileName = "hand6.avi";
                     break;
                 case DetectorMode.Racing:
                     //ApiController.keybd_event((uint)(System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Tab), 0, 0x00, 0);
@@ -121,6 +121,7 @@ namespace HandGesture
                     BasicStateManager.Update(hands);
                     break;
                 case DetectorMode.FPS:
+                    FPSStateManager.Update(hands);
                     break;
                 case DetectorMode.Racing:
                     RacingStateManager.Update(hands);

@@ -1,7 +1,162 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HandGesture
+{
+    public static class FPSStateManager
+    {
+        delegate void fingersDel();
+
+        static List<Finger> m_fingers;
+        static fingersDel func;
+        static int x, y;
+        static int foreY = -1;
+
+        static public void Update(List<Finger> curFingers)
+        {
+            m_fingers = curFingers;
+            if (func != null) func();
+            else
+            {
+                func = idleFunc;
+                func();
+            }
+        }
+
+        static private bool GetHandIdx(out int idx)
+        {
+            int i = 0;
+            for (; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++)
+            { }
+            idx = i;
+            if(m_fingers.Count == 0) return false;
+           
+            //마지막 hand도 tipcount가 0임..
+            if(m_fingers.Count == i ) i = m_fingers.Count -1;
+            idx = i;
+            
+            return true;
+        }
+
+        static private void idleFunc()
+        {
+            int i = 0;
+            if (!GetHandIdx(out i)) return;
+
+            if (m_fingers[i].m_tipPoint.Count <= 2)
+            {
+                Console.WriteLine("change mouseMove");
+                
+                x = m_fingers[i].m_centerPoint.X;
+                y = m_fingers[i].m_centerPoint.Y;
+
+                func = mouseMoveFunc;
+                return;
+            }
+        }
+
+        static private void mouseMoveFunc()
+        {
+            int i = 0;
+            if (!GetHandIdx(out i)) return;
+
+            if (m_fingers[i].m_tipPoint.Count > 2)
+            {
+                Console.WriteLine("change idle");
+                foreY = -1;
+                func = idleFunc;
+                return;
+            }
+
+            if (foreY == -1)
+            {
+                if (m_fingers[i].m_tipPoint.Count == 1)
+                {
+                    foreY = m_fingers[i].GetPixelCntYFingerTip(0);
+                }
+            }
+
+            if (m_fingers[i].m_tipPoint.Count == 1)
+            {
+                if (foreY < m_fingers[i].GetPixelCntYFingerTip(0))
+                {
+                    Console.WriteLine("change shoot");
+                    func = shootFunc;
+                    return;
+                }
+            }
+
+            //ApiController.SetCursorPos(m_fingers[i].m_centerPoint.X, m_fingers[i].m_centerPoint.Y);
+            int dx = m_fingers[i].m_centerPoint.X - x;
+            int dy = m_fingers[i].m_centerPoint.Y - y;
+            //Debug.Log((dx).ToString() + "," + (dy).ToString());
+            ApiController.MoveCursorPos(dx, dy);
+
+            //상대 좌표 이동을 위해 추가
+            x = m_fingers[i].m_centerPoint.X;
+            y = m_fingers[i].m_centerPoint.Y;
+        }
+
+        static private void shootFunc()
+        {
+            int i = 0;
+            if (!GetHandIdx(out i)) return;
+
+            if (m_fingers[i].m_tipPoint.Count == 1)
+            {
+                if (foreY * 1.2f > m_fingers[i].GetPixelCntYFingerTip(0))
+                {
+                    Console.WriteLine("change mouseMove");
+                    ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
+                    ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
+                    func = mouseMoveFunc;
+                    return;
+                }
+            }
+
+            if (m_fingers[i].m_tipPoint.Count > 2)
+            {
+                Console.WriteLine("change idle");
+                foreY = -1;
+                func = idleFunc;
+                return;
+            }
+
+        }
+
+        static private void reloadFunc()
+        {
+            int i = 0;
+            if (!GetHandIdx(out i)) return;
+
+            if (m_fingers[i].m_tipPoint.Count == 1)
+            {
+                if (foreY * 1.2f > m_fingers[i].GetPixelCntYFingerTip(0))
+                {
+                    Console.WriteLine("change reload");
+                    ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
+                    ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
+                    func = mouseMoveFunc;
+                    return;
+                }
+            }
+
+            if (m_fingers[i].m_tipPoint.Count > 2)
+            {
+                Console.WriteLine("change idle");
+                foreY = -1;
+                func = idleFunc;
+                return;
+            }
+
+        }
+
+
+    }
+}
 
 //namespace HandGesture
 //{

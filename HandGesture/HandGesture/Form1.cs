@@ -67,6 +67,7 @@ namespace HandGesture
             RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.F10);
             RegisterHotKey((int)this.Handle, 1, 0x0, (int)Keys.F11);
             RegisterHotKey((int)this.Handle, 2, 0x0, (int)Keys.F9);
+            RegisterHotKey((int)this.Handle, 3, 0x0, (int)Keys.F8);
             //타이머 설정
             timer1.Interval = 20;
             timer1.Enabled = true;
@@ -198,6 +199,10 @@ namespace HandGesture
                 {
                     debugForm.isDrawing = !debugForm.isDrawing;
                 }
+                else if (m.WParam == (IntPtr)0x3)
+                {
+                    this.Pause = !this.Pause;
+                }
 
             }
         }
@@ -208,6 +213,8 @@ namespace HandGesture
         {
             UnregisterHotKey((int)this.Handle, 0);
             UnregisterHotKey((int)this.Handle, 1);
+            UnregisterHotKey((int)this.Handle, 2);
+            UnregisterHotKey((int)this.Handle, 3);
 
             //이거 윤희님이 왜 해두신건지 몰라서 쓰지도 않아서 주석처리 했습니다. By.Yong
             //e.Cancel = true;

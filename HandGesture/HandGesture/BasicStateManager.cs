@@ -36,7 +36,9 @@ namespace HandGesture
 
             if (m_fingers[i].m_tipPoint.Count == 2)
             {
+#if DEBUG
                 Console.WriteLine("changed move mode");
+#endif
                 lengthOfIF = m_fingers[i].m_tipPoint[0].Y > m_fingers[i].m_tipPoint[1].Y ?
                     m_fingers[i].m_tipPoint[0].DistanceTo(m_fingers[i].m_centerPoint)
                     : m_fingers[i].m_tipPoint[1].DistanceTo(m_fingers[i].m_centerPoint);
@@ -56,7 +58,9 @@ namespace HandGesture
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
             if (i == m_fingers.Count || m_fingers[i].m_tipPoint.Count > 2)
             {
+#if DEBUG
                 Console.WriteLine("changed idle mode");
+#endif
                 func = idleFunc;
                 return "idle";
             }
@@ -69,7 +73,9 @@ namespace HandGesture
 
                 if (lengthOfIF * 0.6 > tempLengthOfIF)
                 {
+#if DEBUG
                     Console.WriteLine("changed rbd");
+#endif
                     func = rbdFunc;
 
                     ApiController.mouse_event(ApiController.MOUSEEVENTF_RIGHTDOWN);
@@ -79,7 +85,9 @@ namespace HandGesture
 
             if (m_fingers[i].m_tipPoint.Count == 1 || m_fingers[i].GetFingerAngle() < 0.7)
             {
+#if DEBUG
                 Console.WriteLine("changed left down mode");
+#endif
                 func = lbdFunc;
 
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
@@ -107,7 +115,9 @@ namespace HandGesture
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
             if (i == m_fingers.Count)
             {
+#if DEBUG
                 Console.WriteLine("left up and changed idle mode");
+#endif
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
                 func = idleFunc;
                 return "Idle";
@@ -116,7 +126,9 @@ namespace HandGesture
             if (m_fingers[i].m_tipPoint.Count > 1 && m_fingers[i].GetFingerAngle() > 0.7)
             {
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
-                Console.WriteLine("left up and changed move mode");
+#if DEBUG          
+                Console.WriteLine("left up and changed move mode"); 
+#endif
                 func = idleFunc;
                 return "Move";
             }
@@ -130,7 +142,9 @@ namespace HandGesture
 
             if (i == m_fingers.Count)
             {
+#if DEBUG
                 Console.WriteLine("right up and changed idle mode");
+#endif
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
                 func = idleFunc;
                 return "Idle";
@@ -144,7 +158,9 @@ namespace HandGesture
 
                 if (lengthOfIF * 0.8 < tempLengthOfIF)
                 {
+#if DEBUG
                     Console.WriteLine("changed rbd to move");
+#endif
                     func = moveFunc;
 
                     ApiController.mouse_event(ApiController.MOUSEEVENTF_RIGHTUP);

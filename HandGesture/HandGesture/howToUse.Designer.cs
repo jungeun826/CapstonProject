@@ -35,7 +35,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 25);
+            this.label1.Location = new System.Drawing.Point(12, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 12);
             this.label1.TabIndex = 0;
@@ -44,7 +44,7 @@
             // label_manual
             // 
             this.label_manual.AutoSize = true;
-            this.label_manual.Location = new System.Drawing.Point(22, 57);
+            this.label_manual.Location = new System.Drawing.Point(12, 40);
             this.label_manual.Name = "label_manual";
             this.label_manual.Size = new System.Drawing.Size(105, 12);
             this.label_manual.TabIndex = 1;
@@ -54,7 +54,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(284, 341);
             this.Controls.Add(this.label_manual);
             this.Controls.Add(this.label1);
             this.Name = "howToUse";

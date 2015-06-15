@@ -30,9 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.pointLabel = new System.Windows.Forms.Label();
+           // this.pointLabel = new System.Windows.Forms.Label();
             this.button_basic = new System.Windows.Forms.Button();
             this.button_fps = new System.Windows.Forms.Button();
             this.button_racing = new System.Windows.Forms.Button();
@@ -52,41 +51,28 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.EXIT = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(11, 67);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(330, 250);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // timer1
             // 
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // pointLabel
-            // 
-            this.pointLabel.AutoSize = true;
-            this.pointLabel.Location = new System.Drawing.Point(2304, 824);
-            this.pointLabel.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
-            this.pointLabel.Name = "pointLabel";
-            this.pointLabel.Size = new System.Drawing.Size(0, 32);
-            this.pointLabel.TabIndex = 8;
-            // 
+            //// 
+            //// pointLabel
+            //// 
+            //this.pointLabel.AutoSize = true;
+            //this.pointLabel.Location = new System.Drawing.Point(1008, 319);
+            //this.pointLabel.Name = "pointLabel";
+            //this.pointLabel.Size = new System.Drawing.Size(0, 12);
+            //this.pointLabel.TabIndex = 8;
+            //// 
             // button_basic
             // 
-            this.button_basic.Location = new System.Drawing.Point(14, 741);
-            this.button_basic.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
+            this.button_basic.Location = new System.Drawing.Point(6, 43);
             this.button_basic.Name = "button_basic";
-            this.button_basic.Size = new System.Drawing.Size(240, 129);
+            this.button_basic.Size = new System.Drawing.Size(105, 50);
             this.button_basic.TabIndex = 9;
             this.button_basic.Text = "BASIC";
             this.button_basic.UseVisualStyleBackColor = true;
@@ -94,10 +80,9 @@
             // 
             // button_fps
             // 
-            this.button_fps.Location = new System.Drawing.Point(272, 741);
-            this.button_fps.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
+            this.button_fps.Location = new System.Drawing.Point(119, 43);
             this.button_fps.Name = "button_fps";
-            this.button_fps.Size = new System.Drawing.Size(240, 129);
+            this.button_fps.Size = new System.Drawing.Size(105, 50);
             this.button_fps.TabIndex = 10;
             this.button_fps.Text = "FPS";
             this.button_fps.UseVisualStyleBackColor = true;
@@ -105,10 +90,9 @@
             // 
             // button_racing
             // 
-            this.button_racing.Location = new System.Drawing.Point(530, 741);
-            this.button_racing.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
+            this.button_racing.Location = new System.Drawing.Point(232, 43);
             this.button_racing.Name = "button_racing";
-            this.button_racing.Size = new System.Drawing.Size(240, 129);
+            this.button_racing.Size = new System.Drawing.Size(105, 50);
             this.button_racing.TabIndex = 11;
             this.button_racing.Text = "RACING";
             this.button_racing.UseVisualStyleBackColor = true;
@@ -122,8 +106,7 @@
             this.종료ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(14, 5, 0, 5);
-            this.menuStrip1.Size = new System.Drawing.Size(782, 55);
+            this.menuStrip1.Size = new System.Drawing.Size(342, 24);
             this.menuStrip1.TabIndex = 12;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -133,27 +116,27 @@
             this.사용법ToolStripMenuItem,
             this.정보ToolStripMenuItem});
             this.메뉴ToolStripMenuItem.Name = "메뉴ToolStripMenuItem";
-            this.메뉴ToolStripMenuItem.Size = new System.Drawing.Size(90, 45);
+            this.메뉴ToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.메뉴ToolStripMenuItem.Text = "메뉴";
             // 
             // 사용법ToolStripMenuItem
             // 
             this.사용법ToolStripMenuItem.Name = "사용법ToolStripMenuItem";
-            this.사용법ToolStripMenuItem.Size = new System.Drawing.Size(223, 46);
+            this.사용법ToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.사용법ToolStripMenuItem.Text = "사용법";
             this.사용법ToolStripMenuItem.Click += new System.EventHandler(this.사용법ToolStripMenuItem_Click);
             // 
             // 정보ToolStripMenuItem
             // 
             this.정보ToolStripMenuItem.Name = "정보ToolStripMenuItem";
-            this.정보ToolStripMenuItem.Size = new System.Drawing.Size(223, 46);
+            this.정보ToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.정보ToolStripMenuItem.Text = "정보";
             this.정보ToolStripMenuItem.Click += new System.EventHandler(this.정보ToolStripMenuItem_Click);
             // 
             // 종료ToolStripMenuItem
             // 
             this.종료ToolStripMenuItem.Name = "종료ToolStripMenuItem";
-            this.종료ToolStripMenuItem.Size = new System.Drawing.Size(90, 45);
+            this.종료ToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.종료ToolStripMenuItem.Text = "종료";
             this.종료ToolStripMenuItem.Click += new System.EventHandler(this.종료ToolStripMenuItem_Click);
             // 
@@ -177,57 +160,57 @@
             this.toolStripSeparator1,
             this.EXIT});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(243, 292);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(118, 148);
             // 
             // open
             // 
             this.open.Name = "open";
-            this.open.Size = new System.Drawing.Size(242, 46);
+            this.open.Size = new System.Drawing.Size(117, 22);
             this.open.Text = "열기";
             this.open.Click += new System.EventHandler(this.open_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(239, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(114, 6);
             // 
             // BASIC
             // 
             this.BASIC.Name = "BASIC";
-            this.BASIC.Size = new System.Drawing.Size(242, 46);
+            this.BASIC.Size = new System.Drawing.Size(117, 22);
             this.BASIC.Text = "BASIC";
             this.BASIC.Click += new System.EventHandler(this.BASIC_Click);
             // 
             // FPS
             // 
             this.FPS.Name = "FPS";
-            this.FPS.Size = new System.Drawing.Size(242, 46);
+            this.FPS.Size = new System.Drawing.Size(117, 22);
             this.FPS.Text = "FPS";
             this.FPS.Click += new System.EventHandler(this.FPS_Click);
             // 
             // RACING
             // 
             this.RACING.Name = "RACING";
-            this.RACING.Size = new System.Drawing.Size(242, 46);
+            this.RACING.Size = new System.Drawing.Size(117, 22);
             this.RACING.Text = "RACING";
             this.RACING.Click += new System.EventHandler(this.RACING_Click);
             // 
             // INFO
             // 
             this.INFO.Name = "INFO";
-            this.INFO.Size = new System.Drawing.Size(242, 46);
+            this.INFO.Size = new System.Drawing.Size(117, 22);
             this.INFO.Text = "정보";
             this.INFO.Click += new System.EventHandler(this.INFO_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(239, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(114, 6);
             // 
             // EXIT
             // 
             this.EXIT.Name = "EXIT";
-            this.EXIT.Size = new System.Drawing.Size(242, 46);
+            this.EXIT.Size = new System.Drawing.Size(117, 22);
             this.EXIT.Text = "종료";
             this.EXIT.Click += new System.EventHandler(this.EXIT_Click);
             // 
@@ -235,32 +218,29 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("돋움", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label1.Location = new System.Drawing.Point(638, 700);
-            this.label1.Margin = new System.Windows.Forms.Padding(7, 0, 7, 0);
+            this.label1.Location = new System.Drawing.Point(279, 27);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(133, 38);
+            this.label1.Size = new System.Drawing.Size(54, 15);
             this.label1.TabIndex = 13;
             this.label1.Text = "MODE";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(782, 891);
+            this.ClientSize = new System.Drawing.Size(342, 99);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button_racing);
             this.Controls.Add(this.button_fps);
             this.Controls.Add(this.button_basic);
-            this.Controls.Add(this.pointLabel);
-            this.Controls.Add(this.pictureBox1);
+//            this.Controls.Add(this.pointLabel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.Name = "Form1";
             this.Text = "Motion Recognition";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -271,9 +251,8 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Label pointLabel;
+     //   private System.Windows.Forms.Label pointLabel;
         private System.Windows.Forms.Button button_basic;
         private System.Windows.Forms.Button button_fps;
         private System.Windows.Forms.Button button_racing;

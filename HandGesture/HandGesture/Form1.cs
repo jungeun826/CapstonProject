@@ -56,7 +56,7 @@ namespace HandGesture
 
         public void UseApiController(string text)
         {
-            pointLabel.Text = text;
+            //pointLabel.Text = text;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -311,6 +311,11 @@ namespace HandGesture
         {
             Application.Exit();
             WCC.Visible = false;
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
 
         }
 

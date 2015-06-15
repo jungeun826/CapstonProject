@@ -12,8 +12,10 @@ namespace HandGesture
 {
     public partial class DebugForm : Form
     {
+        public bool isDrawing;
         public DebugForm()
         {
+            isDrawing = false;
             sw.Reset();
             sw.Start();
             SetStyle(ControlStyles.SupportsTransparentBackColor, true);
@@ -34,6 +36,11 @@ namespace HandGesture
         public void updateState()
         {
             label2.Text = DetectorManager.Instance.state; //"state";
+        }
+
+        public void updatePicture(Bitmap img)
+        {
+            pictureBox1.Image = isDrawing?img : null;
         }
     }
 }

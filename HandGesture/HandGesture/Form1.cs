@@ -66,6 +66,7 @@ namespace HandGesture
 #endif
             RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.F10);
             RegisterHotKey((int)this.Handle, 1, 0x0, (int)Keys.F11);
+            RegisterHotKey((int)this.Handle, 2, 0x0, (int)Keys.F9);
             //타이머 설정
             timer1.Interval = 20;
             timer1.Enabled = true;
@@ -97,15 +98,15 @@ namespace HandGesture
             {
                 debugForm.updateFPS();
                 debugForm.updateState();
+                DrawImg(detector.ResultImg);
             }
 
-            DrawImg(detector.ResultImg);
         }
 
         private void DrawImg(IplImage img1 = null)
         {
             if (img1 != null)
-                pictureBox1.Image = detector.ConvertIplToBitmap(img1);
+                debugForm.updatePicture( detector.ConvertIplToBitmap(img1));
         }
 
 
@@ -189,10 +190,15 @@ namespace HandGesture
                     }
                 }
 
-                if (m.WParam == (IntPtr)0x1)
+                else if (m.WParam == (IntPtr)0x1)
                 {
                     Application.Exit();
                 }
+                else if (m.WParam == (IntPtr)0x2)
+                {
+                    debugForm.isDrawing = !debugForm.isDrawing;
+                }
+
             }
         }
 

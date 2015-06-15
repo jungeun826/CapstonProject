@@ -55,6 +55,10 @@ namespace HandGesture
                 //피부색 검출
                 imgYCBCR.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), imgBackProjection);
 
+                imgBackProjection.Dilate(imgBackProjection, null, 2);
+                imgBackProjection.Erode(imgBackProjection, null, 2);
+                imgBackProjection.Smooth(imgBackProjection, SmoothType.Gaussian);
+
                 List<IplImage> listOfBlobImg = FilterBlobImgList(imgBackProjection);
                 int blobCnt = listOfBlobImg.Count;
 
@@ -94,7 +98,6 @@ namespace HandGesture
                     {
                         Finger finger = new Finger(conCenter, (int)maxConDist);
                         fingers.Add(finger);
-                        //resultImg.DrawCircle(conCenter, (int)maxConDist, CvColor.Violet);
                     }
                     else continue;
 #if DEBUG

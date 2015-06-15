@@ -32,9 +32,9 @@ namespace HandGesture
         {
             InitializeComponent();
 
-            button_basic.BackgroundImage = Image.FromFile("BASIC.jpg");
-            button_fps.BackgroundImage = Image.FromFile("FPS.jpg");
-            button_racing.BackgroundImage = Image.FromFile("RACING.jpg");
+            //button_basic.BackgroundImage = Image.FromFile("BASIC.jpg");
+            //button_fps.BackgroundImage = Image.FromFile("FPS.jpg");
+            //button_racing.BackgroundImage = Image.FromFile("RACING.jpg");
 
 
             DetectorManager.Instance.Init(DetectorMode.Basic);

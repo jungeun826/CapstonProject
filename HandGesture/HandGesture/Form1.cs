@@ -65,6 +65,7 @@ namespace HandGesture
             WebcamController.Instance.addDisplayFPS();
 #endif
             RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.F10);
+            RegisterHotKey((int)this.Handle, 1, 0x0, (int)Keys.F11);
             //타이머 설정
             timer1.Interval = 20;
             timer1.Enabled = true;
@@ -90,6 +91,12 @@ namespace HandGesture
             if (webcamImg == null)
             {
                 return;
+            }
+
+            if (debugForm != null && debugForm.Created)
+            {
+                debugForm.updateFPS();
+                debugForm.updateState();
             }
 
             DrawImg(detector.ResultImg);
@@ -181,6 +188,11 @@ namespace HandGesture
                         debugForm.Show();
                     }
                 }
+
+                if (m.WParam == (IntPtr)0x1)
+                {
+                    Application.Exit();
+                }
             }
         }
 
@@ -188,12 +200,16 @@ namespace HandGesture
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = true;
-            //방법1
-            this.Visible = false;
-            //방법2
-            //this.WindowState = FormWindowState.Minimized;
-            //this.ShowInTaskbar = false;
+            UnregisterHotKey((int)this.Handle, 0);
+            UnregisterHotKey((int)this.Handle, 1);
+
+            //이거 윤희님이 왜 해두신건지 몰라서 쓰지도 않아서 주석처리 했습니다. By.Yong
+            //e.Cancel = true;
+            ////방법1
+            //this.Visible = false;
+            ////방법2
+            ////this.WindowState = FormWindowState.Minimized;
+            ////this.ShowInTaskbar = false;
 
         }
 

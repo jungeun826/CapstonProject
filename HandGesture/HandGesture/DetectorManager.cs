@@ -19,6 +19,7 @@ namespace HandGesture
     class DetectorManager : Base.Singletone<DetectorManager>, Base.ISingleTon
     {
 
+        public string state;
         public DetectorMode DetectMode { get; private set; }
         public HandGestureDetector handDetector = new HandGestureDetector();
         private CvSize? _monitorSize = null;
@@ -118,13 +119,13 @@ namespace HandGesture
             switch (DetectMode)
             {
                 case DetectorMode.Basic:
-                    BasicStateManager.Update(hands);
+                    state = BasicStateManager.Update(hands);
                     break;
                 case DetectorMode.FPS:
-                    FPSStateManager.Update(hands);
+                    state = FPSStateManager.Update(hands);
                     break;
                 case DetectorMode.Racing:
-                    RacingStateManager.Update(hands);
+                    state =RacingStateManager.Update(hands);
                     break;
                 case DetectorMode.Custom:
                     break;

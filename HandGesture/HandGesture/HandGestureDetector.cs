@@ -105,7 +105,8 @@ namespace HandGesture
 #endif
                     // finds convex hull
                     int[] hull;
-                    Cv.ConvexHull2(contours, out hull, ConvexHullOrientation.Clockwise);
+                    contours.ConvexHull2(out hull, 
+                        (conCenter.X > (WebcamController.Instance.FrameSize.Width/2))? ConvexHullOrientation.Clockwise : ConvexHullOrientation.Counterclockwise);
                     Cv.Copy(imgFlesh, imgHull);
 #if DEBUG
                     DrawConvexHull(contours, hull, resultImg);

@@ -8,23 +8,23 @@ namespace HandGesture
 {
     public static class RacingStateManager
     {
-        delegate void fingersDel();
+        delegate string fingersDel();
 
         static List<Finger> m_fingers;
         static fingersDel func;
 
-        static public void Update(List<Finger> curFingers)
+        static public string Update(List<Finger> curFingers)
         {
             m_fingers = curFingers;
-            if (func != null) func();
+            if (func != null)return func();
             else
             {
                 func = idleFunc;
-                func();
+                return func();
             }
         }
 
-        static private void idleFunc()
+        static private string idleFunc()
         {
             int i = 0;
             for (; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++)
@@ -35,11 +35,12 @@ namespace HandGesture
                 Console.WriteLine("change handle");
                 ApiController.keybd_event((uint)System.Windows.Forms.Keys.Up, 0, 0x00, 0);
                 func = handleFunc;
-                return;
+                return "Handle Control";
             }
+            return "Idle";
         }
 
-        static private void handleFunc()
+        static private string handleFunc()
         {
             int i;
             int ri = 0, li = 0;
@@ -65,7 +66,7 @@ namespace HandGesture
                 //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
                 //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
                 func = idleFunc;
-                return;
+                return "Idle";
             }
 
             if (Math.Abs(m_fingers[li].m_centerPoint.Y - m_fingers[ri].m_centerPoint.Y) > m_fingers[li].m_rad)
@@ -85,7 +86,7 @@ namespace HandGesture
                     //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
                 }
             }
-            return;
+            return "Handle Control";
         }
 
     }

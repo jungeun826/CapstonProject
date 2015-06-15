@@ -8,25 +8,25 @@ namespace HandGesture
 {
     static class BasicStateManager 
     {
-        delegate void fingersDel();
+        delegate string fingersDel();
 
         static List<Finger> m_fingers;
         static fingersDel func;
         static int  x, y;
         static double lengthOfIF = 0;
 
-        static public void Update(List<Finger> curFingers)
+        static public string Update(List<Finger> curFingers)
         {
             m_fingers = curFingers;
-            if (func != null) func();
+            if (func != null) return func();
             else
             {
                 func = idleFunc;
-                func();
+                return func();
             }
         }
 
-        static private void idleFunc()
+        static private string idleFunc()
         {
             int i;
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
@@ -45,10 +45,12 @@ namespace HandGesture
                 y = m_fingers[i].m_centerPoint.Y;
 
                 func = moveFunc;
+                return "Move";
             }
+            return "Idle";
         }
 
-        private static void moveFunc()
+        private static string moveFunc()
         {
             int i;
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
@@ -56,7 +58,7 @@ namespace HandGesture
             {
                 Console.WriteLine("changed idle mode");
                 func = idleFunc;
-                return;
+                return "idle";
             }
 
             if (m_fingers[i].m_tipPoint.Count == 2)
@@ -71,7 +73,7 @@ namespace HandGesture
                     func = rbdFunc;
 
                     ApiController.mouse_event(ApiController.MOUSEEVENTF_RIGHTDOWN);
-                    return;
+                    return "Right Button Down";
                 }
             }
 
@@ -81,7 +83,7 @@ namespace HandGesture
                 func = lbdFunc;
 
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
-                return;
+                return "Left Button Down";
             }
             int beforeX = x;
             int beforeY = y;
@@ -96,10 +98,10 @@ namespace HandGesture
             x = beforeX; y = beforeY;
             //x = m_fingers[i].m_centerPoint.X;
             //y = m_fingers[i].m_centerPoint.Y;
-            return;
+            return "Move";
         }
 
-        private static void lbdFunc()
+        private static string lbdFunc()
         {
             int i;
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
@@ -108,7 +110,7 @@ namespace HandGesture
                 Console.WriteLine("left up and changed idle mode");
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
                 func = idleFunc;
-                return;
+                return "Idle";
             }
 
             if (m_fingers[i].m_tipPoint.Count > 1 && m_fingers[i].GetFingerAngle() > 0.7)
@@ -116,11 +118,12 @@ namespace HandGesture
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
                 Console.WriteLine("left up and changed move mode");
                 func = idleFunc;
-                return;
+                return "Move";
             }
+            return "Left Button Down";
         }
 
-        static void rbdFunc()
+        static string rbdFunc()
         {
             int i;
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
@@ -130,7 +133,7 @@ namespace HandGesture
                 Console.WriteLine("right up and changed idle mode");
                 ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
                 func = idleFunc;
-                return;
+                return "Idle";
             }
 
             if (m_fingers[i].m_tipPoint.Count > 1)
@@ -145,10 +148,10 @@ namespace HandGesture
                     func = moveFunc;
 
                     ApiController.mouse_event(ApiController.MOUSEEVENTF_RIGHTUP);
-                    return;
+                    return "Move";
                 }
             }
-
+            return "Right Button Down";
         }
     }
 }

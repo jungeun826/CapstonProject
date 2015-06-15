@@ -8,21 +8,21 @@ namespace HandGesture
 {
     public static class FPSStateManager
     {
-        delegate void fingersDel();
+        delegate string fingersDel();
 
         static List<Finger> m_fingers;
         static fingersDel func;
         static int x, y;
         static int foreY = -1;
 
-        static public void Update(List<Finger> curFingers)
+        static public string Update(List<Finger> curFingers)
         {
             m_fingers = curFingers;
-            if (func != null) func();
+            if (func != null)return func();
             else
             {
                 func = idleFunc;
-                func();
+                return func();
             }
         }
 
@@ -41,10 +41,10 @@ namespace HandGesture
             return true;
         }
 
-        static private void idleFunc()
+        static private string idleFunc()
         {
             int i = 0;
-            if (!GetHandIdx(out i)) return;
+            if (!GetHandIdx(out i)) return "Idle";
 
             if (m_fingers[i].m_tipPoint.Count <= 2)
             {
@@ -54,21 +54,22 @@ namespace HandGesture
                 y = m_fingers[i].m_centerPoint.Y;
 
                 func = mouseMoveFunc;
-                return;
+                return "MouseMove";
             }
+            return "Idle";
         }
 
-        static private void mouseMoveFunc()
+        static private string mouseMoveFunc()
         {
             int i = 0;
-            if (!GetHandIdx(out i)) return;
+            if (!GetHandIdx(out i)) return "???1";
 
             if (m_fingers[i].m_tipPoint.Count > 2)
             {
                 Console.WriteLine("change idle");
                 foreY = -1;
                 func = idleFunc;
-                return;
+                return "Idle";
             }
 
             if (foreY == -1)
@@ -85,7 +86,7 @@ namespace HandGesture
                 {
                     Console.WriteLine("change shoot");
                     func = shootFunc;
-                    return;
+                    return "Shoot";
                 }
             }
 
@@ -98,12 +99,14 @@ namespace HandGesture
             //상대 좌표 이동을 위해 추가
             x = m_fingers[i].m_centerPoint.X;
             y = m_fingers[i].m_centerPoint.Y;
+
+            return "MouseMove";
         }
 
-        static private void shootFunc()
+        static private string shootFunc()
         {
             int i = 0;
-            if (!GetHandIdx(out i)) return;
+            if (!GetHandIdx(out i)) return "???2";
 
             if (m_fingers[i].m_tipPoint.Count == 1)
             {
@@ -113,7 +116,7 @@ namespace HandGesture
                     ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
                     ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
                     func = mouseMoveFunc;
-                    return;
+                    return "MouseMove";
                 }
             }
 
@@ -122,9 +125,10 @@ namespace HandGesture
                 Console.WriteLine("change idle");
                 foreY = -1;
                 func = idleFunc;
-                return;
+                return "Idle";
             }
 
+            return "Shoot";
         }
 
         static private void reloadFunc()

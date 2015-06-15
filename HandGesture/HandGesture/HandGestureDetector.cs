@@ -123,7 +123,8 @@ namespace HandGesture
                         if (ccd.End.Y < conCenter.Y + maxConDist / 2)
                         {
                             int dis = (int)ccd.End.DistanceTo(conCenter);
-                            if (dis < maxConDist * 1.6) continue;
+                            int fingerDis = (int)ccd.End.DistanceTo(ccd.DepthPoint);
+                            if (dis < maxConDist * 1.6 || fingerDis < maxConDist * 0.8) continue;
                             fingers[k].addTip(ccd.End);
                             fingers[k].addDepth(ccd.DepthPoint);
                             cntFinger++;

@@ -14,7 +14,7 @@ namespace HandGesture
         static fingersDel func;
         static int x, y;
         static int Threshold = -1;
-        static float ShootRate = 0.5f;//1.3f;
+        static float ShootRate = 0.6f;//1.3f;
         //static float ReloadRate = 0.5f;
 
         static public string Update(List<Finger> curFingers)
@@ -157,8 +157,8 @@ namespace HandGesture
             int tempDeltaX = beforeX - x;
             int tempDeltaY = beforeY - y;
 
-            float RatioX = DetectorManager.Instance.MonitorSize.Value.Width / WebcamController.Instance.FrameSize.Width;
-            float RatioY = DetectorManager.Instance.MonitorSize.Value.Height / WebcamController.Instance.FrameSize.Height;
+            float RatioX = 2f * (DetectorManager.Instance.MonitorSize.Value.Width / WebcamController.Instance.FrameSize.Width);
+            float RatioY = 2f *( DetectorManager.Instance.MonitorSize.Value.Height / WebcamController.Instance.FrameSize.Height);
 
             int moveDeltaX = tempDeltaX, moveDeltaY = tempDeltaY;
             if (Math.Abs(tempDeltaX) < 5)
@@ -191,7 +191,7 @@ namespace HandGesture
             if (tempDeltaY != 0)
                 posY = (int)(((float)tempDeltaY ));
 
-            float rad = ((float)m_fingers[i].m_rad * 1.5f);
+            float rad = ((float)m_fingers[i].m_rad * 1.2f);
             if (m_fingers[i].m_centerPoint.X + rad > WebcamController.Instance.FrameSize.Width)
             {
                 posX = 1;
@@ -205,12 +205,12 @@ namespace HandGesture
             {
                 posY = 1;
             }
-            if (m_fingers[i].m_centerPoint.Y - rad < WebcamController.Instance.FrameSize.Height * 0.5)
+            if (m_fingers[i].m_centerPoint.Y - rad <0)
             {
                 posY = -1;
             }
 
-            ApiController.MoveCursorPos((int)((float)posX * RatioX), (int)((float)posY * RatioY), 5);
+            ApiController.MoveCursorPos((int)((float)posX * RatioX), (int)((float)posY * RatioY));
 
             //상대 좌표 이동을 위해 추가
             if (tempDeltaX != 0)
@@ -267,7 +267,7 @@ namespace HandGesture
             if (Threshold == -1)
             {
                 Threshold = GetLagestYCntFingerTip(i);
-                if (Threshold < m_fingers[i].m_rad * 2)
+                if (Threshold < m_fingers[i].m_rad * 2.2f)
                     Threshold = -1;
             }
         }
@@ -295,9 +295,7 @@ namespace HandGesture
                 return "Idle";
             }
 
-            SetThreshold(i);
             int LagestY = GetLagestYCntFingerTip(i);
-
             if (LagestY > Threshold * ShootRate )
             {
                 shootIngCnt = 0;
@@ -305,6 +303,8 @@ namespace HandGesture
                 func = mouseMoveFunc;
                 return "MouseMove";
             }
+
+            ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
 
             return "Shooting";
 

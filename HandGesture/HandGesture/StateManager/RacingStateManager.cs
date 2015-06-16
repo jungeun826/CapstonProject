@@ -63,8 +63,8 @@ namespace HandGesture
             {
                 Console.WriteLine("change idle state");
                 ApiController.keybd_event((uint)System.Windows.Forms.Keys.Up, 0, 0x02, 0);
-                //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
-                //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
+                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
+                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
                 func = idleFunc;
                 return "Idle";
             }
@@ -73,18 +73,23 @@ namespace HandGesture
             {
                 if (m_fingers[li].m_centerPoint.Y < m_fingers[ri].m_centerPoint.Y)
                 {
+                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
                     ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x00, 0);
-
-                    //sleep해서 프레임 드랍이 심해져서 주석처리함.
-                    //System.Threading.Thread.Sleep(100);
-                    //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
+                    return "left";
                 }
                 else
                 {
+                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
                     ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x00, 0);
-                    //System.Threading.Thread.Sleep(100);
-                    //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
+                    return "right";
                 }
+            }
+            else
+            {
+                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
+                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
+
+                return "GoGo";
             }
             return "Handle Control";
         }

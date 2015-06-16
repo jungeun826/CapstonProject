@@ -32,7 +32,10 @@ namespace HandGesture
             for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++) ;
 
             if (i == m_fingers.Count)
+            {
                 i = m_fingers.Count - 1;
+                return "Idle";
+            }
 
             if (m_fingers[i].m_tipPoint.Count == 2)
             {

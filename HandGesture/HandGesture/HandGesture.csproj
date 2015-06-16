@@ -87,7 +87,6 @@
   <ItemGroup>
     <Compile Include="ApiController.cs" />
     <Compile Include="StateManager\BasicStateManager.cs" />
-    <Compile Include="Debug.cs" />
     <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,7 +109,6 @@
     <Compile Include="Forms\howToUse.Designer.cs">
       <DependentUpon>howToUse.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImageProcessBase.cs" />
     <Compile Include="Forms\info.cs">
       <SubType>Form</SubType>
     </Compile>

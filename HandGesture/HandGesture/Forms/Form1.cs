@@ -61,9 +61,6 @@ namespace HandGesture
 
         private void Form1_Load(object sender, EventArgs e)
         {
-#if DEBUG
-            WebcamController.Instance.addDisplayFPS();
-#endif
             RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.F10);
             RegisterHotKey((int)this.Handle, 1, 0x0, (int)Keys.F11);
             RegisterHotKey((int)this.Handle, 2, 0x0, (int)Keys.F9);

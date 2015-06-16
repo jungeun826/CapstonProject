@@ -236,9 +236,9 @@ namespace HandGesture
             //e.Cancel = true;
             ////방법1
             //this.Visible = false;
-            ////방법2
-            ////this.WindowState = FormWindowState.Minimized;
-            ////this.ShowInTaskbar = false;
+            //방법2
+            this.WindowState = FormWindowState.Minimized;
+            this.ShowInTaskbar = false;
 
         }
 

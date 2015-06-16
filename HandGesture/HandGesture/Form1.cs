@@ -197,6 +197,7 @@ namespace HandGesture
                 }
                 else if (m.WParam == (IntPtr)0x2)
                 {
+                    if(debugForm != null)
                     debugForm.isDrawing = !debugForm.isDrawing;
                 }
                 else if (m.WParam == (IntPtr)0x3)

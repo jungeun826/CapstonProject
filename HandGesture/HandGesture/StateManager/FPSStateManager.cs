@@ -94,7 +94,7 @@ namespace HandGesture
             int dx = m_fingers[i].m_centerPoint.X - x;
             int dy = m_fingers[i].m_centerPoint.Y - y;
             //Debug.Log((dx).ToString() + "," + (dy).ToString());
-            ApiController.MoveCursorPos(dx, dy);
+            ApiController.SetCursorPos(dx, dy);
 
             //상대 좌표 이동을 위해 추가
             x = m_fingers[i].m_centerPoint.X;

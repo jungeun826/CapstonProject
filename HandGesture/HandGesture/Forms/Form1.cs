@@ -45,20 +45,12 @@ namespace HandGesture
             //opticalFlow = new OpticalFlow();
             WebcamController.Instance.Init();
             WebcamController.Instance.updateFrame();
-
-            ApiController.CallBack = UseApiController;
-
-
+            
             Pause = false;
 
             label1.Text = "BASIC";
         }
-
-        public void UseApiController(string text)
-        {
-            //pointLabel.Text = text;
-        }
-
+        
         private void Form1_Load(object sender, EventArgs e)
         {
             RegisterHotKey((int)this.Handle, 0, 0x0, (int)Keys.F10);

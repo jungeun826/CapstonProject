@@ -104,7 +104,7 @@ namespace HandGesture
 
             //ApiController.SetCursorPos(m_fingers[i].m_centerPoint.X, m_fingers[i].m_centerPoint.Y);
             //ApiController.MoveCursorPos(m_fingers[i].m_centerPoint.X -x, m_fingers[i].m_centerPoint.Y -y);
-            ApiController.MoveCursorPos(beforeX -x, beforeY -y);
+            ApiController.MoveCursorPos(beforeX -x, beforeY -y, 5);
             //상대 좌표 이동을 위해 추가
             x = beforeX; y = beforeY;
             //x = m_fingers[i].m_centerPoint.X;

@@ -105,7 +105,7 @@ namespace HandGesture
 
         private void button_basic_Click(object sender, EventArgs e)
         {
-            DetectorManager.Instance.ChangeDetectMode(DetectorMode.Custom);
+            DetectorManager.Instance.ChangeDetectMode(DetectorMode.Basic);
             label1.Text = DetectorManager.Instance.DetectMode.ToString();
         
         }
@@ -198,15 +198,18 @@ namespace HandGesture
                 }
                 else if (m.WParam == (IntPtr)0x4)
                 {
-                    button_basic.PerformClick();
+                    DetectorManager.Instance.ChangeDetectMode(DetectorMode.Basic);
+                    label1.Text = DetectorManager.Instance.DetectMode.ToString();
                 }
                 else if (m.WParam == (IntPtr)0x5)
                 {
-                    button_fps.PerformClick();
+                    DetectorManager.Instance.ChangeDetectMode(DetectorMode.FPS);
+                    label1.Text = DetectorManager.Instance.DetectMode.ToString();
                 }
                 else if (m.WParam == (IntPtr)0x6)
                 {
-                    button_racing.PerformClick();
+                    DetectorManager.Instance.ChangeDetectMode(DetectorMode.Racing);
+                    label1.Text = DetectorManager.Instance.DetectMode.ToString();
                 }
 
             }

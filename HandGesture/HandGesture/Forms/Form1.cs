@@ -57,6 +57,9 @@ namespace HandGesture
             RegisterHotKey((int)this.Handle, 1, 0x0, (int)Keys.F11);
             RegisterHotKey((int)this.Handle, 2, 0x0, (int)Keys.F9);
             RegisterHotKey((int)this.Handle, 3, 0x0, (int)Keys.F8);
+            RegisterHotKey((int)this.Handle, 4, 0x0, (int)Keys.F1);
+            RegisterHotKey((int)this.Handle, 5, 0x0, (int)Keys.F2);
+            RegisterHotKey((int)this.Handle, 6, 0x0, (int)Keys.F3);
             //타이머 설정
             timer1.Interval = 20;
             timer1.Enabled = true;
@@ -193,6 +196,18 @@ namespace HandGesture
                 {
                     this.Pause = !this.Pause;
                 }
+                else if (m.WParam == (IntPtr)0x4)
+                {
+                    button_basic.PerformClick();
+                }
+                else if (m.WParam == (IntPtr)0x5)
+                {
+                    button_fps.PerformClick();
+                }
+                else if (m.WParam == (IntPtr)0x6)
+                {
+                    button_racing.PerformClick();
+                }
 
             }
         }
@@ -205,6 +220,9 @@ namespace HandGesture
             UnregisterHotKey((int)this.Handle, 1);
             UnregisterHotKey((int)this.Handle, 2);
             UnregisterHotKey((int)this.Handle, 3);
+            UnregisterHotKey((int)this.Handle, 4);
+            UnregisterHotKey((int)this.Handle, 5);
+            UnregisterHotKey((int)this.Handle, 6);
 
             //이거 윤희님이 왜 해두신건지 몰라서 쓰지도 않아서 주석처리 했습니다. By.Yong
             //e.Cancel = true;

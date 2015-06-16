@@ -102,7 +102,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="StateManager\FPSStateManager.cs" />
-    <Compile Include="HandGestureDetector.cs" />
+    <Compile Include="HandDetector.cs" />
     <Compile Include="Forms\howToUse.cs">
       <SubType>Form</SubType>
     </Compile>

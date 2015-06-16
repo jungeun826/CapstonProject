@@ -21,7 +21,7 @@ namespace HandGesture
 
         public string state;
         public DetectorMode DetectMode { get; private set; }
-        public HandGestureDetector handDetector = new HandGestureDetector();
+        public HandDetector handDetector = new HandDetector();
         private CvSize? _monitorSize = null;
         public CvSize? MonitorSize
         {

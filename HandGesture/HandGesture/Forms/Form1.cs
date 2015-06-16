@@ -26,7 +26,7 @@ namespace HandGesture
 
         public bool Pause { get; set; }
 
-        HandGestureDetector detector;
+        HandDetector detector;
 
         public Form1()
         {

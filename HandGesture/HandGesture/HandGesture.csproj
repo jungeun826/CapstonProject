@@ -119,7 +119,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IRecognition.cs" />
     <Compile Include="StateManager\RacingStateManager.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="WebcamController.cs" />

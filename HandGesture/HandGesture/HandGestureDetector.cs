@@ -10,7 +10,7 @@ using OpenCvSharp.Blob;
 namespace HandGesture
 {
 
-    class HandGestureDetector : ImageProcessBase, IRecognition
+    class HandGestureDetector : ImageProcessBase
     {
         #region member
         

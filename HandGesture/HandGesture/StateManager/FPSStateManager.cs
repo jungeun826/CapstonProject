@@ -157,7 +157,7 @@ namespace HandGesture
             int tempDeltaX = beforeX - x;
             int tempDeltaY = beforeY - y;
 
-            float RatioX = 2f * (DetectorManager.Instance.MonitorSize.Value.Width / WebcamController.Instance.FrameSize.Width);
+            float RatioX = 4f * (DetectorManager.Instance.MonitorSize.Value.Width / WebcamController.Instance.FrameSize.Width);
             float RatioY = 2f *( DetectorManager.Instance.MonitorSize.Value.Height / WebcamController.Instance.FrameSize.Height);
 
             int moveDeltaX = tempDeltaX, moveDeltaY = tempDeltaY;

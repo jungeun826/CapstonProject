@@ -13,7 +13,9 @@ namespace HandGesture
         static List<Finger> m_fingers;
         static fingersDel func;
         static int x, y;
-        static int foreY = -1;
+        static int Threshold = -1;
+        static float ShootRate = 0.5f;//1.3f;
+        //static float ReloadRate = 0.5f;
 
         static public string Update(List<Finger> curFingers)
         {
@@ -26,25 +28,49 @@ namespace HandGesture
             }
         }
 
-        static private bool GetHandIdx(out int idx)
+        static private bool GetRightHandIdx(out int idx)
         {
             int i = 0;
-            for (; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++)
-            { }
-            idx = i;
-            if(m_fingers.Count == 0) return false;
-           
+            int rightHandIdx = 0;
+            if (m_fingers.Count == 1)
+            {
+                idx = -1;
+                return false;
+            }
+
+            for (; i < m_fingers.Count; i++)
+            {
+                if (m_fingers[rightHandIdx].m_centerPoint.X < m_fingers[i].m_centerPoint.X)
+                    rightHandIdx = i;
+            }
+
+            idx = rightHandIdx;
+            if (m_fingers.Count < 2)
+            {
+                idx = -1;
+                return false;
+            }
+
             //마지막 hand도 tipcount가 0임..
-            if(m_fingers.Count == i ) i = m_fingers.Count -1;
-            idx = i;
-            
+            if (m_fingers.Count == i)
+            {
+                if (i == rightHandIdx)
+                    idx = m_fingers.Count - 1;
+            }
+
             return true;
         }
 
         static private string idleFunc()
         {
             int i = 0;
-            if (!GetHandIdx(out i)) return "Idle";
+            if (!GetRightHandIdx(out i) || i == -1) return "Idle";
+
+
+            if (ProcessReloadLogic(i))
+            {
+                return "Reload";
+            }
 
             if (m_fingers[i].m_tipPoint.Count <= 2)
             {
@@ -56,109 +82,233 @@ namespace HandGesture
                 func = mouseMoveFunc;
                 return "MouseMove";
             }
-            return "Idle";
+            return "IdleIng";
         }
 
+        static private bool ProcessReloadLogic(int idx)
+        {
+            if (idx != -1 && m_fingers[idx].m_tipPoint.Count == 5)
+            {
+                Console.WriteLine("change Reload");
+
+                ApiController.mouse_event(ApiController.MOUSEEVENTF_RIGHTDOWN);
+                func = reloadFunc;
+                return true;
+            }
+
+            return false;
+        }
+
+
+        static int idleMiss = 0;
         static private string mouseMoveFunc()
         {
             int i = 0;
-            if (!GetHandIdx(out i)) return "???1";
-
-            if (m_fingers[i].m_tipPoint.Count > 2)
+            if (!GetRightHandIdx(out i) || i == -1 || (m_fingers[i].m_tipPoint.Count > 2))
             {
+                idleMiss++; 
+                if (idleMiss > 10)
+                {
+                    idleMiss = 0;
+                    Console.WriteLine("change idle");
+                    func = idleFunc;
+                    Threshold = -1;
+                    return "Idle";
+                }
+
+                if (ProcessReloadLogic(i))
+                {
+                    return "Reload";
+                }
+
+                return "IdleMiss";
+            }
+
+            if (i == 1 && m_fingers.Count == 1)
+            {
+
                 Console.WriteLine("change idle");
-                foreY = -1;
                 func = idleFunc;
+                Threshold = -1;
                 return "Idle";
             }
 
-            if (foreY == -1)
+            SetThreshold(i);
+            if (Threshold != -1)
             {
-                if (m_fingers[i].m_tipPoint.Count == 1)
+                int LagestY = GetLagestYCntFingerTip(i);
+
+                if (LagestY != -1 && LagestY < Threshold * ShootRate)
                 {
-                    foreY = m_fingers[i].GetPixelCntYFingerTip(0);
+                        Console.WriteLine("change shoot");
+
+                        ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
+                        func = shootFunc;
+                        return "Shoot";
                 }
             }
 
-            if (m_fingers[i].m_tipPoint.Count == 1)
+            int beforeX = x;
+            int beforeY = y;
+
+            beforeX = (int)(m_fingers[i].m_centerPoint.X * 0.8 + beforeX * 0.2);
+            beforeY = (int)(m_fingers[i].m_centerPoint.Y * 0.8 + beforeY * 0.2);
+
+            int tempDeltaX = beforeX - x;
+            int tempDeltaY = beforeY - y;
+
+            float RatioX = DetectorManager.Instance.MonitorSize.Value.Width / WebcamController.Instance.FrameSize.Width;
+            float RatioY = DetectorManager.Instance.MonitorSize.Value.Height / WebcamController.Instance.FrameSize.Height;
+
+            int moveDeltaX = tempDeltaX, moveDeltaY = tempDeltaY;
+            if (Math.Abs(tempDeltaX) < 5)
             {
-                if (foreY < m_fingers[i].GetPixelCntYFingerTip(0))
-                {
-                    Console.WriteLine("change shoot");
-                    func = shootFunc;
-                    return "Shoot";
-                }
+                notMoveXCnt++;
+                tempDeltaX = 0;
+            }
+            if (Math.Abs(tempDeltaY) < 5)
+            {
+                tempDeltaY = 0;
+                notMoveYCnt++;
             }
 
-            //ApiController.SetCursorPos(m_fingers[i].m_centerPoint.X, m_fingers[i].m_centerPoint.Y);
-            int dx = m_fingers[i].m_centerPoint.X - x;
-            int dy = m_fingers[i].m_centerPoint.Y - y;
-            //Debug.Log((dx).ToString() + "," + (dy).ToString());
-            ApiController.MoveCursorPos(dx, dy);
+            int posX = 0;
+            int posY = 0;
+
+            if (tempDeltaX == 0 && notMoveXCnt > 5)
+            {
+                posX = (int)(((float)moveDeltaY) / 5);
+                notMoveXCnt = 0;
+            }
+            if (tempDeltaY == 0 && notMoveYCnt > 5)
+            {
+                posY = (int)(((float)moveDeltaY ) / 5);
+                notMoveYCnt = 0;
+            }
+
+            if (tempDeltaX != 0)
+                posX = (int)(((float)tempDeltaX ));
+            if (tempDeltaY != 0)
+                posY = (int)(((float)tempDeltaY ));
+
+            float rad = ((float)m_fingers[i].m_rad * 1.5f);
+            if (m_fingers[i].m_centerPoint.X + rad > WebcamController.Instance.FrameSize.Width)
+            {
+                posX = 1;
+            }
+            if (m_fingers[i].m_centerPoint.X - rad < WebcamController.Instance.FrameSize.Width * 0.5)
+            {
+                posX = -1;
+            }
+
+            if (m_fingers[i].m_centerPoint.Y + rad > WebcamController.Instance.FrameSize.Height)
+            {
+                posY = 1;
+            }
+            if (m_fingers[i].m_centerPoint.Y - rad < WebcamController.Instance.FrameSize.Height * 0.5)
+            {
+                posY = -1;
+            }
+
+            ApiController.MoveCursorPos((int)((float)posX * RatioX), (int)((float)posY * RatioY), 5);
 
             //상대 좌표 이동을 위해 추가
-            x = m_fingers[i].m_centerPoint.X;
-            y = m_fingers[i].m_centerPoint.Y;
+            if (tempDeltaX != 0)
+            {
+                x = beforeX;
+            }
+            if (tempDeltaY != 0)
+            {
+                y = beforeY;
+            }
 
-            return "MouseMove";
+            return "MouseMoveIng";
+        }
+        static int notMoveXCnt = 0;
+        static int notMoveYCnt = 0;
+
+
+        private static int GetLagestYCntFingerTip(int i)
+        {
+            int LagestY = 0;
+
+            if (i == -1) return -1;
+
+            if (m_fingers.Count == 1 && 1 == i)
+                return -1;
+
+            for (int idx = 0; idx < m_fingers[i].m_tipPoint.Count; idx++)
+            {
+                int pixelCnt = m_fingers[i].GetPixelCntYFingerTip(idx);
+                if (LagestY < pixelCnt)
+                    LagestY = pixelCnt;
+            }
+            return LagestY;
         }
 
-        static private string shootFunc()
+        static private string reloadFunc()
         {
-            int i = 0;
-            if (!GetHandIdx(out i)) return "???2";
+            ApiController.mouse_event(ApiController.MOUSEEVENTF_RIGHTUP);
 
-            if (m_fingers[i].m_tipPoint.Count == 1)
-            {
-                if (foreY * 1.2f > m_fingers[i].GetPixelCntYFingerTip(0))
-                {
-                    Console.WriteLine("change mouseMove");
-                    ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
-                    ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
-                    func = mouseMoveFunc;
-                    return "MouseMove";
-                }
-            }
-
-            if (m_fingers[i].m_tipPoint.Count > 2)
-            {
-                Console.WriteLine("change idle");
-                foreY = -1;
-                func = idleFunc;
-                return "Idle";
-            }
-
-            return "Shoot";
+            Console.WriteLine("change idle");
+            func = idleFunc;
+            Threshold = -1;
+            return "reload";
         }
 
-        static private void reloadFunc()
+        private static void SetThreshold(int i)
         {
-            int i = 0;
-            if (!GetHandIdx(out i)) return;
-
-            if (m_fingers[i].m_tipPoint.Count == 1)
+            if (i == -1)
             {
-                if (foreY * 1.2f > m_fingers[i].GetPixelCntYFingerTip(0))
-                {
-                    Console.WriteLine("change reload");
-                    ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTDOWN);
-                    ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
-                    func = mouseMoveFunc;
-                    return;
-                }
-            }
-
-            if (m_fingers[i].m_tipPoint.Count > 2)
-            {
-                Console.WriteLine("change idle");
-                foreY = -1;
-                func = idleFunc;
+                Threshold = -1;
                 return;
             }
 
+            if (Threshold == -1)
+            {
+                Threshold = GetLagestYCntFingerTip(i);
+                if (Threshold < m_fingers[i].m_rad * 2)
+                    Threshold = -1;
+            }
         }
 
+        static int shootIngCnt = 0;
+        static private string shootFunc() 
+        {
+            ApiController.mouse_event(ApiController.MOUSEEVENTF_LEFTUP);
 
+            if (shootIngCnt++ > 10)
+            {
+                shootIngCnt = 0;
+                Console.WriteLine("change idle");
+                func = idleFunc;
+                Threshold = -1;
+                return "Idle";
+            }
+            int i = 0;
+            if (!GetRightHandIdx(out i))
+            {
+                shootIngCnt = 0;
+                Console.WriteLine("change idle");
+                func = idleFunc;
+                Threshold = -1;
+                return "Idle";
+            }
+
+            SetThreshold(i);
+            int LagestY = GetLagestYCntFingerTip(i);
+
+            if (LagestY > Threshold * ShootRate )
+            {
+                shootIngCnt = 0;
+                Console.WriteLine("change mouseMove");
+                func = mouseMoveFunc;
+                return "MouseMove";
+            }
+
+            return "Shooting";
+
+        }
     }
 }
 

@@ -45,10 +45,15 @@ namespace HandGesture
             //opticalFlow = new OpticalFlow();
             WebcamController.Instance.Init();
             WebcamController.Instance.updateFrame();
-            
+
+           
+
             Pause = false;
 
             label1.Text = "BASIC";
+
+            this.Visible = false;
+            this.WindowState = FormWindowState.Minimized;
         }
         
         private void Form1_Load(object sender, EventArgs e)

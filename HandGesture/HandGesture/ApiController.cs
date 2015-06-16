@@ -17,7 +17,6 @@ namespace HandGesture
         public const int MOUSEEVENTF_RIGHTUP = 0x10;
         public const int KEYBOARD_DOWN = 0x00;
         public const int KEYBOARD_UP = 0x02;
-        public static readonly int MOVE = 0x00000001;
 
         /// <summary>
         /// 마우스 이벤트를 발생 시킨다.
@@ -47,6 +46,12 @@ namespace HandGesture
         static public void MoveCursorPos(int x, int y)
         {
             SetCursorPos(Control.MousePosition.X + x, Control.MousePosition.Y + y);
+        }
+
+        static public void GetCursorPos(out int x, out int y)
+        {
+            x = Control.MousePosition.X;
+            y = Control.MousePosition.Y;
         }
 
         static public void MoveCursorPos(int x, int y, int ratio)

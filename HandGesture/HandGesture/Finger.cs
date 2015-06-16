@@ -61,14 +61,14 @@ namespace HandGesture
 
         public int GetPixelCntYFingerTip(int TipIdx)
         {
-            int pixelCnt = -1;
-            if(TipIdx < m_tipPoint.Count)
-                pixelCnt = Math.Abs(m_tipPoint[TipIdx].Y - m_centerPoint.Y) - m_rad;
+            int dist = -1;
+            if (TipIdx < m_tipPoint.Count)
+                dist = Math.Abs((int)m_tipPoint[TipIdx].DistanceTo(m_centerPoint));
 
-            if (pixelCnt <= 0)
-                return -1;
+            //if (dist <= 0)
+            //    return -1;
 
-            return pixelCnt;
+            return dist;
         }
 
     }

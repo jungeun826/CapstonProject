@@ -47,3 +47,6 @@ C:\Users\민수\Desktop\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGes
 C:\Users\민수\Desktop\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.info.resources
 C:\Users\민수\Desktop\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.Properties.Resources.resources
 C:\Users\민수\Desktop\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.csproj.GenerateResource.Cache
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.DebugForm.resources
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.howToUse.resources
+D:\학교\4학년\2학기\Project\CapstonProject\CapstonProject\HandGesture\HandGesture\obj\Debug\HandGesture.info.resources

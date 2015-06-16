@@ -16,19 +16,11 @@ namespace HandGesture
         #region member
         
         private IplImage resultImg;
-        //private IplImage filterImg;
-        private int maxDist = 0;
-
-        //public IplImage FilterImg { get { return filterImg; } }
-        public IplImage BlobImg { get; set; }
-        public IplImage ConvexHullImg { get; set; }
         public IplImage ResultImg { get { return resultImg; } }
-        public int MaxDist { get { return maxDist; } }
         private  List<Finger> fingers = new List<Finger>();
 
         #endregion
 
-        #region implement IRecognition
         public List<Finger> Detect()
         {
             fingers.Clear();
@@ -144,41 +136,6 @@ namespace HandGesture
             }
 
             return fingers;
-        }
-
-        public IplImage ExtractRecognitionImageIpl()
-        {
-            return resultImg;
-        }
-        public Bitmap ExtractRecognitionImageBitmap()
-        {
-            return ConvertIplToBitmap(resultImg);
-        }
-        public bool RecognitionProcessing() { return true; }
-        #endregion
-
-        /// <summary>
-        /// Gets flesh regions by histogram back projection
-        /// </summary>
-        /// <param name="imgSrc"></param>
-        /// <param name="hsvPlanes"></param>
-        /// <param name="imgRender"></param>
-        private void RetrieveFleshRegion(IplImage imgSrc, IplImage[] hsvPlanes, IplImage imgDst)
-        {
-            int[] histSize = new int[] { 30, 32 };
-            float[] hRanges = { 0.0f, 20f };
-            float[] sRanges = { 50f, 255f };
-            float[][] ranges = { hRanges, sRanges };
-
-            imgDst.Zero();
-            using (CvHistogram hist = new CvHistogram(histSize, HistogramFormat.Array, ranges, true))
-            {
-                hist.Calc(hsvPlanes, false, null);
-                float minValue, maxValue;
-                hist.GetMinMaxValue(out minValue, out maxValue);
-                hist.Normalize(imgSrc.Width * imgSrc.Height * 255 / maxValue);
-                hist.CalcBackProject(hsvPlanes, imgDst);
-            }
         }
 
         /// <summary>

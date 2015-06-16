@@ -49,7 +49,7 @@ namespace HandGesture
                 imgYCBCR.InRangeS(new CvScalar(0, 135, 40), new CvScalar(255, 170, 150), imgBackProjection);
 
                 imgBackProjection.Dilate(imgBackProjection, null, 2);
-                imgBackProjection.Erode(imgBackProjection, null, 2);
+                imgBackProjection.Erode(imgBackProjection, null, 1);
                 imgBackProjection.Smooth(imgBackProjection, SmoothType.Gaussian);
 
                 List<IplImage> listOfBlobImg = FilterBlobImgList(imgBackProjection);
@@ -68,6 +68,7 @@ namespace HandGesture
                     int x, y, height, width;
                     CvRect roi = contours.BoundingRect();
                     x = roi.X; y = roi.Y; height = roi.Height; width = roi.Width;
+                    if (height > webcamImg.Height / 2) height /= 2;
                     if (height > width * 1.5) height = (int)(width * 1.5);
                     for (int i = x; i < x + width; i++)
                     {
@@ -118,7 +119,7 @@ namespace HandGesture
                         {
                             int dis = (int)ccd.End.DistanceTo(conCenter);
                             int fingerDis = (int)ccd.End.DistanceTo(ccd.DepthPoint);
-                            if (dis < maxConDist * 1.6 || fingerDis < maxConDist * 0.8) continue;
+                            if (dis < maxConDist * 1.6 /* || fingerDis < maxConDist * 0.8*/) continue;
                             fingers[k].addTip(ccd.End);
                             fingers[k].addDepth(ccd.DepthPoint);
                             cntFinger++;

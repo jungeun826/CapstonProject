@@ -45,7 +45,7 @@ namespace HandGesture
             int i;
             int ri = 0, li = 0;
 
-            for (i = 0; i < m_fingers.Count && m_fingers[i].m_tipPoint.Count == 0; i++)
+            for (i = 0; i < m_fingers.Count  && m_fingers[i].m_tipPoint.Count / 2 == 0 ; i++)
             {
                 int temp = m_fingers[i].m_centerPoint.X;
                 if (m_fingers[ri].m_centerPoint.X < temp)

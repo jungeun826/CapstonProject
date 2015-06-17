@@ -49,6 +49,11 @@ namespace HandGesture
             SetCursorPos(Control.MousePosition.X + x, Control.MousePosition.Y + y);
         }
 
+        static public void MoveCursorDelta(uint dx, uint dy)
+        {
+            mouse_event((uint)MOVE, dx, dy);//
+        }
+
         static public void MoveCursorPos(int x, int y, int ratio)
         {
             MoveCursorPos(x * ratio, y * ratio);

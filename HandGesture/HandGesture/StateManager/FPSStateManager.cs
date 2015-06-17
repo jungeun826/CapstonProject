@@ -194,23 +194,23 @@ namespace HandGesture
             float rad = ((float)m_fingers[i].m_rad * 1.2f);
             if (m_fingers[i].m_centerPoint.X + rad > WebcamController.Instance.FrameSize.Width)
             {
-                posX = 1;
+                posX = 10;
             }
             if (m_fingers[i].m_centerPoint.X - rad < WebcamController.Instance.FrameSize.Width * 0.5)
             {
-                posX = -1;
+                posX = -10;
             }
 
             if (m_fingers[i].m_centerPoint.Y + rad > WebcamController.Instance.FrameSize.Height)
             {
-                posY = 1;
+                posY = 10;
             }
             if (m_fingers[i].m_centerPoint.Y - rad <0)
             {
-                posY = -1;
+                posY = -10;
             }
 
-            ApiController.MoveCursorPos((int)((float)posX * RatioX), (int)((float)posY * RatioY));
+            ApiController.MoveCursorDelta((uint)((float)posX), (uint)((float)posY));
 
             //상대 좌표 이동을 위해 추가
             if (tempDeltaX != 0)

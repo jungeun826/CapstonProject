@@ -232,6 +232,8 @@ namespace HandGesture
             UnregisterHotKey((int)this.Handle, 5);
             UnregisterHotKey((int)this.Handle, 6);
 
+            WCC.Visible = false; //이거 여기 있어야 제대로 동작해요, By.Yong
+
             //이거 윤희님이 왜 해두신건지 몰라서 쓰지도 않아서 주석처리 했습니다. By.Yong
             //e.Cancel = true;
             ////방법1
@@ -260,7 +262,6 @@ namespace HandGesture
         private void 종료ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
-            WCC.Visible = false;
         }
         //시스템트레이
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)

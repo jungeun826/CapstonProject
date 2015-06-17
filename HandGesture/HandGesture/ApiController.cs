@@ -17,6 +17,7 @@ namespace HandGesture
         public const int MOUSEEVENTF_RIGHTUP = 0x10;
         public const int KEYBOARD_DOWN = 0x00;
         public const int KEYBOARD_UP = 0x02;
+        public static readonly int MOVE = 0x00000001;
 
         /// <summary>
         /// 마우스 이벤트를 발생 시킨다.
@@ -48,12 +49,6 @@ namespace HandGesture
             SetCursorPos(Control.MousePosition.X + x, Control.MousePosition.Y + y);
         }
 
-        static public void GetCursorPos(out int x, out int y)
-        {
-            x = Control.MousePosition.X;
-            y = Control.MousePosition.Y;
-        }
-
         static public void MoveCursorPos(int x, int y, int ratio)
         {
             MoveCursorPos(x * ratio, y * ratio);
@@ -69,5 +64,17 @@ namespace HandGesture
         [DllImport("user32.dll")]
         public static extern void keybd_event(uint vk, uint scan, uint flags, uint extraInfo);
 
+
+        [DllImport("user32.dll")]
+        static extern int GetForegroundWindow();
+        [DllImport("user32.dll")]
+        static extern int SendMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+        const uint WM_KEYDOWN = 0x0100;
+        const uint WM_KEYUP = 0x0101;
+        public static int SendMessage(uint msg, IntPtr wParam)
+        {
+            return SendMessage((IntPtr)GetForegroundWindow(), msg, wParam, IntPtr.Zero);
+        }
     }
 }

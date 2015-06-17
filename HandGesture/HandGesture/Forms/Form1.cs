@@ -238,9 +238,9 @@ namespace HandGesture
             //e.Cancel = true;
             ////방법1
             //this.Visible = false;
-            //방법2
-            this.WindowState = FormWindowState.Minimized;
-            this.ShowInTaskbar = false;
+            ////방법2  이거때문에 정상종료 안되잖아요 왜 여기다가 넣어요 By.Yong
+            //this.WindowState = FormWindowState.Minimized;
+            //this.ShowInTaskbar = false;
 
         }
 

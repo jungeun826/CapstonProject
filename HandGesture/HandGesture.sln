@@ -13,6 +13,7 @@ Global
 		{101306E4-2C1A-407B-900A-CFE6C4799183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{101306E4-2C1A-407B-900A-CFE6C4799183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{101306E4-2C1A-407B-900A-CFE6C4799183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{101306E4-2C1A-407B-900A-CFE6C4799183}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

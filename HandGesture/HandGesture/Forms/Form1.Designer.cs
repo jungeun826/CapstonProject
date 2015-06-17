@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-           // this.pointLabel = new System.Windows.Forms.Label();
             this.button_basic = new System.Windows.Forms.Button();
             this.button_fps = new System.Windows.Forms.Button();
             this.button_racing = new System.Windows.Forms.Button();
@@ -59,15 +58,7 @@
             // 
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            //// 
-            //// pointLabel
-            //// 
-            //this.pointLabel.AutoSize = true;
-            //this.pointLabel.Location = new System.Drawing.Point(1008, 319);
-            //this.pointLabel.Name = "pointLabel";
-            //this.pointLabel.Size = new System.Drawing.Size(0, 12);
-            //this.pointLabel.TabIndex = 8;
-            //// 
+            // 
             // button_basic
             // 
             this.button_basic.Location = new System.Drawing.Point(6, 43);
@@ -234,7 +225,6 @@
             this.Controls.Add(this.button_racing);
             this.Controls.Add(this.button_fps);
             this.Controls.Add(this.button_basic);
-//            this.Controls.Add(this.pointLabel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";

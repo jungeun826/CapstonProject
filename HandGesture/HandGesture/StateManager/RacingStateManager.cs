@@ -33,8 +33,8 @@ namespace HandGesture
             if (i == 3)
             {
                 Console.WriteLine("change handle");
-                //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Up, 0, 0x00, 0);
-                ApiController.SendMessage(0x100, (IntPtr)System.Windows.Forms.Keys.Up);
+                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Up, 0, 0x00, 0);
+                //ApiController.SendMessage(0x100, (IntPtr)System.Windows.Forms.Keys.Up);
                 func = handleFunc;
                 return "Handle Control";
             }
@@ -63,12 +63,12 @@ namespace HandGesture
             if (m_fingers.Count < 3)
             {
                 Console.WriteLine("change idle state");
-                ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Up);
-                ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Right);
-                ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Left);
-                //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Up, 0, 0x02, 0);
-                //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
-                //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
+                //ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Up);
+                //ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Right);
+                //ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Left);
+                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Up, 0, 0x02, 0);
+                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
+                ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
                 func = idleFunc;
                 return "Idle";
             }
@@ -77,19 +77,19 @@ namespace HandGesture
             {
                 if (m_fingers[li].m_centerPoint.Y < m_fingers[ri].m_centerPoint.Y)
                 {
-                    ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Right);
-                    ApiController.SendMessage(0x100, (IntPtr)System.Windows.Forms.Keys.Left);
-                    //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
-                    //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x00, 0);
+                    //ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Right);
+                    //ApiController.SendMessage(0x100, (IntPtr)System.Windows.Forms.Keys.Left);
+                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x02, 0);
+                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x00, 0);
                     return "left";
                 }
                 else
                 {
 
-                    ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Left);
-                    ApiController.SendMessage(0x100, (IntPtr)System.Windows.Forms.Keys.Right);
-                    //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
-                    //ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x00, 0);
+                    //ApiController.SendMessage(0x101, (IntPtr)System.Windows.Forms.Keys.Left);
+                    //ApiController.SendMessage(0x100, (IntPtr)System.Windows.Forms.Keys.Right);
+                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Left, 0, 0x02, 0);
+                    ApiController.keybd_event((uint)System.Windows.Forms.Keys.Right, 0, 0x00, 0);
                     return "right";
                 }
             }
